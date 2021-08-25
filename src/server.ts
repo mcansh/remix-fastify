@@ -9,6 +9,7 @@ import {
   Headers,
 } from "@remix-run/node";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { PassThrough } from "node:stream";
 
 /**
  * A function that returns the value to use as `context` in route `loader` and
@@ -79,9 +80,9 @@ function createRemixRequest(request: FastifyRequest): Request {
     headers: createRemixHeaders(request.headers),
   };
 
-  // if (request.method !== "GET" && request.method !== "HEAD") {
-  //   init.body =
-  // }
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    init.body = request.raw.pipe(new PassThrough({ highWaterMark: 16384 }));
+  }
 
   return new Request(url.toString(), init);
 }
