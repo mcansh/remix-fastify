@@ -1,0 +1,8 @@
+dist
+node_modules
+.ds_store
+.yalc
+yalc.lock
+
+/example/server/build
+/example/public/build
