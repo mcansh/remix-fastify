@@ -1,15 +1,23 @@
 import { URL } from "node:url";
-
-import {
-  ServerBuild,
-  AppLoadContext,
-  createRequestHandler as createNodeRequestHandler,
-  Request,
-  RequestInit,
-  Headers,
-} from "@remix-run/node";
-import { FastifyReply, FastifyRequest } from "fastify";
 import { PassThrough } from "node:stream";
+
+import type { FastifyReply, FastifyRequest } from "fastify";
+import type {
+  AppLoadContext,
+  ServerBuild,
+  ServerPlatform,
+} from "@remix-run/server-runtime";
+import { createRequestHandler as createRemixRequestHandler } from "@remix-run/server-runtime";
+import type {
+  Request,
+  RequestInit as NodeRequestInit,
+  Response as NodeResponse,
+} from "@remix-run/node";
+import {
+  Headers as NodeHeaders,
+  Request as NodeRequest,
+  formatServerError,
+} from "@remix-run/node";
 
 /**
  * A function that returns the value to use as `context` in route `loader` and
@@ -34,7 +42,8 @@ export function createRequestHandler({
   getLoadContext?: GetAppLoadContext;
   mode?: string;
 }) {
-  let handleRequest = createNodeRequestHandler(build, mode);
+  let platform: ServerPlatform = { formatServerError };
+  let handleRequest = createRemixRequestHandler(build, platform, mode);
 
   return async (request: FastifyRequest, reply: FastifyReply) => {
     let remixRequest = createRemixRequest(request);
@@ -43,13 +52,16 @@ export function createRequestHandler({
         ? getLoadContext(request, reply)
         : undefined;
 
-    let response = await handleRequest(remixRequest, loadContext);
+    let response = (await handleRequest(
+      remixRequest as unknown as Request,
+      loadContext
+    )) as unknown as NodeResponse;
+
+    reply.code(response.status);
+    reply.headers(response.headers.raw());
 
     if (Buffer.isBuffer(response.body)) {
-      return reply
-        .code(response.status)
-        .headers(response.headers.raw())
-        .send(response.body);
+      return reply.send(response.body);
     }
 
     return response.body.pipe(reply.raw);
@@ -58,8 +70,8 @@ export function createRequestHandler({
 
 function createRemixHeaders(
   requestHeaders: FastifyRequest["headers"]
-): Headers {
-  let headers = new Headers();
+): NodeHeaders {
+  let headers = new NodeHeaders();
 
   for (let [header, values] of Object.entries(requestHeaders)) {
     if (!values) continue;
@@ -71,11 +83,11 @@ function createRemixHeaders(
   return headers;
 }
 
-function createRemixRequest(request: FastifyRequest): Request {
+function createRemixRequest(request: FastifyRequest): NodeRequest {
   let origin = `${request.protocol}://${request.hostname}`;
   let url = new URL(request.url, origin);
 
-  let init: RequestInit = {
+  let init: NodeRequestInit = {
     method: request.method,
     headers: createRemixHeaders(request.headers),
   };
@@ -84,5 +96,5 @@ function createRemixRequest(request: FastifyRequest): Request {
     init.body = request.raw.pipe(new PassThrough({ highWaterMark: 16384 }));
   }
 
-  return new Request(url.toString(), init);
+  return new NodeRequest(url.toString(), init);
 }
