@@ -7,6 +7,9 @@
     "dev": "tsc -w",
     "build": "tsc"
   },
+  "files": [
+    "dist"
+  ],
   "author": "Logan McAnsh <logan@remix.run> (https://remix.run)",
   "devDependencies": {
     "@tsconfig/node14": "1.0.1",
