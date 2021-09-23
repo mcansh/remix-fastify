@@ -93,7 +93,7 @@ function createRemixRequest(request: FastifyRequest): NodeRequest {
   };
 
   if (request.method !== "GET" && request.method !== "HEAD") {
-    init.body = request.raw.pipe(new PassThrough({ highWaterMark: 16384 }));
+    init.body = request.body as any;
   }
 
   return new NodeRequest(url.toString(), init);

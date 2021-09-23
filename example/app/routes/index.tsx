@@ -1,4 +1,10 @@
-import type { MetaFunction, LinksFunction, LoaderFunction } from "remix";
+import {
+  MetaFunction,
+  LinksFunction,
+  LoaderFunction,
+  ActionFunction,
+  redirect,
+} from "remix";
 import { useRouteData } from "remix";
 
 import stylesUrl from "../styles/index.css";
@@ -18,6 +24,15 @@ export let loader: LoaderFunction = async () => {
   return { message: "this is awesome 😎" };
 };
 
+export let action: ActionFunction = async ({ request }) => {
+  let body = await request.text();
+  let formData = new URLSearchParams(body);
+
+  console.log({ formData });
+
+  return redirect("/");
+};
+
 export default function Index() {
   let data = useRouteData();
 
@@ -29,6 +44,11 @@ export default function Index() {
         started.
       </p>
       <p>Message from the loader: {data.message}</p>
+
+      <form action="/" method="post">
+        <input type="text" name="name" />
+        <input type="submit" value="Submit" />
+      </form>
     </div>
   );
 }
