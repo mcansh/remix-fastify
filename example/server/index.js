@@ -2,28 +2,39 @@ const path = require("path");
 const fastify = require("fastify");
 const fastifyStatic = require("fastify-static");
 const { createRequestHandler } = require("@mcansh/remix-fastify");
-const rawBody = require("raw-body");
 
 const BUILD_DIR = "./build";
 const BUILD_DIR_PATH = path.join(process.cwd(), "server", BUILD_DIR);
 const MODE = process.env.NODE_ENV;
 
-let app = fastify({ logger: { level: "trace" } });
+let app = fastify();
 
-app.addContentTypeParser("*", (req, done) => {
-  rawBody(
-    req,
-    {
-      length: req.headers["content-length"],
-      limit: "1mb",
-      encoding: "utf-8",
-    },
-    (err, body) => {
-      if (err) return done(err);
-      done(null, body);
-    }
-  );
+/**
+ * @type {import('fastify').AddContentTypeParser}
+ */
+
+app.addContentTypeParser("*", (request, payload, done) => {
+  let data = "";
+  payload.on("data", (chunk) => {
+    data += chunk;
+  });
+  payload.on("end", () => {
+    done(null, data);
+  });
 });
+
+// app.addContentTypeParser("*", async (request, payload) => {
+//   try {
+//     let body = await rawBody(request, {
+//       encoding: "utf-8",
+//       limit: "1mb",
+//       length: request.headers["content-length"],
+//     });
+//     return body;
+//   } catch (error) {
+//     throw error;
+//   }
+// });
 
 app.register(fastifyStatic, {
   root: path.join(process.cwd(), "public"),

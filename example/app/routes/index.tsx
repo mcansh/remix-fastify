@@ -4,8 +4,10 @@ import {
   LoaderFunction,
   ActionFunction,
   redirect,
+  useLoaderData,
+  useActionData,
+  json,
 } from "remix";
-import { useRouteData } from "remix";
 
 import stylesUrl from "../styles/index.css";
 
@@ -25,16 +27,16 @@ export let loader: LoaderFunction = async () => {
 };
 
 export let action: ActionFunction = async ({ request }) => {
-  let body = await request.text();
-  let formData = new URLSearchParams(body);
+  let formData = await request.formData();
 
-  console.log({ formData });
+  console.log({ formData: Object.fromEntries(formData) });
 
-  return redirect("/");
+  return json({ name: formData.get("name") });
 };
 
 export default function Index() {
-  let data = useRouteData();
+  let data = useLoaderData();
+  let actionData = useActionData();
 
   return (
     <div style={{ textAlign: "center", padding: 20 }}>
@@ -45,10 +47,17 @@ export default function Index() {
       </p>
       <p>Message from the loader: {data.message}</p>
 
-      <form action="/" method="post">
-        <input type="text" name="name" />
-        <input type="submit" value="Submit" />
-      </form>
+      {actionData ? (
+        <h3>Hello {actionData.name}</h3>
+      ) : (
+        <form action="/?index" method="post">
+          <label>
+            <span>Name:</span>
+            <input type="text" name="name" />
+          </label>
+          <input type="submit" value="Submit" />
+        </form>
+      )}
     </div>
   );
 }

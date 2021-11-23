@@ -12,16 +12,16 @@
   ],
   "author": "Logan McAnsh <logan@remix.run> (https://remix.run)",
   "devDependencies": {
-    "@remix-run/node": "^0.18.1",
-    "@remix-run/server-runtime": "^0.18.1",
+    "@remix-run/node": "^1.0.4",
+    "@remix-run/server-runtime": "^1.0.4",
     "@tsconfig/node14": "1.0.1",
-    "@types/node": "16.9.2",
-    "fastify": "^3.21.3",
-    "typescript": "4.4.3"
+    "@types/node": "16.11.9",
+    "fastify": "^3.24.0",
+    "typescript": "4.5.2"
   },
   "peerDependencies": {
-    "@remix-run/node": "^0.18.1",
-    "@remix-run/server-runtime": "^0.18.1",
-    "fastify": "^3.21.3"
+    "@remix-run/node": "^1.0.3",
+    "@remix-run/server-runtime": "^1.0.3",
+    "fastify": "^3.24.0"
   }
 }
