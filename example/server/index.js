@@ -12,7 +12,6 @@ let app = fastify();
 /**
  * @type {import('fastify').AddContentTypeParser}
  */
-
 app.addContentTypeParser("*", (request, payload, done) => {
   let data = "";
   payload.on("data", (chunk) => {
@@ -22,19 +21,6 @@ app.addContentTypeParser("*", (request, payload, done) => {
     done(null, data);
   });
 });
-
-// app.addContentTypeParser("*", async (request, payload) => {
-//   try {
-//     let body = await rawBody(request, {
-//       encoding: "utf-8",
-//       limit: "1mb",
-//       length: request.headers["content-length"],
-//     });
-//     return body;
-//   } catch (error) {
-//     throw error;
-//   }
-// });
 
 app.register(fastifyStatic, {
   root: path.join(process.cwd(), "public"),
