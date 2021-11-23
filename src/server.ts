@@ -58,6 +58,7 @@ export function createRequestHandler({
     )) as unknown as NodeResponse;
 
     reply.code(response.status);
+
     reply.headers(response.headers.raw());
 
     if (Buffer.isBuffer(response.body)) {
@@ -74,9 +75,14 @@ function createRemixHeaders(
   let headers = new NodeHeaders();
 
   for (let [header, values] of Object.entries(requestHeaders)) {
-    if (!values) continue;
-    for (let value of values) {
-      headers.append(header, value);
+    if (Array.isArray(values)) {
+      if (!values) continue;
+      for (let value of values) {
+        headers.append(header, value);
+      }
+    } else {
+      if (!values) continue;
+      headers.append(header, values);
     }
   }
 
