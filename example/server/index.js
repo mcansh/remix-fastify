@@ -27,8 +27,6 @@ app.register(fastifyStatic, {
   prefix: "/static",
 });
 
-console.log(path.join(process.cwd(), "public"));
-
 app.all(
   "*",
   MODE === "production"
