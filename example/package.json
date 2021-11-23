@@ -6,8 +6,8 @@
   "sideEffects": false,
   "scripts": {
     "build": "remix build",
-    "dev": "NODE_ENV=development node server/index.js",
-    "start": "NODE_ENV=production node server/index.js",
+    "dev": "NODE_ENV=development SESSION_SECRET=foobar node server/index.js",
+    "start": "NODE_ENV=production SESSION_SECRET=foobar node server/index.js",
     "prepare": "remix setup node"
   },
   "dependencies": {

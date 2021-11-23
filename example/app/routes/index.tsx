@@ -5,11 +5,10 @@ import {
   ActionFunction,
   redirect,
   useLoaderData,
-  useActionData,
-  json,
 } from "remix";
 
-import stylesUrl from "../styles/index.css";
+import { storage } from "~/session";
+import stylesUrl from "~/styles/index.css";
 
 export let meta: MetaFunction = () => {
   return {
@@ -22,21 +21,28 @@ export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
 };
 
-export let loader: LoaderFunction = async () => {
-  return { message: "this is awesome 😎" };
+export let loader: LoaderFunction = async ({ request }) => {
+  let session = await storage.getSession(request.headers.get("Cookie"));
+  let name = session.get("name");
+
+  return { message: "this is awesome 😎", name };
 };
 
 export let action: ActionFunction = async ({ request }) => {
   let formData = await request.formData();
+  let session = await storage.getSession(request.headers.get("Cookie"));
 
-  console.log({ formData: Object.fromEntries(formData) });
+  session.flash("name", formData.get("name"));
 
-  return json({ name: formData.get("name") });
+  return redirect("/", {
+    headers: {
+      "Set-Cookie": await storage.commitSession(session),
+    },
+  });
 };
 
 export default function Index() {
   let data = useLoaderData();
-  let actionData = useActionData();
 
   return (
     <div style={{ textAlign: "center", padding: 20 }}>
@@ -47,17 +53,15 @@ export default function Index() {
       </p>
       <p>Message from the loader: {data.message}</p>
 
-      {actionData ? (
-        <h3>Hello {actionData.name}</h3>
-      ) : (
-        <form action="/?index" method="post">
-          <label>
-            <span>Name:</span>
-            <input type="text" name="name" />
-          </label>
-          <input type="submit" value="Submit" />
-        </form>
-      )}
+      {data.name && <h3>Hello {data.name}</h3>}
+
+      <form action="/?index" method="post">
+        <label>
+          <span>Name:</span>
+          <input type="text" name="name" />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
     </div>
   );
 }

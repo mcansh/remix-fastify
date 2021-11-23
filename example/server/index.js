@@ -3,9 +3,10 @@ const fastify = require("fastify");
 const fastifyStatic = require("fastify-static");
 const { createRequestHandler } = require("@mcansh/remix-fastify");
 
-const BUILD_DIR = "./build";
-const BUILD_DIR_PATH = path.join(process.cwd(), "server", BUILD_DIR);
 const MODE = process.env.NODE_ENV;
+const BUILD_DIR = path.join(process.cwd(), "server/build");
+
+console.log({ MODE });
 
 let app = fastify();
 
@@ -27,16 +28,21 @@ app.register(fastifyStatic, {
   prefix: "/static",
 });
 
+/**
+ * @type {import('fastify').RouteHandler}
+ */
 app.all(
   "*",
   MODE === "production"
-    ? createRequestHandler({ build: require(BUILD_DIR_PATH) })
-    : (request, reply) => {
+    ? createRequestHandler({ build: require("./build") })
+    : (request, reply, next) => {
         purgeRequireCache();
-        createRequestHandler({
-          build: require(BUILD_DIR_PATH),
-          mode: "development",
-        })(request, reply);
+        let build = require("./build");
+        return createRequestHandler({ build, mode: MODE })(
+          request,
+          reply,
+          next
+        );
       }
 );
 
@@ -62,7 +68,7 @@ function purgeRequireCache() {
   // file changes, we prefer the DX of this though, so we've included it
   // for you by default
   for (let key in require.cache) {
-    if (key.startsWith(BUILD_DIR_PATH)) {
+    if (key.startsWith(BUILD_DIR)) {
       delete require.cache[key];
     }
   }
