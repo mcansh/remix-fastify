@@ -62,10 +62,12 @@ export function createRequestHandler({
     reply.headers(response.headers.raw());
 
     if (Buffer.isBuffer(response.body)) {
-      return reply.send(response.body);
+      reply.send(response.body);
+    } else if (response.body?.pipe) {
+      response.body.pipe(reply.raw);
+    } else {
+      reply.send();
     }
-
-    return response.body.pipe(reply.raw);
   };
 }
 
