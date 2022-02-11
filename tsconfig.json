@@ -1,8 +1,20 @@
 {
-  "extends": "@tsconfig/node14/tsconfig.json",
+  "exclude": ["__tests__", "example"],
+  "include": ["src/**/*.ts"],
   "compilerOptions": {
-    "outDir": "./dist",
-    "importsNotUsedAsValues": "error"
-  },
-  "include": ["src"]
+    "lib": ["ES2019", "DOM.Iterable", "DOM"],
+    "target": "ES2019",
+
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+
+    "declaration": true,
+    "emitDeclarationOnly": true,
+
+    "outDir": "dist",
+    "rootDir": ".",
+
+    "skipLibCheck": true
+  }
 }

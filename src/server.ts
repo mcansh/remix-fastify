@@ -1,6 +1,3 @@
-import { URL } from "node:url";
-import { PassThrough } from "node:stream";
-
 import type { FastifyReply, FastifyRequest } from "fastify";
 import type {
   AppLoadContext,
@@ -9,7 +6,6 @@ import type {
 } from "@remix-run/server-runtime";
 import { createRequestHandler as createRemixRequestHandler } from "@remix-run/server-runtime";
 import type {
-  Request,
   RequestInit as NodeRequestInit,
   Response as NodeResponse,
 } from "@remix-run/node";
@@ -26,7 +22,7 @@ import {
  * You can think of this as an escape hatch that allows you to pass
  * environment/platform-specific values through to your loader/action.
  */
-export type GetAppLoadContext = (
+export type GetLoadContextFunction = (
   request: FastifyRequest,
   reply: FastifyReply
 ) => AppLoadContext;
@@ -39,7 +35,7 @@ export function createRequestHandler({
   mode = process.env.NODE_ENV,
 }: {
   build: ServerBuild;
-  getLoadContext?: GetAppLoadContext;
+  getLoadContext?: GetLoadContextFunction;
   mode?: string;
 }) {
   let platform: ServerPlatform = { formatServerError };
@@ -57,21 +53,11 @@ export function createRequestHandler({
       loadContext
     )) as unknown as NodeResponse;
 
-    reply.code(response.status);
-
-    reply.headers(response.headers.raw());
-
-    if (Buffer.isBuffer(response.body)) {
-      reply.send(response.body);
-    } else if (response.body?.pipe) {
-      response.body.pipe(reply.raw);
-    } else {
-      reply.send();
-    }
+    sendRemixResponse(reply, response);
   };
 }
 
-function createRemixHeaders(
+export function createRemixHeaders(
   requestHeaders: FastifyRequest["headers"]
 ): NodeHeaders {
   let headers = new NodeHeaders();
@@ -91,7 +77,7 @@ function createRemixHeaders(
   return headers;
 }
 
-function createRemixRequest(request: FastifyRequest): NodeRequest {
+export function createRemixRequest(request: FastifyRequest): NodeRequest {
   let origin = `${request.protocol}://${request.hostname}`;
   let url = new URL(request.url, origin);
 
@@ -105,4 +91,18 @@ function createRemixRequest(request: FastifyRequest): NodeRequest {
   }
 
   return new NodeRequest(url.toString(), init);
+}
+
+function sendRemixResponse(reply: FastifyReply, response: NodeResponse): void {
+  reply.code(response.status);
+
+  reply.headers(response.headers.raw());
+
+  if (Buffer.isBuffer(response.body)) {
+    reply.send(response.body);
+  } else if (response.body?.pipe) {
+    response.body.pipe(reply.raw);
+  } else {
+    reply.send();
+  }
 }
