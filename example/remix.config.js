@@ -1,7 +1,11 @@
+/**
+ * @type {import('@remix-run/dev').AppConfig}
+ */
 module.exports = {
   appDirectory: "app",
-  browserBuildDirectory: "public/build",
-  publicPath: "/static/build/",
-  serverBuildDirectory: "server/build",
+  assetsBuildDirectory: "public/build",
+  publicPath: "/build/",
+  server: "./server.ts",
   devServerPort: 8002,
+  devServerBroadcastDelay: 1000,
 };
