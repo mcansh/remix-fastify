@@ -10,9 +10,10 @@ import type {
   Response as NodeResponse,
 } from "@remix-run/node";
 import {
+  // This has been added as a global in node 15+
+  AbortController,
   Headers as NodeHeaders,
   Request as NodeRequest,
-  formatServerError,
 } from "@remix-run/node";
 
 /**
@@ -29,6 +30,9 @@ export type GetLoadContextFunction = (
 
 export type RequestHandler = ReturnType<typeof createRequestHandler>;
 
+/**
+ * Returns a request handler for Fastify that serves the response using Remix.
+ */
 export function createRequestHandler({
   build,
   getLoadContext,
@@ -38,11 +42,12 @@ export function createRequestHandler({
   getLoadContext?: GetLoadContextFunction;
   mode?: string;
 }) {
-  let platform: ServerPlatform = { formatServerError };
+  let platform: ServerPlatform = {};
   let handleRequest = createRemixRequestHandler(build, platform, mode);
 
   return async (request: FastifyRequest, reply: FastifyReply) => {
-    let remixRequest = createRemixRequest(request);
+    let abortController = new AbortController();
+    let remixRequest = createRemixRequest(request, abortController);
     let loadContext =
       typeof getLoadContext === "function"
         ? getLoadContext(request, reply)
@@ -53,7 +58,7 @@ export function createRequestHandler({
       loadContext
     )) as unknown as NodeResponse;
 
-    sendRemixResponse(reply, response);
+    sendRemixResponse(reply, response, abortController);
   };
 }
 
@@ -63,13 +68,13 @@ export function createRemixHeaders(
   let headers = new NodeHeaders();
 
   for (let [header, values] of Object.entries(requestHeaders)) {
+    if (!values) continue;
+
     if (Array.isArray(values)) {
-      if (!values) continue;
       for (let value of values) {
         headers.append(header, value);
       }
     } else {
-      if (!values) continue;
       headers.append(header, values);
     }
   }
@@ -77,26 +82,39 @@ export function createRemixHeaders(
   return headers;
 }
 
-export function createRemixRequest(request: FastifyRequest): NodeRequest {
+export function createRemixRequest(
+  request: FastifyRequest,
+  abortController?: AbortController
+): NodeRequest {
   let origin = `${request.protocol}://${request.hostname}`;
   let url = new URL(request.url, origin);
 
   let init: NodeRequestInit = {
     method: request.method,
     headers: createRemixHeaders(request.headers),
+    signal: abortController?.signal,
+    abortController,
   };
 
   if (request.method !== "GET" && request.method !== "HEAD") {
     init.body = request.body as any;
   }
 
-  return new NodeRequest(url.toString(), init);
+  return new NodeRequest(url.href, init);
 }
 
-function sendRemixResponse(reply: FastifyReply, response: NodeResponse): void {
+function sendRemixResponse(
+  reply: FastifyReply,
+  response: NodeResponse,
+  abortController: AbortController
+): void {
   reply.code(response.status);
 
   reply.headers(response.headers.raw());
+
+  if (abortController.signal.aborted) {
+    reply.headers({ Connection: "close" });
+  }
 
   if (Buffer.isBuffer(response.body)) {
     reply.send(response.body);
