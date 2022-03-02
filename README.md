@@ -11,4 +11,4 @@ yarn add @mcansh/remix-fastify
 
 ## Example
 
-checkout the example in [./example](./example)
+checkout the example usage in [./example/server.ts](./example/server.ts)
