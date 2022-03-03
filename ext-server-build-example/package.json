@@ -1,0 +1,41 @@
+{
+  "name": "remix-app-template",
+  "private": true,
+  "description": "",
+  "license": "",
+  "sideEffects": false,
+  "scripts": {
+    "build:server": "esbuild server/index.ts --platform=node --target=node14 --format=cjs --outfile=server/index.js",
+    "build:remix": "remix build",
+    "build": "run-s build:*",
+    "dev:remix": "remix watch",
+    "dev:server:build": "esbuild server/index.ts --watch --platform=node --target=node14 --format=cjs --outfile=server/index.js",
+    "dev:server": "node server/index.js",
+    "dev": "cross-env NODE_ENV=development SESSION_SECRET=$(openssl rand -hex 32) run-p dev:*",
+    "start": "cross-env NODE_ENV=production SESSION_SECRET=$(openssl rand -hex 32) node server/index.js",
+    "prepare": "remix setup node"
+  },
+  "dependencies": {
+    "@mcansh/remix-fastify": "../",
+    "@remix-run/node": "1.2.1",
+    "@remix-run/react": "1.2.1",
+    "cross-env": "7.0.3",
+    "fastify": "3.27.2",
+    "fastify-express": "0.3.3",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "remix": "1.2.1",
+    "sirv": "2.0.2"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "1.2.1",
+    "@types/react": "17.0.39",
+    "@types/react-dom": "17.0.11",
+    "esbuild": "0.14.24",
+    "npm-run-all": "4.1.5",
+    "typescript": "4.5.5"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
