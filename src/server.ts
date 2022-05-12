@@ -113,9 +113,9 @@ function sendRemixResponse(
     // fastify can accept array for set-cookie header
     // but for the rest we should use string
     if (key.toLowerCase() === "set-cookie") {
-      void fastifyRes.headers({ [key]: values });
+      fastifyRes.headers({ [key]: values });
     } else {
-      void fastifyRes.header(key, values.join("; "));
+      fastifyRes.header(key, values.join("; "));
     }
   }
 
