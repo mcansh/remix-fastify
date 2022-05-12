@@ -21,13 +21,13 @@ import {
  * environment/platform-specific values through to your loader/action.
  */
 export type GetLoadContextFunction = (
-  req: FastifyRequest,
-  res: FastifyReply
+  request: FastifyRequest,
+  reply: FastifyReply
 ) => AppLoadContext;
 
 export type RequestHandler = (
-  req: FastifyRequest,
-  res: FastifyReply
+  request: FastifyRequest,
+  reply: FastifyReply
 ) => Promise<void>;
 
 /**
