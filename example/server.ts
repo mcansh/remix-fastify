@@ -1,8 +1,7 @@
 import fastify from "fastify";
-import sirv from "sirv";
-import fastifyExpress from "fastify-express";
-import { createRequestHandler } from "@mcansh/remix-fastify";
 import * as serverBuild from "@remix-run/dev/server-build";
+import { remixFastifyPlugin } from "@mcansh/remix-fastify";
+import path from "path";
 
 let MODE = process.env.NODE_ENV;
 
@@ -10,39 +9,12 @@ async function start() {
   try {
     let app = fastify();
 
-    app.addContentTypeParser("*", (_request, payload, done) => {
-      let data = "";
-      payload.on("data", (chunk) => {
-        data += chunk;
-      });
-      payload.on("end", () => {
-        done(null, data);
-      });
+    app.register(() => remixFastifyPlugin, {
+      assetsBuildDirectory: path.resolve(process.cwd(), "public", "build"),
+      buildDir: serverBuild,
+      mode: MODE,
+      publicPath: "/build/",
     });
-
-    await app.register(fastifyExpress);
-
-    app.use(
-      "/build",
-      sirv("public/build", {
-        dev: MODE !== "production",
-        etag: true,
-        dotfiles: true,
-        maxAge: 31536000,
-        immutable: true,
-      })
-    );
-
-    app.use(
-      sirv("public", {
-        dev: MODE !== "production",
-        etag: true,
-        dotfiles: true,
-        maxAge: 3600,
-      })
-    );
-
-    app.all("*", createRequestHandler({ build: serverBuild }));
 
     let port = process.env.PORT || 3000;
 

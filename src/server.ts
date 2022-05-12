@@ -1,17 +1,81 @@
-import type { FastifyReply, FastifyRequest } from "fastify";
-import type {
-  RequestInit as NodeRequestInit,
-  Response as NodeResponse,
-  AppLoadContext,
-  ServerBuild,
-} from "@remix-run/node";
+import path from "path";
+
+import fp from "fastify-plugin";
+import fastifyStatic from "@fastify/static";
+import type { AppLoadContext, ServerBuild } from "@remix-run/node";
+import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
 import {
-  // This has been added as a global in node 15+
-  AbortController,
+  createRequestHandler as createRemixRequestHandler,
+  Response as NodeResponse,
   Headers as NodeHeaders,
   Request as NodeRequest,
-  createRequestHandler as createRemixRequestHandler,
+  RequestInit as NodeRequestInit,
+  AbortController,
 } from "@remix-run/node";
+
+interface PluginOptions {
+  mode?: string;
+  build?: ServerBuild;
+  // Same as assetsBuildDirectory in remix.config.js, but absolute or relative to this file
+  assetsBuildDirectory?: string;
+  // Must match the same setting in remix.config.js
+  publicPath?: string;
+}
+
+const remixFastify: FastifyPluginAsync<PluginOptions> = async (
+  fastify,
+  options = {}
+) => {
+  let fullOptions = Object.assign(
+    {
+      mode: process.env.NODE_ENV,
+      assetsBuildDirectory: path.resolve(process.cwd(), "public", "build"),
+      publicPath: "/build/",
+    },
+    options
+  );
+
+  if (!fullOptions.build) {
+    throw new Error("Must provide a build");
+  }
+
+  if (!fastify.hasContentTypeParser("*")) {
+    await fastify.addContentTypeParser("*", (_request, payload, done) => {
+      let data = "";
+      payload.on("data", (chunk) => {
+        data += chunk;
+      });
+      payload.on("end", () => {
+        done(null, data);
+      });
+    });
+  }
+
+  await fastify.register(fastifyStatic, {
+    root: fullOptions.assetsBuildDirectory,
+    prefix: "/",
+    wildcard: false,
+    maxAge: 31536000,
+    dotfiles: "allow",
+  });
+
+  await fastify.register(fastifyStatic, {
+    // the reply decorator has been added by the first plugin registration
+    decorateReply: false,
+    root: path.join(process.cwd(), "public"),
+    prefix: "/",
+    wildcard: false,
+    maxAge: 3600,
+    dotfiles: "allow",
+  });
+
+  let requestHandler = createRequestHandler({
+    build: fullOptions.build,
+    mode: fullOptions.mode,
+  });
+
+  fastify.all("*", requestHandler);
+};
 
 /**
  * A function that returns the value to use as `context` in route `loader` and
@@ -102,12 +166,12 @@ export function createRemixRequest(
   return new NodeRequest(url.href, init);
 }
 
-function sendRemixResponse(
+export function sendRemixResponse(
   reply: FastifyReply,
   response: NodeResponse,
   abortController: AbortController
-): void {
-  reply.code(response.status);
+) {
+  reply.status(response.status);
 
   for (const [key, values] of Object.entries(response.headers.raw())) {
     // fastify can accept array for set-cookie header
@@ -131,3 +195,8 @@ function sendRemixResponse(
     reply.send();
   }
 }
+
+export const remixFastifyPlugin = fp(remixFastify, {
+  name: "remix-fastify",
+  fastify: "^3.0.0",
+});
