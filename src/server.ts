@@ -1,19 +1,16 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import type {
-  AppLoadContext,
-  ServerBuild,
-  ServerPlatform,
-} from "@remix-run/server-runtime";
-import { createRequestHandler as createRemixRequestHandler } from "@remix-run/server-runtime";
-import type {
   RequestInit as NodeRequestInit,
   Response as NodeResponse,
+  AppLoadContext,
+  ServerBuild,
 } from "@remix-run/node";
 import {
   // This has been added as a global in node 15+
   AbortController,
   Headers as NodeHeaders,
   Request as NodeRequest,
+  createRequestHandler as createRemixRequestHandler,
 } from "@remix-run/node";
 
 /**
@@ -24,11 +21,14 @@ import {
  * environment/platform-specific values through to your loader/action.
  */
 export type GetLoadContextFunction = (
-  request: FastifyRequest,
-  reply: FastifyReply
+  req: FastifyRequest,
+  res: FastifyReply
 ) => AppLoadContext;
 
-export type RequestHandler = ReturnType<typeof createRequestHandler>;
+export type RequestHandler = (
+  req: FastifyRequest,
+  res: FastifyReply
+) => Promise<void>;
 
 /**
  * Returns a request handler for Fastify that serves the response using Remix.
@@ -42,32 +42,31 @@ export function createRequestHandler({
   getLoadContext?: GetLoadContextFunction;
   mode?: string;
 }) {
-  let platform: ServerPlatform = {};
-  let handleRequest = createRemixRequestHandler(build, platform, mode);
+  let handleRequest = createRemixRequestHandler(build, mode);
 
-  return async (request: FastifyRequest, reply: FastifyReply) => {
+  return async (fastifyReq: FastifyRequest, fastifyRes: FastifyReply) => {
     let abortController = new AbortController();
-    let remixRequest = createRemixRequest(request, abortController);
+    let remixRequest = createRemixRequest(fastifyReq, abortController);
     let loadContext =
       typeof getLoadContext === "function"
-        ? getLoadContext(request, reply)
+        ? getLoadContext(fastifyReq, fastifyRes)
         : undefined;
 
-    let response = (await handleRequest(
+    let nodeRes = (await handleRequest(
       remixRequest as unknown as Request,
       loadContext
     )) as unknown as NodeResponse;
 
-    sendRemixResponse(reply, response, abortController);
+    sendRemixResponse(fastifyRes, nodeRes, abortController);
   };
 }
 
 export function createRemixHeaders(
-  requestHeaders: FastifyRequest["headers"]
+  fastifyReqHeaders: FastifyRequest["headers"]
 ): NodeHeaders {
   let headers = new NodeHeaders();
 
-  for (let [header, values] of Object.entries(requestHeaders)) {
+  for (let [header, values] of Object.entries(fastifyReqHeaders)) {
     if (!values) continue;
 
     if (Array.isArray(values)) {
@@ -83,44 +82,52 @@ export function createRemixHeaders(
 }
 
 export function createRemixRequest(
-  request: FastifyRequest,
+  fastifyReq: FastifyRequest,
   abortController?: AbortController
 ): NodeRequest {
-  let origin = `${request.protocol}://${request.hostname}`;
-  let url = new URL(request.url, origin);
+  let origin = `${fastifyReq.protocol}://${fastifyReq.hostname}`;
+  let url = new URL(fastifyReq.url, origin);
 
   let init: NodeRequestInit = {
-    method: request.method,
-    headers: createRemixHeaders(request.headers),
+    method: fastifyReq.method,
+    headers: createRemixHeaders(fastifyReq.headers),
     signal: abortController?.signal,
     abortController,
   };
 
-  if (request.method !== "GET" && request.method !== "HEAD") {
-    init.body = request.body as any;
+  if (fastifyReq.method !== "GET" && fastifyReq.method !== "HEAD") {
+    init.body = fastifyReq.body as NodeRequestInit["body"] | undefined;
   }
 
   return new NodeRequest(url.href, init);
 }
 
 function sendRemixResponse(
-  reply: FastifyReply,
-  response: NodeResponse,
+  fastifyRes: FastifyReply,
+  nodeRes: NodeResponse,
   abortController: AbortController
 ): void {
-  reply.code(response.status);
+  fastifyRes.code(nodeRes.status);
 
-  reply.headers(response.headers.raw());
-
-  if (abortController.signal.aborted) {
-    reply.headers({ Connection: "close" });
+  for (const [key, values] of Object.entries(nodeRes.headers.raw())) {
+    // fastify can accept array for set-cookie header
+    // but for the rest we should use string
+    if (key.toLowerCase() === "set-cookie") {
+      void fastifyRes.headers({ [key]: values });
+    } else {
+      void fastifyRes.header(key, values.join("; "));
+    }
   }
 
-  if (Buffer.isBuffer(response.body)) {
-    reply.send(response.body);
-  } else if (response.body?.pipe) {
-    response.body.pipe(reply.raw);
+  if (abortController.signal.aborted) {
+    fastifyRes.headers({ Connection: "close" });
+  }
+
+  if (Buffer.isBuffer(nodeRes.body)) {
+    fastifyRes.send(nodeRes.body);
+  } else if (nodeRes.body?.pipe) {
+    nodeRes.body.pipe(fastifyRes.raw);
   } else {
-    reply.send();
+    fastifyRes.send();
   }
 }

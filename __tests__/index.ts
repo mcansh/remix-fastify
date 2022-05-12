@@ -112,7 +112,7 @@ describe("fastify createRequestHandler", () => {
         url: "/",
       });
 
-      expect(response.headers["x-time-of-year"]).toEqual(["most wonderful"]);
+      expect(response.headers["x-time-of-year"]).toEqual("most wonderful");
       expect(response.headers["set-cookie"]).toEqual([
         "first=one; Expires=0; Path=/; HttpOnly; Secure; SameSite=Lax",
         "second=two; MaxAge=1209600; Path=/; HttpOnly; Secure; SameSite=Lax",
