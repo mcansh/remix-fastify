@@ -107,7 +107,7 @@ function sendRemixResponse(
   response: NodeResponse,
   abortController: AbortController
 ): void {
-  response.code(response.status);
+  reply.code(response.status);
 
   for (const [key, values] of Object.entries(response.headers.raw())) {
     // fastify can accept array for set-cookie header
