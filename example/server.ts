@@ -9,9 +9,10 @@ async function start() {
   try {
     let app = fastify();
 
-    app.register(() => remixFastifyPlugin, {
+    await app.register(remixFastifyPlugin, {
       assetsBuildDirectory: path.resolve(process.cwd(), "public", "build"),
-      buildDir: serverBuild,
+      // @ts-expect-error hm, types are messed up
+      build: serverBuild,
       mode: MODE,
       publicPath: "/build/",
     });

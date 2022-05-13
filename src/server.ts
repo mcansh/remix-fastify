@@ -2,15 +2,19 @@ import path from "path";
 
 import fp from "fastify-plugin";
 import fastifyStatic from "@fastify/static";
-import type { AppLoadContext, ServerBuild } from "@remix-run/node";
 import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
-import {
-  createRequestHandler as createRemixRequestHandler,
+import type {
+  AppLoadContext,
+  ServerBuild,
+  RequestInit as NodeRequestInit,
   Response as NodeResponse,
+} from "@remix-run/node";
+import {
+  // This has been added as a global in node 15+
+  AbortController,
+  createRequestHandler as createRemixRequestHandler,
   Headers as NodeHeaders,
   Request as NodeRequest,
-  RequestInit as NodeRequestInit,
-  AbortController,
 } from "@remix-run/node";
 
 interface PluginOptions {
@@ -40,7 +44,7 @@ const remixFastify: FastifyPluginAsync<PluginOptions> = async (
   }
 
   if (!fastify.hasContentTypeParser("*")) {
-    await fastify.addContentTypeParser("*", (_request, payload, done) => {
+    fastify.addContentTypeParser("*", (_request, payload, done) => {
       let data = "";
       payload.on("data", (chunk) => {
         data += chunk;
