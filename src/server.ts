@@ -1,16 +1,16 @@
-import type { FastifyReply, FastifyRequest } from "fastify";
+import type { FastifyRequest, FastifyReply } from "fastify";
 import type {
-  RequestInit as NodeRequestInit,
-  Response as NodeResponse,
   AppLoadContext,
   ServerBuild,
+  RequestInit as NodeRequestInit,
+  Response as NodeResponse,
 } from "@remix-run/node";
 import {
   // This has been added as a global in node 15+
   AbortController,
+  createRequestHandler as createRemixRequestHandler,
   Headers as NodeHeaders,
   Request as NodeRequest,
-  createRequestHandler as createRemixRequestHandler,
 } from "@remix-run/node";
 
 /**
@@ -41,10 +41,10 @@ export function createRequestHandler({
   build: ServerBuild;
   getLoadContext?: GetLoadContextFunction;
   mode?: string;
-}): RequestHandler {
+}) {
   let handleRequest = createRemixRequestHandler(build, mode);
 
-  return async (request, reply) => {
+  return async (request: FastifyRequest, reply: FastifyReply) => {
     let abortController = new AbortController();
     let remixRequest = createRemixRequest(request, abortController);
     let loadContext =
@@ -102,12 +102,12 @@ export function createRemixRequest(
   return new NodeRequest(url.href, init);
 }
 
-function sendRemixResponse(
+export function sendRemixResponse(
   reply: FastifyReply,
   response: NodeResponse,
   abortController: AbortController
-): void {
-  reply.code(response.status);
+) {
+  reply.status(response.status);
 
   for (const [key, values] of Object.entries(response.headers.raw())) {
     // fastify can accept array for set-cookie header
