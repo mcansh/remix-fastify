@@ -4,8 +4,10 @@
   "description": "Fastify server request handler for Remix",
   "main": "dist/index.js",
   "scripts": {
+    "prepare": "npm run build",
     "dev": "rollup -cw",
     "build": "rollup -c && tsc",
+    "prebuild": "del dist",
     "test": "jest"
   },
   "repository": "mcansh/remix-fastify",
@@ -31,6 +33,7 @@
     "@types/react": "18.0.9",
     "@types/react-dom": "18.0.4",
     "@typescript/lib-dom": "npm:@types/web@0.0.64",
+    "del-cli": "4.0.1",
     "fastify": "3.29.0",
     "jest": "28.1.0",
     "node-mocks-http": "1.11.0",
