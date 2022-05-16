@@ -47,7 +47,7 @@ const remixFastify: FastifyPluginAsync<PluginOptions> = async (
     root: fullOptions.assetsBuildDirectory,
     prefix: "/",
     wildcard: false,
-    maxAge: 31536000,
+    maxAge: "1y",
     dotfiles: "allow",
   });
 
@@ -57,7 +57,7 @@ const remixFastify: FastifyPluginAsync<PluginOptions> = async (
     root: path.join(process.cwd(), "public"),
     prefix: "/",
     wildcard: false,
-    maxAge: 3600,
+    maxAge: "1d",
     dotfiles: "allow",
   });
 
