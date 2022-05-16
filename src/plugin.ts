@@ -47,6 +47,7 @@ const remixFastify: FastifyPluginAsync<PluginOptions> = async (
     root: fullOptions.assetsBuildDirectory,
     prefix: "/",
     wildcard: false,
+    immutable: true,
     maxAge: "1y",
     dotfiles: "allow",
   });
