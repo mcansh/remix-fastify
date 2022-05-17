@@ -69,7 +69,7 @@ const remixFastify: FastifyPluginAsync<PluginOptions> = async (
   for (const asset of staticFiles) {
     fastify.get(asset.path, (_request, reply) => {
       reply.sendFile(asset.path, {
-        maxAge: asset.isBuildAsset ? "1y" : "1d",
+        maxAge: asset.isBuildAsset ? "1y" : "1h",
         immutable: asset.isBuildAsset,
       });
     });
