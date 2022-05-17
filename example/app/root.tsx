@@ -1,7 +1,12 @@
-import type { LinksFunction, LoaderFunction } from "remix";
-import { Meta, Links, Scripts, useLoaderData, LiveReload } from "remix";
-import { Outlet } from "react-router-dom";
-
+import { LinksFunction, LoaderFunction } from "@remix-run/node";
+import {
+  Links,
+  LiveReload,
+  Meta,
+  Outlet,
+  Scripts,
+  useLoaderData,
+} from "@remix-run/react";
 import stylesUrl from "./styles/global.css";
 
 export let links: LinksFunction = () => {
@@ -23,9 +28,8 @@ function Document({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
-
         <Scripts />
-        {process.env.NODE_ENV === "development" && <LiveReload />}
+        <LiveReload />
       </body>
     </html>
   );
@@ -33,6 +37,7 @@ function Document({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   let data = useLoaderData();
+
   return (
     <Document>
       <Outlet />

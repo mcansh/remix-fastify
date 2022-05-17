@@ -9,8 +9,7 @@
     "predev": "npm run build",
     "dev:remix": "remix watch",
     "dev": "cross-env NODE_ENV=development SESSION_SECRET=$(openssl rand -hex 32) node build/index.js",
-    "start": "cross-env NODE_ENV=production SESSION_SECRET=$(openssl rand -hex 32) node build/index.js",
-    "prepare": "remix setup node"
+    "start": "cross-env NODE_ENV=production SESSION_SECRET=$(openssl rand -hex 32) node build/index.js"
   },
   "dependencies": {
     "@mcansh/remix-fastify": "../",
@@ -20,7 +19,6 @@
     "fastify": "3.29.0",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "remix": "1.4.3",
     "sirv": "2.0.2"
   },
   "devDependencies": {

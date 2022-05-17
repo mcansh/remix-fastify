@@ -1,4 +1,4 @@
-import { createCookieSessionStorage } from "remix";
+import { createCookieSessionStorage } from "@remix-run/node";
 
 let sessionSecret = process.env.SESSION_SECRET;
 if (!sessionSecret) {

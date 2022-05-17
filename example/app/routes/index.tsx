@@ -1,13 +1,12 @@
 import {
-  MetaFunction,
+  ActionFunction,
   LinksFunction,
   LoaderFunction,
-  ActionFunction,
+  MetaFunction,
   redirect,
-  useLoaderData,
-} from "remix";
-
-import { storage } from "~/session";
+} from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { storage } from "~/session.server";
 import stylesUrl from "~/styles/index.css";
 
 export let meta: MetaFunction = () => {
@@ -46,7 +45,7 @@ export default function Index() {
 
   return (
     <div style={{ textAlign: "center", padding: 20 }}>
-      <h2>Welcome to Remix!!!</h2>
+      <h2>Welcome to Remix!</h2>
       <p>
         <a href="https://remix.run/dashboard/docs">Check out the docs</a> to get
         started.

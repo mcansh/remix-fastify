@@ -6,6 +6,5 @@ module.exports = {
   assetsBuildDirectory: "public/build",
   publicPath: "/build/",
   server: "./server.ts",
-  devServerPort: 8002,
   devServerBroadcastDelay: 1000,
 };

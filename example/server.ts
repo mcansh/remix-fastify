@@ -11,7 +11,6 @@ async function start() {
 
     await app.register(remixFastifyPlugin, {
       assetsBuildDirectory: path.resolve(process.cwd(), "public", "build"),
-      // @ts-expect-error hm, types are messed up
       build: serverBuild,
       mode: MODE,
       publicPath: "/build/",
