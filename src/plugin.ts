@@ -33,14 +33,8 @@ const remixFastify: FastifyPluginAsync<PluginOptions> = async (
   }
 
   if (!fastify.hasContentTypeParser("*")) {
-    fastify.addContentTypeParser("*", (_request, payload, done) => {
-      let data = "";
-      payload.on("data", (chunk) => {
-        data += chunk;
-      });
-      payload.on("end", () => {
-        done(null, data);
-      });
+    fastify.addContentTypeParser("*", (request, payload, done) => {
+      done(null, payload);
     });
   }
 
