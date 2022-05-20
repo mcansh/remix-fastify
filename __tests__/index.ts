@@ -1,9 +1,13 @@
-import type { FastifyRequest } from "fastify";
+import { Readable } from "stream";
+
 import fastify from "fastify";
 import { createRequest } from "node-mocks-http";
-import { createRequestHandler as createRemixRequestHandler } from "@remix-run/server-runtime";
-import "../src/globals";
 
+import {
+  createRequestHandler as createRemixRequestHandler,
+  Response as NodeResponse,
+} from "@remix-run/node";
+import "../src/globals";
 import {
   createRemixHeaders,
   createRemixRequest,
@@ -11,8 +15,14 @@ import {
 } from "../src/server";
 
 // We don't want to test that the remix server works here (that's what the
-// puppetteer tests do), we just want to test the express adapter
-jest.mock("@remix-run/server-runtime/server");
+// puppetteer tests do), we just want to test the fastify adapter
+jest.mock("@remix-run/node", () => {
+  let original = jest.requireActual("@remix-run/node");
+  return {
+    ...original,
+    createRequestHandler: jest.fn(),
+  };
+});
 let mockedCreateRequestHandler =
   createRemixRequestHandler as jest.MockedFunction<
     typeof createRemixRequestHandler
@@ -50,10 +60,7 @@ describe("fastify createRequestHandler", () => {
 
       let app = createApp();
 
-      const response = await app.inject({
-        method: "GET",
-        url: "/foo/bar",
-      });
+      let response = await app.inject("/foo/bar");
 
       expect(response.statusCode).toBe(200);
       expect(response.body).toBe("URL: /foo/bar");
@@ -66,12 +73,23 @@ describe("fastify createRequestHandler", () => {
 
       let app = createApp();
 
-      const response = await app.inject({
-        method: "GET",
-        url: "/",
-      });
+      let response = await app.inject("/");
 
       expect(response.statusCode).toBe(200);
+    });
+
+    // https://github.com/node-fetch/node-fetch/blob/4ae35388b078bddda238277142bf091898ce6fda/test/response.js#L142-L148
+    it("handles body as stream", async () => {
+      mockedCreateRequestHandler.mockImplementation(() => async () => {
+        let stream = Readable.from("hello world");
+        return new NodeResponse(stream, { status: 200 }) as unknown as Response;
+      });
+
+      let app = createApp();
+      let response = await app.inject("/");
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toBe("hello world");
     });
 
     it("handles status codes", async () => {
@@ -80,17 +98,14 @@ describe("fastify createRequestHandler", () => {
       });
 
       let app = createApp();
-      let response = await app.inject({
-        method: "GET",
-        url: "/",
-      });
+      let res = await app.inject("/");
 
-      expect(response.statusCode).toBe(204);
+      expect(res.statusCode).toBe(204);
     });
 
     it("sets headers", async () => {
       mockedCreateRequestHandler.mockImplementation(() => async () => {
-        const headers = new Headers({ "X-Time-Of-Year": "most wonderful" });
+        let headers = new Headers({ "X-Time-Of-Year": "most wonderful" });
         headers.append(
           "Set-Cookie",
           "first=one; Expires=0; Path=/; HttpOnly; Secure; SameSite=Lax"
@@ -107,13 +122,10 @@ describe("fastify createRequestHandler", () => {
       });
 
       let app = createApp();
-      let response = await app.inject({
-        method: "GET",
-        url: "/",
-      });
+      let res = await app.inject("/");
 
-      expect(response.headers["x-time-of-year"]).toEqual("most wonderful");
-      expect(response.headers["set-cookie"]).toEqual([
+      expect(res.headers["x-time-of-year"]).toBe("most wonderful");
+      expect(res.headers["set-cookie"]).toEqual([
         "first=one; Expires=0; Path=/; HttpOnly; Secure; SameSite=Lax",
         "second=two; MaxAge=1209600; Path=/; HttpOnly; Secure; SameSite=Lax",
         "third=three; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Path=/; HttpOnly; Secure; SameSite=Lax",
@@ -127,7 +139,8 @@ describe("fastify createRemixHeaders", () => {
     it("handles empty headers", () => {
       expect(createRemixHeaders({})).toMatchInlineSnapshot(`
         Headers {
-          Symbol(map): Object {},
+          Symbol(query): Array [],
+          Symbol(context): null,
         }
       `);
     });
@@ -135,11 +148,11 @@ describe("fastify createRemixHeaders", () => {
     it("handles simple headers", () => {
       expect(createRemixHeaders({ "x-foo": "bar" })).toMatchInlineSnapshot(`
         Headers {
-          Symbol(map): Object {
-            "x-foo": Array [
-              "bar",
-            ],
-          },
+          Symbol(query): Array [
+            "x-foo",
+            "bar",
+          ],
+          Symbol(context): null,
         }
       `);
     });
@@ -148,14 +161,13 @@ describe("fastify createRemixHeaders", () => {
       expect(createRemixHeaders({ "x-foo": "bar", "x-bar": "baz" }))
         .toMatchInlineSnapshot(`
         Headers {
-          Symbol(map): Object {
-            "x-bar": Array [
-              "baz",
-            ],
-            "x-foo": Array [
-              "bar",
-            ],
-          },
+          Symbol(query): Array [
+            "x-foo",
+            "bar",
+            "x-bar",
+            "baz",
+          ],
+          Symbol(context): null,
         }
       `);
     });
@@ -164,11 +176,11 @@ describe("fastify createRemixHeaders", () => {
       expect(createRemixHeaders({ "x-foo": "bar, baz" }))
         .toMatchInlineSnapshot(`
         Headers {
-          Symbol(map): Object {
-            "x-foo": Array [
-              "bar, baz",
-            ],
-          },
+          Symbol(query): Array [
+            "x-foo",
+            "bar, baz",
+          ],
+          Symbol(context): null,
         }
       `);
     });
@@ -177,14 +189,13 @@ describe("fastify createRemixHeaders", () => {
       expect(createRemixHeaders({ "x-foo": "bar, baz", "x-bar": "baz" }))
         .toMatchInlineSnapshot(`
         Headers {
-          Symbol(map): Object {
-            "x-bar": Array [
-              "baz",
-            ],
-            "x-foo": Array [
-              "bar, baz",
-            ],
-          },
+          Symbol(query): Array [
+            "x-foo",
+            "bar, baz",
+            "x-bar",
+            "baz",
+          ],
+          Symbol(context): null,
         }
       `);
     });
@@ -199,12 +210,13 @@ describe("fastify createRemixHeaders", () => {
         })
       ).toMatchInlineSnapshot(`
         Headers {
-          Symbol(map): Object {
-            "set-cookie": Array [
-              "__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax",
-              "__other=some_other_value; Path=/; Secure; HttpOnly; MaxAge=3600; SameSite=Lax",
-            ],
-          },
+          Symbol(query): Array [
+            "set-cookie",
+            "__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax",
+            "set-cookie",
+            "__other=some_other_value; Path=/; Secure; HttpOnly; MaxAge=3600; SameSite=Lax",
+          ],
+          Symbol(context): null,
         }
       `);
     });
@@ -212,8 +224,8 @@ describe("fastify createRemixHeaders", () => {
 });
 
 describe("fastify createRemixRequest", () => {
-  it("creates a request with the correct headers", () => {
-    const fastifyRequest = createRequest({
+  it("creates a request with the correct headers", async () => {
+    let fastifyRequest = createRequest({
       url: "/foo/bar",
       method: "GET",
       protocol: "http",
@@ -222,50 +234,39 @@ describe("fastify createRemixRequest", () => {
         "Cache-Control": "max-age=300, s-maxage=3600",
         Host: "localhost:3000",
       },
-    }) as unknown as FastifyRequest;
+    });
 
     expect(createRemixRequest(fastifyRequest)).toMatchInlineSnapshot(`
       NodeRequest {
-        "abortController": undefined,
         "agent": undefined,
         "compress": true,
         "counter": 0,
         "follow": 20,
+        "highWaterMark": 16384,
+        "insecureHTTPParser": false,
         "size": 0,
-        "timeout": 0,
         Symbol(Body internals): Object {
           "body": null,
+          "boundary": null,
           "disturbed": false,
           "error": null,
+          "size": 0,
+          "type": null,
         },
         Symbol(Request internals): Object {
           "headers": Headers {
-            Symbol(map): Object {
-              "cache-control": Array [
-                "max-age=300, s-maxage=3600",
-              ],
-              "host": Array [
-                "localhost:3000",
-              ],
-            },
+            Symbol(query): Array [
+              "cache-control",
+              "max-age=300, s-maxage=3600",
+              "host",
+              "localhost:3000",
+            ],
+            Symbol(context): null,
           },
           "method": "GET",
-          "parsedURL": Url {
-            "auth": null,
-            "hash": null,
-            "host": "localhost:3000",
-            "hostname": "localhost",
-            "href": "http://localhost:3000/foo/bar",
-            "path": "/foo/bar",
-            "pathname": "/foo/bar",
-            "port": "3000",
-            "protocol": "http:",
-            "query": null,
-            "search": null,
-            "slashes": true,
-          },
+          "parsedURL": "http://localhost:3000/foo/bar",
           "redirect": "follow",
-          "signal": undefined,
+          "signal": AbortSignal {},
         },
       }
     `);
