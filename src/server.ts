@@ -109,8 +109,13 @@ export async function sendRemixResponse(
 ): Promise<void> {
   reply.status(nodeResponse.status);
 
-  let multiValueHeaders = nodeResponse.headers.raw();
-  reply.headers(multiValueHeaders);
+  for (let [key, values] of Object.entries(nodeResponse.headers.raw())) {
+    if (key.toLowerCase() === "set-cookie") {
+      reply.raw.setHeader(key, values);
+    } else {
+      reply.raw.setHeader(key, values.join("; "));
+    }
+  }
 
   if (nodeResponse.body) {
     await writeReadableStreamToWritable(nodeResponse.body, reply.raw);
