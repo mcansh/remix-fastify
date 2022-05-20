@@ -2,6 +2,7 @@ import fastifyStatic from "@fastify/static";
 import type { ServerBuild } from "@remix-run/node";
 import type { FastifyPluginAsync } from "fastify";
 import fp from "fastify-plugin";
+import glob from "glob";
 import path from "path";
 import { createRequestHandler } from "./server";
 
@@ -37,24 +38,36 @@ const remixFastify: FastifyPluginAsync<PluginOptions> = async (
     });
   }
 
-  await fastify.register(fastifyStatic, {
-    root: fullOptions.assetsBuildDirectory,
-    prefix: "/",
+  fastify.register(fastifyStatic, {
+    root: path.join(process.cwd(), "public"),
+    // this needs to be false so our regular requests can still be served
     wildcard: false,
-    immutable: true,
-    maxAge: "1y",
-    dotfiles: "allow",
+    // we handle serving the files ourselves as you cant stack roots (public/build, public)
+    serve: false,
   });
 
-  await fastify.register(fastifyStatic, {
-    // the reply decorator has been added by the first plugin registration
-    decorateReply: false,
-    root: path.join(process.cwd(), "public"),
-    prefix: "/",
-    wildcard: false,
-    maxAge: "1d",
-    dotfiles: "allow",
+  const staticFilePaths = glob.sync(`public/**/*`, {
+    dot: true,
+    absolute: true,
+    nodir: true,
   });
+
+  let staticFiles = staticFilePaths.map((filepath) => {
+    return {
+      path: filepath.replace(path.join(process.cwd(), "public"), ""),
+      filepath,
+      isBuildAsset: filepath.startsWith(fullOptions.assetsBuildDirectory),
+    };
+  });
+
+  for (const asset of staticFiles) {
+    fastify.get(asset.path, (_request, reply) => {
+      reply.sendFile(asset.path, {
+        maxAge: asset.isBuildAsset ? "1y" : "1h",
+        immutable: asset.isBuildAsset,
+      });
+    });
+  }
 
   let requestHandler = createRequestHandler({
     build: fullOptions.build,
