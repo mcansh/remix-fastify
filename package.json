@@ -1,6 +1,6 @@
 {
   "name": "@mcansh/remix-fastify",
-  "version": "1.10.1",
+  "version": "1.11.0",
   "description": "Fastify server request handler for Remix",
   "main": "dist/index.js",
   "scripts": {
