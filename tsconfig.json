@@ -4,15 +4,16 @@
   "compilerOptions": {
     "lib": ["ES2019", "DOM.Iterable", "DOM"],
     "target": "ES2019",
-
     "moduleResolution": "node",
     "strict": true,
-
     "outDir": "./dist",
     "rootDir": "./src",
-
     "skipLibCheck": true,
-
-    "importsNotUsedAsValues": "error"
+    "importsNotUsedAsValues": "error",
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "resolveJsonModule": true
   }
 }
