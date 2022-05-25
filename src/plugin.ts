@@ -1,9 +1,12 @@
+import * as path from "path";
+
 import fastifyStatic from "@fastify/static";
 import type { ServerBuild } from "@remix-run/node";
 import type { FastifyPluginAsync } from "fastify";
 import fp from "fastify-plugin";
-import glob from "glob";
-import path from "path";
+import fastifyRacing from "fastify-racing";
+import * as glob from "glob";
+
 import { createRequestHandler } from "./server";
 
 interface PluginOptions {
@@ -33,10 +36,14 @@ const remixFastify: FastifyPluginAsync<PluginOptions> = async (
   }
 
   if (!fastify.hasContentTypeParser("*")) {
-    fastify.addContentTypeParser("*", (request, payload, done) => {
+    fastify.addContentTypeParser("*", (_request, payload, done) => {
       done(null, payload);
     });
   }
+
+  fastify.register(fastifyRacing, {
+    handleError: true,
+  });
 
   fastify.register(fastifyStatic, {
     root: path.join(process.cwd(), "public"),

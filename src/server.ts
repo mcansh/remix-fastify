@@ -86,14 +86,10 @@ export function createRemixRequest(request: FastifyRequest): NodeRequest {
 
   let controller = new AbortController();
 
-  request.raw.on("close", () => {
-    controller.abort();
-  });
-
   let init: NodeRequestInit = {
     method: request.method,
     headers: createRemixHeaders(request.headers),
-    signal: controller.signal as any,
+    signal: controller.signal as AbortSignal,
   };
 
   if (request.method !== "GET" && request.method !== "HEAD") {

@@ -6,7 +6,6 @@
     "target": "ES2019",
 
     "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
     "strict": true,
 
     "outDir": "./dist",

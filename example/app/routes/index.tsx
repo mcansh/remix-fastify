@@ -5,7 +5,7 @@ import {
   MetaFunction,
   redirect,
 } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData } from "@remix-run/react";
 import { storage } from "~/session.server";
 import stylesUrl from "~/styles/index.css";
 
@@ -24,12 +24,13 @@ export let loader: LoaderFunction = async ({ request }) => {
   let session = await storage.getSession(request.headers.get("Cookie"));
   let name = session.get("name");
 
-  return { message: "this is awesome 😎", name };
+  return { message: "this is awesome 😎", name: name || "Anonymous" };
 };
 
 export let action: ActionFunction = async ({ request }) => {
+  let cookie = request.headers.get("Cookie");
+  let session = await storage.getSession(cookie);
   let formData = await request.formData();
-  let session = await storage.getSession(request.headers.get("Cookie"));
 
   session.flash("name", formData.get("name"));
 
@@ -52,15 +53,15 @@ export default function Index() {
       </p>
       <p>Message from the loader: {data.message}</p>
 
-      {data.name && <h3>Hello {data.name}</h3>}
+      <h3>Hello {data.name}</h3>
 
-      <form action="/?index" method="post">
+      <Form method="post">
         <label>
           <span>Name:</span>
           <input type="text" name="name" />
         </label>
         <input type="submit" value="Submit" />
-      </form>
+      </Form>
     </div>
   );
 }
