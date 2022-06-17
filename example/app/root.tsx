@@ -1,4 +1,4 @@
-import { LinksFunction, LoaderFunction } from "@remix-run/node";
+import { json, LinksFunction, LoaderFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -14,7 +14,16 @@ export let links: LinksFunction = () => {
 };
 
 export let loader: LoaderFunction = async () => {
-  return { date: new Date() };
+  return json({
+    date: new Date().toLocaleString("en", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+    }),
+  });
 };
 
 function Document({ children }: { children: React.ReactNode }) {
@@ -42,7 +51,7 @@ export default function App() {
     <Document>
       <Outlet />
       <footer>
-        <p>This page was rendered at {data.date.toLocaleString()}</p>
+        <p>This page was rendered at {data.date}</p>
       </footer>
     </Document>
   );

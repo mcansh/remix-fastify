@@ -6,25 +6,23 @@ import path from "path";
 let MODE = process.env.NODE_ENV;
 
 async function start() {
-  try {
-    let app = fastify();
+  let app = fastify();
 
-    await app.register(remixFastifyPlugin, {
-      assetsBuildDirectory: path.resolve(process.cwd(), "public", "build"),
-      build: serverBuild,
-      mode: MODE,
-      publicPath: "/build/",
-    });
+  await app.register(remixFastifyPlugin, {
+    assetsBuildDirectory: path.resolve(process.cwd(), "public", "build"),
+    build: serverBuild,
+    mode: MODE,
+    publicPath: "/build/",
+  });
 
-    let port = process.env.PORT || 3000;
+  let port = process.env.PORT || 3000;
 
-    app.listen(port, "0.0.0.0", () => {
-      console.log(`Fastify server listening on port ${port}`);
-    });
-  } catch (error) {
-    console.error(error);
-    process.exit(1);
-  }
+  app.listen(port, "0.0.0.0", () => {
+    console.log(`Fastify server listening on port ${port}`);
+  });
 }
 
-start();
+start().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
