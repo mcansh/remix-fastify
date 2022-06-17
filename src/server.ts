@@ -10,8 +10,30 @@ import {
   createRequestHandler as createRemixRequestHandler,
   Headers as NodeHeaders,
   Request as NodeRequest,
-  writeReadableStreamToWritable,
 } from "@remix-run/node";
+import { Readable } from "stream";
+
+async function readableStreamToReadable(
+  stream: ReadableStream<Uint8Array>,
+  encoding: BufferEncoding
+): Promise<Readable> {
+  const reader = stream.getReader();
+  const chunks: Uint8Array[] = [];
+
+  async function read(): Promise<void> {
+    const { done, value } = await reader.read();
+
+    if (done) {
+      return;
+    }
+
+    chunks.push(value);
+    await read();
+  }
+
+  await read();
+  return Readable.from(chunks, { encoding });
+}
 
 /**
  * A function that returns the value to use as `context` in route `loader` and
@@ -107,14 +129,15 @@ export async function sendRemixResponse(
 
   for (let [key, values] of Object.entries(nodeResponse.headers.raw())) {
     if (key.toLowerCase() === "set-cookie") {
-      reply.raw.setHeader(key, values);
+      reply.headers({ [key]: values });
     } else {
-      reply.raw.setHeader(key, values.join("; "));
+      reply.header(key, values.join("; "));
     }
   }
 
   if (nodeResponse.body) {
-    await writeReadableStreamToWritable(nodeResponse.body, reply.raw);
+    const body = await readableStreamToReadable(nodeResponse.body, "utf8");
+    reply.send(body);
   } else {
     reply.send();
   }
