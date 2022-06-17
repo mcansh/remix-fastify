@@ -115,7 +115,9 @@ export async function sendRemixResponse(
 
   if (nodeResponse.body) {
     await writeReadableStreamToWritable(nodeResponse.body, reply.raw);
+    return reply;
   } else {
     reply.send();
+    return reply;
   }
 }

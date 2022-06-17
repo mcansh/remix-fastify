@@ -86,5 +86,5 @@ const remixFastify: FastifyPluginAsync<PluginOptions> = async (
 
 export const remixFastifyPlugin = fp(remixFastify, {
   name: "remix-fastify",
-  fastify: "^3.29.0",
+  fastify: "^3.29.0 || ^4.0.0",
 });
