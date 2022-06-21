@@ -27,6 +27,7 @@ function generateTypeDefs(tsconfig, entryfiles, outDir) {
     ...tsconfig.compilerOptions,
     moduleResolution: undefined,
     declaration: true,
+    noEmit: undefined,
     outDir,
   };
   let program = ts.ts.createProgram(filenames, compilerOptions);
