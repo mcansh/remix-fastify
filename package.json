@@ -45,7 +45,7 @@
   "dependencies": {
     "@fastify/static": "^6.4.0",
     "fastify-plugin": "^3.0.1",
-    "fastify-racing": "^1.0.0",
+    "fastify-racing": "^1.0.3",
     "glob": "^8.0.3"
   }
 }
