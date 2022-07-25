@@ -4,7 +4,7 @@
 module.exports = {
   appDirectory: "app",
   assetsBuildDirectory: "public/build",
-  publicPath: "/build/",
+  publicPath: "/modules/",
   server: "./server.ts",
   devServerBroadcastDelay: 1000,
 };

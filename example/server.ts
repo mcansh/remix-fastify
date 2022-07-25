@@ -8,10 +8,8 @@ async function start() {
   let app = fastify();
 
   await app.register(remixFastifyPlugin, {
-    assetsBuildDirectory: serverBuild.assetsBuildDirectory,
     build: serverBuild,
     mode: MODE,
-    publicPath: serverBuild.publicPath,
   });
 
   let port = process.env.PORT ? Number(process.env.PORT) : 3000;

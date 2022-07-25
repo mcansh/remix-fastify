@@ -1,53 +1,19 @@
 {
-  "name": "@mcansh/remix-fastify",
-  "version": "1.11.5",
-  "description": "Fastify server request handler for Remix",
-  "source": "src/index.ts",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "prepublishOnly": "npm run build",
-    "dev": "./build.js --watch",
-    "build": "./build.js",
-    "prebuild": "del dist",
-    "test": "jest"
-  },
+  "private": true,
   "repository": "mcansh/remix-fastify",
   "license": "MIT",
-  "files": [
-    "dist",
-    "package.json",
-    "README.md",
-    "LICENSE"
-  ],
-  "author": "Logan McAnsh <logan@remix.run> (https://remix.run)",
-  "devDependencies": {
-    "@remix-run/node": "1.7.2",
-    "@remix-run/react": "1.7.2",
-    "@types/glob": "^8.0.0",
-    "@types/jest": "29.0.3",
-    "@types/node": "18.7.22",
-    "@types/react": "18.0.21",
-    "@types/react-dom": "18.0.6",
-    "@typescript/lib-dom": "npm:@types/web@0.0.75",
-    "del-cli": "5.0.0",
-    "estrella": "1.4.1",
-    "fastify": "4.6.0",
-    "jest": "29.0.3",
-    "node-mocks-http": "1.11.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "ts-jest": "29.0.2",
-    "typescript": "4.8.3"
-  },
-  "peerDependencies": {
-    "@remix-run/node": "^1.6.0",
-    "fastify": "^3.29.0 || ^4.0.0"
+  "scripts": {
+    "dev": "./build.js --watch",
+    "build": "./build.js",
+    "test": "pnpm --filter ./packages/* test"
   },
   "dependencies": {
-    "@fastify/static": "^6.5.0",
-    "fastify-plugin": "^4.2.1",
-    "fastify-racing": "^1.0.3",
-    "glob": "^8.0.3"
+    "@types/glob": "^8.0.0",
+    "@types/jest": "29.0.3",
+    "del-cli": "5.0.0",
+    "estrella": "1.4.1",
+    "glob": "^8.0.3",
+    "jest": "29.0.3",
+    "ts-jest": "29.0.2"
   }
 }
