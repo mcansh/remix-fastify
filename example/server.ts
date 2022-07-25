@@ -1,7 +1,6 @@
 import fastify from "fastify";
 import * as serverBuild from "@remix-run/dev/server-build";
 import { remixFastifyPlugin } from "@mcansh/remix-fastify";
-import path from "path";
 
 let MODE = process.env.NODE_ENV;
 
@@ -9,10 +8,10 @@ async function start() {
   let app = fastify();
 
   await app.register(remixFastifyPlugin, {
-    assetsBuildDirectory: path.resolve(process.cwd(), "public", "build"),
+    assetsBuildDirectory: serverBuild.assetsBuildDirectory,
     build: serverBuild,
     mode: MODE,
-    publicPath: "/build/",
+    publicPath: serverBuild.publicPath,
   });
 
   let port = process.env.PORT || 3000;
