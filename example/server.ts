@@ -8,16 +8,18 @@ async function start() {
   let app = fastify();
 
   await app.register(remixFastifyPlugin, {
-    assetsBuildDirectory: serverBuild.assetsBuildDirectory,
     build: serverBuild,
     mode: MODE,
-    publicPath: serverBuild.publicPath,
   });
 
-  let port = process.env.PORT || 3000;
+  let port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
-  app.listen(port, "0.0.0.0", () => {
-    console.log(`Fastify server listening on port ${port}`);
+  app.listen({ port, host: "0.0.0.0" }, (error, address) => {
+    if (error) {
+      console.error(error);
+      process.exit(1);
+    }
+    console.log(`Fastify server started at ${address}`);
   });
 }
 
