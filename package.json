@@ -17,7 +17,8 @@
   "files": [
     "dist",
     "package.json",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "author": "Logan McAnsh <logan@remix.run> (https://remix.run)",
   "devDependencies": {
