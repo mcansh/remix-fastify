@@ -1,0 +1,51 @@
+name: 🚀 Release
+
+on:
+  release:
+    types: [published]
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+env:
+  CI: true
+
+jobs:
+  release-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 🟧 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7
+
+      - name: ⎔ Setup node for npm publishing
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: pnpm
+          registry-url: "https://registry.npmjs.org"
+
+      - name: 📥 Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: 🚀 Publish to npm
+        run: npm run publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: ⎔ Setup node for GitHub Packages publishing
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: pnpm
+          registry-url: "https://npm.pkg.github.com"
+
+      - name: 🚀 Publish to GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
