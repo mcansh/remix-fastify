@@ -13,7 +13,7 @@
     "start": "cross-env NODE_ENV=production SESSION_SECRET=$(openssl rand -hex 32) node build/index.js"
   },
   "dependencies": {
-    "@mcansh/remix-fastify": "../",
+    "@mcansh/remix-fastify": "workspace:*",
     "@remix-run/node": "1.7.2",
     "@remix-run/react": "1.7.2",
     "cross-env": "7.0.3",
