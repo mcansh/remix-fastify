@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "./build.js --watch",
     "build": "./build.js",
-    "test": "pnpm --filter ./packages/* test"
+    "test": "pnpm --filter ./packages/* test --if-present"
   },
   "dependencies": {
     "@types/glob": "^8.0.0",

@@ -12,7 +12,7 @@ import {
   createRemixHeaders,
   createRemixRequest,
   createRequestHandler,
-} from "@mcansh/remix-fastify";
+} from "../src/server";
 
 // We don't want to test that the remix server works here (that's what the
 // puppetteer tests do), we just want to test the fastify adapter
