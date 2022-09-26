@@ -7,6 +7,7 @@ Use [Remix](https://remix.run) with [Fastify](http://fastify.io)
 ```sh
 npm i @mcansh/remix-fastify
 yarn add @mcansh/remix-fastify
+pnpm i @mcansh/remix-fastify
 ```
 
 ## Quick Start
