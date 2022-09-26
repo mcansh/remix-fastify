@@ -14,11 +14,17 @@ async function start() {
     publicPath: serverBuild.publicPath,
   });
 
-  let port = process.env.PORT || 3000;
+  let port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
-  app.listen(port, "0.0.0.0", () => {
-    console.log(`Fastify server listening on port ${port}`);
-  });
+  app
+    .listen({ port, host: "0.0.0.0" })
+    .then((address) => {
+      console.log(`Fastify server listening at ${address}`);
+    })
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
 }
 
 start().catch((error) => {
