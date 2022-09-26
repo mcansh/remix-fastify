@@ -14,13 +14,15 @@ async function start() {
 
   let port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
-  app.listen({ port, host: "0.0.0.0" }, (error, address) => {
-    if (error) {
+  app
+    .listen({ port, host: "0.0.0.0" })
+    .then((address) => {
+      console.log(`Fastify server listening at ${address}`);
+    })
+    .catch((error) => {
       console.error(error);
       process.exit(1);
-    }
-    console.log(`Fastify server started at ${address}`);
-  });
+    });
 }
 
 start().catch((error) => {
