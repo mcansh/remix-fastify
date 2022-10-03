@@ -20,4 +20,4 @@ pnpm i @mcansh/remix-fastify
 
 ## Example
 
-checkout the example usage in [./example/server.ts](./example/server.ts)
+checkout the example usage in [./example/server.ts](https://github.com/mcansh/remix-fastify/tree/1a2819f03e448a79e06e98f37f87c6e7fa8d243e/example)
