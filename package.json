@@ -9,6 +9,7 @@
     "publish": "./scripts/publish.js"
   },
   "dependencies": {
+    "@changesets/cli": "^2.25.0",
     "@types/glob": "^8.0.0",
     "@types/jest": "^29.0.3",
     "estrella": "^1.4.1",
