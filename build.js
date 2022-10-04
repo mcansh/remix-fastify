@@ -24,24 +24,28 @@ for (let package of packages) {
   });
 }
 
-function generateTypeDefs(tsconfig, entryfiles, outDir) {
+function generateTypeDefs(tsconfig, entryfiles, outdir) {
   let entries = Array.isArray(entryfiles) ? entryfiles : [entryfiles];
-  let allEntries = [...entries, ...tsconfig.include];
-  let uniqueEntries = [...new Set(allEntries)];
-  let rootDir = path.dirname(outDir);
-  let filenames = uniqueEntries
-    .filter((v) => v)
-    .map((v) => path.relative(rootDir, v));
+  let all = [...entries, ...(tsconfig.include || [])];
+  let unique = [...new Set(all)];
+  let files = unique
+    .flatMap((t) => glob.sync(t, { absolute: true }))
+    .filter((file) => file);
+  let rootdir = path.dirname(outdir);
 
-  log.info("Generating type declaration files for", filenames.join(", "));
+  log.info(
+    "Generating type declaration files for",
+    files.map((file) => path.relative(rootdir, file)).join(", ")
+  );
+
   let compilerOptions = {
     ...tsconfig.compilerOptions,
     moduleResolution: undefined,
     declaration: true,
-    noEmit: undefined,
-    outDir,
+    noEmit: false,
+    outDir: outdir,
   };
-  let program = ts.ts.createProgram(filenames, compilerOptions);
+  let program = ts.ts.createProgram(files, compilerOptions);
   let targetSourceFile = undefined;
   let writeFile = undefined;
   let cancellationToken = undefined;
@@ -52,5 +56,6 @@ function generateTypeDefs(tsconfig, entryfiles, outDir) {
     cancellationToken,
     emitOnlyDtsFiles
   );
-  log.info("Wrote", glob.sync(outDir + "/*.d.ts").join(", "));
+  let generated = glob.sync(`${outdir}/*.d.ts`);
+  log.info(`Wrote ${generated.length} files`, generated.join(", "));
 }
