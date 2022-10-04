@@ -7,8 +7,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm run build",
-    "dev": "./build.js --watch",
-    "build": "./build.js",
+    "dev": "../../scripts/build.js --watch",
+    "build": "../../scripts/build.js",
     "prebuild": "del dist",
     "test": "jest"
   },
