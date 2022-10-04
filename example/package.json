@@ -8,9 +8,9 @@
     "build": "remix build",
     "predev": "npm run build",
     "dev:remix": "remix watch",
-    "dev:server": "cross-env NODE_ENV=development SESSION_SECRET=$(openssl rand -hex 32) node build/index.js",
+    "dev:server": "cross-env NODE_ENV=development SESSION_SECRET=mysupersecret node build/index.js",
     "dev": "run-p dev:*",
-    "start": "cross-env NODE_ENV=production SESSION_SECRET=$(openssl rand -hex 32) node build/index.js"
+    "start": "cross-env NODE_ENV=production SESSION_SECRET=mysupersecret node build/index.js"
   },
   "dependencies": {
     "@mcansh/remix-fastify": "workspace:*",
