@@ -4,8 +4,6 @@ let { remixFastifyPlugin } = require("@mcansh/remix-fastify");
 
 let MODE = process.env.NODE_ENV;
 
-let BUILD = path.join(process.cwd(), "build", "index.js");
-
 async function start() {
   let app = fastify();
 
