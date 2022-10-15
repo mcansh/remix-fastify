@@ -5,9 +5,9 @@ import type { ServerBuild } from "@remix-run/node";
 import type { FastifyPluginAsync } from "fastify";
 import fp from "fastify-plugin";
 import fastifyRacing from "fastify-racing";
-import * as glob from "glob";
 
 import { createRequestHandler } from "./server";
+import { getStaticFiles } from "./utils";
 
 interface PluginOptions {
   mode?: string;
@@ -26,7 +26,7 @@ interface PluginOptions {
   publicPath?: string;
 }
 
-const remixFastify: FastifyPluginAsync<PluginOptions> = async (
+let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   fastify,
   options = {}
 ) => {
@@ -38,16 +38,11 @@ const remixFastify: FastifyPluginAsync<PluginOptions> = async (
   } = options;
 
   if (!build) {
-    throw new Error("Must provide a build");
+    throw new Error("You must provide a build");
   }
 
-  if (!assetsBuildDirectory) {
-    assetsBuildDirectory = build.assetsBuildDirectory;
-  }
-
-  if (!publicPath) {
-    publicPath = build.publicPath;
-  }
+  assetsBuildDirectory ||= build.assetsBuildDirectory;
+  publicPath ||= build.publicPath;
 
   if (!fastify.hasContentTypeParser("*")) {
     fastify.addContentTypeParser("*", (_request, payload, done) => {
@@ -55,9 +50,7 @@ const remixFastify: FastifyPluginAsync<PluginOptions> = async (
     });
   }
 
-  fastify.register(fastifyRacing, {
-    handleError: true,
-  });
+  fastify.register(fastifyRacing, { handleError: true });
 
   fastify.register(fastifyStatic, {
     root: path.join(process.cwd(), "public"),
@@ -67,17 +60,9 @@ const remixFastify: FastifyPluginAsync<PluginOptions> = async (
     serve: false,
   });
 
-  const staticFilePaths = glob.sync(`public/**/*`, { dot: true, nodir: true });
+  let staticFiles = getStaticFiles(assetsBuildDirectory, publicPath);
 
-  let staticFiles = staticFilePaths.map((filepath) => {
-    let isBuildAsset = filepath.startsWith(assetsBuildDirectory!);
-    let assetPath = filepath.replace(assetsBuildDirectory!, "");
-    let filePublicPath = filepath.replace(assetsBuildDirectory!, publicPath!);
-    filePublicPath = path.posix.join("/", filePublicPath);
-    return { filePublicPath, assetPath, isBuildAsset };
-  });
-
-  for (const asset of staticFiles) {
+  for (let asset of staticFiles) {
     fastify.get(asset.filePublicPath, (_request, reply) => {
       reply.sendFile(asset.assetPath, assetsBuildDirectory, {
         maxAge: asset.isBuildAsset ? "1y" : "1h",
@@ -91,7 +76,7 @@ const remixFastify: FastifyPluginAsync<PluginOptions> = async (
   fastify.all("*", requestHandler);
 };
 
-export const remixFastifyPlugin = fp(remixFastify, {
+export let remixFastifyPlugin = fp(remixFastify, {
   name: "@mcansh/remix-fastify",
   fastify: "^3.29.0 || ^4.0.0",
 });
