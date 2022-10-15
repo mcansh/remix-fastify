@@ -2,9 +2,11 @@
  * @type {import('@remix-run/dev').AppConfig}
  */
 module.exports = {
-  appDirectory: "app",
-  assetsBuildDirectory: "public/build",
+  ignoredRouteFiles: ["**/.*"],
+  // just showing that you can customize this and it will work with the plugin
   publicPath: "/modules/",
-  server: "./server.ts",
-  devServerBroadcastDelay: 1000,
+  // appDirectory: "app",
+  // assetsBuildDirectory: "public/build",
+  // serverBuildPath: "build/index.js",
+  // publicPath: "/build/",
 };

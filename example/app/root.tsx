@@ -1,11 +1,11 @@
-import { json, LinksFunction, LoaderFunction } from "@remix-run/node";
+import { LinksFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
   Meta,
   Outlet,
   Scripts,
-  useLoaderData,
+  ScrollRestoration,
 } from "@remix-run/react";
 import stylesUrl from "./styles/global.css";
 
@@ -13,20 +13,7 @@ export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
 };
 
-export let loader: LoaderFunction = async () => {
-  return json({
-    date: new Date().toLocaleString("en", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-    }),
-  });
-};
-
-function Document({ children }: { children: React.ReactNode }) {
+export default function App() {
   return (
     <html lang="en">
       <head>
@@ -36,38 +23,11 @@ function Document({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <Outlet />
         <Scripts />
+        <ScrollRestoration />
         <LiveReload />
       </body>
     </html>
-  );
-}
-
-export default function App() {
-  let data = useLoaderData();
-
-  return (
-    <Document>
-      <Outlet />
-      <footer>
-        <p>This page was rendered at {data.date}</p>
-      </footer>
-    </Document>
-  );
-}
-
-export function ErrorBoundary({ error }: { error: Error }) {
-  console.error(error);
-
-  return (
-    <Document>
-      <h1>App Error</h1>
-      <pre>{error.message}</pre>
-      <p>
-        Replace this UI with what you want users to see when your app throws
-        uncaught errors.
-      </p>
-    </Document>
   );
 }
