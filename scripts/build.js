@@ -1,19 +1,26 @@
 #!/usr/bin/env node
 
-const path = require("node:path");
-const { build, ts, tsconfig, log } = require("estrella");
-const glob = require("glob");
+let path = require("node:path");
+let fse = require("fs-extra");
+let { build, ts, tsconfig, log } = require("estrella");
+let glob = require("glob");
 
-const packages = glob.sync("packages/*/package.json", { absolute: true });
+let packages = glob.sync("packages/*/package.json", {
+  absolute: true,
+  cwd: process.cwd(),
+});
 
 async function run() {
   for (let package of packages) {
     let pkg = require(package);
     let packageDir = path.dirname(package);
+    let entryPoints = glob.sync(path.join(packageDir, "src", "**", "*.ts"));
+    let outdir = path.join(packageDir, path.dirname(pkg.main));
+    await fse.emptyDir(outdir);
 
     await build({
-      entry: glob.sync(path.join(packageDir, "src", "**", "*.ts")),
-      outdir: path.join(packageDir, path.dirname(pkg.main)),
+      entryPoints,
+      outdir,
       minify: false,
       target: "node14",
       format: "cjs",

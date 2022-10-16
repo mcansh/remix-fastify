@@ -29,18 +29,18 @@
   ],
   "author": "Logan McAnsh <logan@remix.run> (https://remix.run)",
   "devDependencies": {
-    "@remix-run/node": "1.7.2",
-    "@remix-run/react": "1.7.2",
+    "@remix-run/node": "^1.7.2",
+    "@remix-run/react": "^1.7.2",
     "@types/glob": "^8.0.0",
-    "@types/node": "18.7.22",
-    "@types/react": "18.0.21",
-    "@types/react-dom": "18.0.6",
+    "@types/node": "^18.7.22",
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
     "@typescript/lib-dom": "npm:@types/web@0.0.75",
-    "fastify": "4.6.0",
-    "node-mocks-http": "1.11.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "typescript": "4.8.3"
+    "fastify": "^4.6.0",
+    "node-mocks-http": "^1.11.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^4.8.3"
   },
   "peerDependencies": {
     "@remix-run/node": "^1.6.0",
