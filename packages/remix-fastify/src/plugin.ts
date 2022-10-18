@@ -2,7 +2,7 @@ import * as path from "node:path";
 
 import fastifyStatic from "@fastify/static";
 import type { ServerBuild } from "@remix-run/node";
-import type { FastifyPluginAsync } from "fastify";
+import type { FastifyPluginAsync, FastifyReply } from "fastify";
 import fp from "fastify-plugin";
 import fastifyRacing from "fastify-racing";
 import invariant from "tiny-invariant";
@@ -39,26 +39,46 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     serve: false,
   });
 
-  fastify.addHook("onRequest", (request, reply, done) => {
+  function sendAsset(
+    reply: FastifyReply,
+    assetPath: string,
+    isBuildAsset: boolean
+  ) {
+    return reply.sendFile(assetPath, build.assetsBuildDirectory, {
+      maxAge: isBuildAsset ? "1y" : "1h",
+      immutable: isBuildAsset,
+    });
+  }
+
+  if (mode === "development") {
+    fastify.addHook("onRequest", (request, reply, done) => {
+      let staticFiles = getStaticFiles(
+        build.assetsBuildDirectory,
+        build.publicPath
+      );
+      for (let staticFile of staticFiles) {
+        if (request.url === staticFile.filePublicPath) {
+          return sendAsset(
+            reply,
+            staticFile.assetPath,
+            staticFile.isBuildAsset
+          );
+        }
+      }
+
+      done();
+    });
+  } else {
     let staticFiles = getStaticFiles(
       build.assetsBuildDirectory,
       build.publicPath
     );
-    for (let staticFile of staticFiles) {
-      if (request.url === staticFile.filePublicPath) {
-        return reply.sendFile(
-          staticFile.assetPath,
-          build.assetsBuildDirectory,
-          {
-            maxAge: staticFile.isBuildAsset ? "1y" : "1h",
-            immutable: staticFile.isBuildAsset,
-          }
-        );
-      }
+    for (const staticFile of staticFiles) {
+      fastify.get(staticFile.filePublicPath, (_request, reply) => {
+        return sendAsset(reply, staticFile.assetPath, staticFile.isBuildAsset);
+      });
     }
-
-    done();
-  });
+  }
 
   if (mode === "development") {
     fastify.all("*", (request, reply) => {
