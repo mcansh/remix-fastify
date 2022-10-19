@@ -1,17 +1,38 @@
 import path from "node:path";
 import * as glob from "glob";
 
+export interface StaticFile {
+  // whether or not the file is in the build directory
+  isBuildAsset: boolean;
+  // relative file path to file on disk from the public directory
+  filePublicPath: string;
+  // url in the browser
+  browserAssetUrl: string;
+}
+
 export function getStaticFiles(
   assetsBuildDirectory: string,
   publicPath: string
-) {
+): Array<StaticFile> {
   let staticFilePaths = glob.sync(`public/**/*`, { dot: true, nodir: true });
+
   return staticFilePaths.map((filepath) => {
-    let isBuildAsset = filepath.startsWith(assetsBuildDirectory!);
-    let assetPath = filepath.replace(assetsBuildDirectory!, "");
-    let filePublicPath = filepath.replace(assetsBuildDirectory!, publicPath!);
-    filePublicPath = path.posix.join("/", filePublicPath);
-    return { filePublicPath, assetPath, isBuildAsset };
+    let isBuildAsset = filepath.startsWith(assetsBuildDirectory);
+
+    let filePublicPath = filepath.replace(
+      isBuildAsset ? assetsBuildDirectory : "public",
+      ""
+    );
+
+    let browserAssetUrl = isBuildAsset
+      ? path.join(publicPath, filePublicPath)
+      : filePublicPath;
+
+    return {
+      isBuildAsset,
+      filePublicPath,
+      browserAssetUrl,
+    };
   });
 }
 

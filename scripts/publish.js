@@ -8,8 +8,6 @@ const glob = require("glob");
 const packageDir = path.resolve(process.cwd(), "../packages");
 const packages = glob.sync("packages/*", { absolute: true });
 
-console.log({ packages });
-
 function getTaggedVersion() {
   let output = execSync("git tag --list --points-at HEAD").toString().trim();
   return output.replace(/^v/g, "");
