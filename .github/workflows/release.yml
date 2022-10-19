@@ -33,6 +33,9 @@ jobs:
       - name: 📥 Install deps
         run: pnpm install --frozen-lockfile
 
+      - name: 🏗 Build
+        run: npm run build
+
       - name: 🚀 Publish to npm
         run: npm run publish
         env:
