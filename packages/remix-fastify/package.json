@@ -9,7 +9,6 @@
     "prepublishOnly": "npm run build",
     "dev": "../../scripts/build.js --watch",
     "build": "../../scripts/build.js",
-    "prebuild": "del dist",
     "test": "jest"
   },
   "exports": {
