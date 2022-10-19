@@ -2,13 +2,13 @@ import * as path from "node:path";
 
 import fastifyStatic from "@fastify/static";
 import type { ServerBuild } from "@remix-run/node";
-import type { FastifyPluginAsync } from "fastify";
+import type { FastifyPluginAsync, FastifyReply } from "fastify";
 import fp from "fastify-plugin";
 import fastifyRacing from "fastify-racing";
 import invariant from "tiny-invariant";
 
 import { createRequestHandler } from "./server";
-import { getStaticFiles, purgeRequireCache } from "./utils";
+import { getStaticFiles, purgeRequireCache, StaticFile } from "./utils";
 
 interface PluginOptions {
   buildDir?: string;
@@ -31,34 +31,60 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
 
   fastify.register(fastifyRacing, { handleError: true });
 
+  let ROOT_DIR = process.cwd();
+  let PUBLIC_DIR = path.join(ROOT_DIR, "public");
+  let ASSET_DIR = path.join(ROOT_DIR, build.assetsBuildDirectory);
+
   fastify.register(fastifyStatic, {
-    root: path.join(process.cwd(), "public"),
+    root: PUBLIC_DIR,
     // this needs to be false so our regular requests can still be served
     wildcard: false,
     // we handle serving the files ourselves as you cant stack roots (public/build, public)
     serve: false,
   });
 
-  fastify.addHook("onRequest", (request, reply, done) => {
+  function sendAsset(reply: FastifyReply, file: StaticFile) {
+    return reply.sendFile(
+      file.filePublicPath,
+      file.isBuildAsset ? ASSET_DIR : PUBLIC_DIR,
+      {
+        maxAge: file.isBuildAsset ? "1y" : "1h",
+        immutable: file.isBuildAsset,
+      }
+    );
+  }
+
+  if (mode === "development") {
+    fastify.addHook("onRequest", (request, reply, done) => {
+      let staticFiles = getStaticFiles(
+        build.assetsBuildDirectory,
+        build.publicPath
+      );
+
+      let staticFile = staticFiles.find((file) => {
+        return (
+          request.url ===
+          (file.isBuildAsset ? file.browserAssetUrl : file.filePublicPath)
+        );
+      });
+
+      if (staticFile) {
+        return sendAsset(reply, staticFile);
+      }
+
+      done();
+    });
+  } else {
     let staticFiles = getStaticFiles(
       build.assetsBuildDirectory,
       build.publicPath
     );
-    for (let staticFile of staticFiles) {
-      if (request.url === staticFile.filePublicPath) {
-        return reply.sendFile(
-          staticFile.assetPath,
-          build.assetsBuildDirectory,
-          {
-            maxAge: staticFile.isBuildAsset ? "1y" : "1h",
-            immutable: staticFile.isBuildAsset,
-          }
-        );
-      }
+    for (const staticFile of staticFiles) {
+      fastify.get(staticFile.browserAssetUrl, (_request, reply) => {
+        return sendAsset(reply, staticFile);
+      });
     }
-
-    done();
-  });
+  }
 
   if (mode === "development") {
     fastify.all("*", (request, reply) => {
