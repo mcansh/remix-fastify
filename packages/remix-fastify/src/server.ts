@@ -38,11 +38,19 @@ export function createRequestHandler({
   getLoadContext,
   mode = process.env.NODE_ENV,
 }: {
-  build: ServerBuild;
+  build: ServerBuild | string;
   getLoadContext?: GetLoadContextFunction;
   mode?: string;
 }): RequestHandler {
-  let handleRequest = createRemixRequestHandler(build, mode);
+
+  let shouldHotModuleReload = typeof build === "string" &&
+    (mode === "development" || mode == null);
+
+  let createLocalRequestHandler = () => createRemixRequestHandler(
+    typeof build === "string" ? require(build) : build,
+    mode);
+
+  let staticRequestHandler = createLocalRequestHandler();
 
   return async (request, reply) => {
     let remixRequest = createRemixRequest(request);
@@ -51,7 +59,13 @@ export function createRequestHandler({
         ? getLoadContext(request, reply)
         : undefined;
 
-    let response = (await handleRequest(
+    if (shouldHotModuleReload) {
+      //@ts-expect-error TS is not smart enough to know that
+      // this is a string when shouldHotModuleReload is true
+      purgeRequireCache(build)
+    };
+
+    let response = (await (shouldHotModuleReload ? createLocalRequestHandler() : staticRequestHandler)(
       remixRequest,
       loadContext
     )) as NodeResponse;
@@ -119,5 +133,25 @@ export async function sendRemixResponse(
   } else {
     reply.send();
     return reply;
+  }
+}
+
+  // purge require cache on requests for "server side HMR". Copied from
+  // Remix templates
+  function purgeRequireCache(buildDir: string) {
+  // When using Jest, purging the require cache the regular way does not work,
+  // because Jest does magic stuff with modules and skips the require cache.
+  // So for the tests to work, we must reset Jest's cache.
+  // Unfortunately, this means that the real code that clears the cache
+  // (and which was copied from Remix) can only be tested by trying it out
+  // manually with the example.
+  if (typeof jest !== "undefined") {
+    jest.resetModules()
+    return
+  }
+  for (const key in require.cache) {
+    if (key.startsWith(buildDir)) {
+      delete require.cache[key];
+    }
   }
 }

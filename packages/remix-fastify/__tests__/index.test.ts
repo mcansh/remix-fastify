@@ -1,5 +1,6 @@
 import { Readable } from "stream";
-
+import fs from "fs";
+import os from "os";
 import fastify from "fastify";
 import { createRequest } from "node-mocks-http";
 
@@ -28,16 +29,26 @@ let mockedCreateRequestHandler =
     typeof createRemixRequestHandler
   >;
 
-function createApp() {
+function createBuildDirectory(publicPathToBeReturnedByModule: string) {
+  let buildDirectory = fs.mkdtempSync(os.tmpdir() + "/");
+
+  fs.writeFileSync(buildDirectory + "/index.js",
+    `module.exports.publicPath = "${publicPathToBeReturnedByModule}"`);
+
+  return buildDirectory;
+}
+
+function createApp(buildDirectory?: string, mode?: string) {
   let app = fastify();
 
   app.all(
     "*",
     createRequestHandler({
-      // We don't have a real app to test, but it doesn't matter. We
+      // Sometimes we don't have a real app to test, but it doesn't matter. We
       // won't ever call through to the real createRequestHandler
-      // @ts-expect-error
-      build: undefined,
+      //@ts-expect-error
+      build: buildDirectory,
+      mode
     })
   );
 
@@ -131,6 +142,48 @@ describe("fastify createRequestHandler", () => {
         "second=two; MaxAge=1209600; Path=/; HttpOnly; Secure; SameSite=Lax",
         "third=three; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Path=/; HttpOnly; Secure; SameSite=Lax",
       ]);
+    });
+
+    it("reloads build on each requests when NODE_ENV=development", async () => {
+      mockedCreateRequestHandler.mockImplementation((build) => async (req) => {
+        return new Response(build.publicPath);
+      });
+
+      let buildDirectory = createBuildDirectory("publicPath1");
+      let app = createApp(buildDirectory, "development");
+
+      let response = await app.inject("/foo/bar");
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toBe("publicPath1");
+
+      fs.writeFileSync(buildDirectory + "/index.js", "module.exports.publicPath = 'publicPath2';");
+
+      let response2 = await app.inject("/foo/bar");
+
+      expect(response2.statusCode).toBe(200);
+      expect(response2.body).toBe("publicPath2");
+    });
+
+    it("does not reload build on each requests when NODE_ENV=production", async () => {
+      mockedCreateRequestHandler.mockImplementation((build) => async (req) => {
+        return new Response(build.publicPath);
+      });
+
+      let buildDirectory = createBuildDirectory("publicPath1");
+      let app = createApp(buildDirectory, "production");
+
+      let response = await app.inject("/foo/bar");
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toBe("publicPath1");
+
+      fs.writeFileSync(buildDirectory + "/index.js", "module.exports.publicPath = 'publicPath2';");
+
+      let response2 = await app.inject("/foo/bar");
+
+      expect(response2.statusCode).toBe(200);
+      expect(response2.body).toBe("publicPath1");
     });
   });
 });

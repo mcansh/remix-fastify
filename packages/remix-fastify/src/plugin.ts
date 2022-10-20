@@ -11,7 +11,7 @@ import { createRequestHandler } from "./server";
 
 interface PluginOptions {
   mode?: string;
-  build?: ServerBuild;
+  build?: ServerBuild | string | undefined;
   /**
    * @deprecated
    * @see https://remix.run/docs/en/v1/api/conventions#publicpath
@@ -41,12 +41,14 @@ const remixFastify: FastifyPluginAsync<PluginOptions> = async (
     throw new Error("Must provide a build");
   }
 
+  let realizedBuild = typeof build === "string" ? require(build) : build;
+
   if (!assetsBuildDirectory) {
-    assetsBuildDirectory = build.assetsBuildDirectory;
+    assetsBuildDirectory = realizedBuild.assetsBuildDirectory;
   }
 
   if (!publicPath) {
-    publicPath = build.publicPath;
+    publicPath = realizedBuild.publicPath;
   }
 
   if (!fastify.hasContentTypeParser("*")) {
