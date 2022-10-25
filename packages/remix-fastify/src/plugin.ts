@@ -7,12 +7,13 @@ import fp from "fastify-plugin";
 import fastifyRacing from "fastify-racing";
 import invariant from "tiny-invariant";
 
-import { createRequestHandler } from "./server";
+import { createRequestHandler, GetLoadContextFunction } from "./server";
 import { getStaticFiles, purgeRequireCache, StaticFile } from "./utils";
 
 interface PluginOptions {
   buildDir?: string;
   mode?: string;
+  getLoadContext?: GetLoadContextFunction;
 }
 
 let remixFastify: FastifyPluginAsync<PluginOptions> = async (
@@ -86,17 +87,30 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     }
   }
 
+  let getLoadContext =
+    typeof options.getLoadContext === "function"
+      ? options.getLoadContext
+      : undefined;
+
   if (mode === "development") {
     fastify.all("*", (request, reply) => {
       invariant(buildDir, `we lost the buildDir`);
       purgeRequireCache(buildDir);
-      return createRequestHandler({ build: require(buildDir), mode })(
-        request,
-        reply
-      );
+      return createRequestHandler({
+        build: require(buildDir),
+        mode,
+        getLoadContext,
+      })(request, reply);
     });
   } else {
-    fastify.all("*", createRequestHandler({ build: require(buildDir), mode }));
+    fastify.all(
+      "*",
+      createRequestHandler({
+        build: require(buildDir),
+        mode,
+        getLoadContext,
+      })
+    );
   }
 };
 
