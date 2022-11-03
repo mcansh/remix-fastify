@@ -11,7 +11,7 @@ import { createRequestHandler, GetLoadContextFunction } from "./server";
 import { getStaticFiles, purgeRequireCache, StaticFile } from "./utils";
 
 interface PluginOptions {
-  buildDir?: string;
+  build?: ServerBuild | string;
   mode?: string;
   getLoadContext?: GetLoadContextFunction;
 }
@@ -20,9 +20,10 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   fastify,
   options = {}
 ) => {
-  let { buildDir, mode = process.env.NODE_ENV } = options;
-  invariant(buildDir, "You must provide a build");
-  let build: ServerBuild = require(buildDir);
+  let { build, mode = process.env.NODE_ENV } = options;
+  invariant(build, "You must provide a build");
+  let resolvedBuild: ServerBuild =
+    typeof build === "string" ? require(build) : build;
 
   if (!fastify.hasContentTypeParser("*")) {
     fastify.addContentTypeParser("*", (_request, payload, done) => {
@@ -34,7 +35,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
 
   let ROOT_DIR = process.cwd();
   let PUBLIC_DIR = path.join(ROOT_DIR, "public");
-  let ASSET_DIR = path.join(ROOT_DIR, build.assetsBuildDirectory);
+  let ASSET_DIR = path.join(ROOT_DIR, resolvedBuild.assetsBuildDirectory);
 
   fastify.register(fastifyStatic, {
     root: PUBLIC_DIR,
@@ -58,8 +59,8 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   if (mode === "development") {
     fastify.addHook("onRequest", (request, reply, done) => {
       let staticFiles = getStaticFiles(
-        build.assetsBuildDirectory,
-        build.publicPath
+        resolvedBuild.assetsBuildDirectory,
+        resolvedBuild.publicPath
       );
 
       let staticFile = staticFiles.find((file) => {
@@ -77,8 +78,8 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     });
   } else {
     let staticFiles = getStaticFiles(
-      build.assetsBuildDirectory,
-      build.publicPath
+      resolvedBuild.assetsBuildDirectory,
+      resolvedBuild.publicPath
     );
     for (const staticFile of staticFiles) {
       fastify.get(staticFile.browserAssetUrl, (_request, reply) => {
@@ -92,12 +93,16 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
       ? options.getLoadContext
       : undefined;
 
-  if (mode === "development") {
+  if (mode === "development" && typeof build === "string") {
     fastify.all("*", (request, reply) => {
-      invariant(buildDir, `we lost the buildDir`);
-      purgeRequireCache(buildDir);
+      invariant(build, `we lost the build`);
+      invariant(
+        typeof build === "string",
+        `to support "HMR" you must pass a path to the build`
+      );
+      purgeRequireCache(build);
       return createRequestHandler({
-        build: require(buildDir),
+        build: require(build),
         mode,
         getLoadContext,
       })(request, reply);
@@ -106,7 +111,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     fastify.all(
       "*",
       createRequestHandler({
-        build: require(buildDir),
+        build: resolvedBuild,
         mode,
         getLoadContext,
       })
