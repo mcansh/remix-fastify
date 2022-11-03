@@ -21,10 +21,10 @@ export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
 };
 
-export let loader: LoaderFunction = async ({ request }) => {
+export let loader: LoaderFunction = async ({ request, context }) => {
   let cookie = request.headers.get("Cookie");
   let session = await storage.getSession(cookie);
-  let name = session.get("name") || "Stranger";
+  let name = session.get("name") || context?.defaultName || "Stranger";
   return json({ name });
 };
 

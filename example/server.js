@@ -10,6 +10,9 @@ async function start() {
   await app.register(remixFastifyPlugin, {
     buildDir: path.join(process.cwd(), "build"),
     mode: MODE,
+    getLoadContext: () => {
+      return { defaultName: "John Doe" };
+    },
   });
 
   let port = process.env.PORT ? Number(process.env.PORT) || 3000 : 3000;
