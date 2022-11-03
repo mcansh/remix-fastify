@@ -1,14 +1,10 @@
 #!/usr/bin/env node
 
-const path = require("node:path");
-const { execSync } = require("node:child_process");
-const semver = require("semver");
-const glob = require("glob");
+let { execSync } = require("node:child_process");
+let semver = require("semver");
+let glob = require("glob");
 
-const packageDir = path.resolve(process.cwd(), "../packages");
-const packages = glob.sync("packages/*", { absolute: true });
-
-console.log({ packages });
+let packages = glob.sync("packages/*", { absolute: true });
 
 function getTaggedVersion() {
   let output = execSync("git tag --list --points-at HEAD").toString().trim();
@@ -43,7 +39,6 @@ async function run() {
       : prereleaseTag
     : "latest";
 
-  // Publish all @remix-run/* packages
   for (let name of packages) {
     publish(name, tag);
   }

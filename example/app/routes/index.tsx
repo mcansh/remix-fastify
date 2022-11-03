@@ -1,5 +1,6 @@
 import {
   ActionFunction,
+  json,
   LinksFunction,
   LoaderFunction,
   MetaFunction,
@@ -20,11 +21,11 @@ export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
 };
 
-export let loader: LoaderFunction = async ({ request }) => {
-  let session = await storage.getSession(request.headers.get("Cookie"));
-  let name = session.get("name");
-
-  return { message: "this is awesome 😎", name: name || "Anonymous" };
+export let loader: LoaderFunction = async ({ request, context }) => {
+  let cookie = request.headers.get("Cookie");
+  let session = await storage.getSession(cookie);
+  let name = session.get("name") || context?.defaultName || "Stranger";
+  return json({ name });
 };
 
 export let action: ActionFunction = async ({ request }) => {
@@ -32,7 +33,13 @@ export let action: ActionFunction = async ({ request }) => {
   let session = await storage.getSession(cookie);
   let formData = await request.formData();
 
-  session.flash("name", formData.get("name"));
+  let name = formData.get("name");
+
+  if (!name) {
+    throw new Response("Name is required", { status: 400 });
+  }
+
+  session.set("name", name);
 
   return redirect("/", {
     headers: {
@@ -45,22 +52,25 @@ export default function Index() {
   let data = useLoaderData();
 
   return (
-    <div style={{ textAlign: "center", padding: 20 }}>
-      <h2>Welcome to Remix!</h2>
-      <p>
-        <a href="https://remix.run/dashboard/docs">Check out the docs</a> to get
-        started.
-      </p>
-      <p>Message from the loader: {data.message}</p>
+    <div className="container">
+      <h1>
+        Welcome to{" "}
+        <a target="_blank" rel="nofollow noopener" href="https://remix.run">
+          Remix
+        </a>{" "}
+        running on{" "}
+        <a target="_blank" rel="nofollow noopener" href="https://fastify.io">
+          Fastify
+        </a>
+      </h1>
 
-      <h3>Hello {data.name}</h3>
+      <h2>Hello {data.name}</h2>
 
       <Form method="post">
         <label>
-          <span>Name:</span>
-          <input type="text" name="name" />
-        </label>
-        <input type="submit" value="Submit" />
+          <span>Name:</span> <input type="text" name="name" />
+        </label>{" "}
+        <button type="submit">Submit</button>
       </Form>
     </div>
   );
