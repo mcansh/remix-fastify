@@ -2,9 +2,10 @@
   "name": "@mcansh/remix-fastify",
   "version": "2.0.1",
   "description": "Fastify server request handler for Remix",
-  "source": "src/index.ts",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "source": "./src/index.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm run build",
     "dev": "../../scripts/build.js --watch",
@@ -14,8 +15,10 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "default": "./dist/cjs/index.js",
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "types": "./dist/esm/index.d.ts"
     }
   },
   "repository": "mcansh/remix-fastify",
