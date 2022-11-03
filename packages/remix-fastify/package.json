@@ -5,7 +5,7 @@
   "source": "./src/index.ts",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/esm/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm run build",
     "dev": "../../scripts/build.js --watch",
