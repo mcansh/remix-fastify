@@ -8,7 +8,7 @@ async function start() {
   let app = fastify();
 
   await app.register(remixFastifyPlugin, {
-    buildDir: path.join(process.cwd(), "build"),
+    build: path.join(process.cwd(), "build/index.js"),
     mode: MODE,
     getLoadContext: () => {
       return { defaultName: "John Doe" };
