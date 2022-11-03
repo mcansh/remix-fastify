@@ -14,22 +14,41 @@ async function run() {
   for (let package of packages) {
     let pkg = require(package);
     let packageDir = path.dirname(package);
-    let entryPoints = glob.sync(path.join(packageDir, "src", "**", "*.ts"));
-    let outdir = path.join(packageDir, path.dirname(pkg.main));
-    await fse.emptyDir(outdir);
+    let entryPoints = glob.sync(
+      path.join(packageDir, "src", "**", "*.{mts,cts,ts}")
+    );
+    let baseOutDir = path.join(packageDir, "dist");
+    let cjsOutDir = path.join(baseOutDir, "cjs");
+    let esmOutDir = path.join(baseOutDir, "esm");
 
-    await build({
-      entryPoints,
-      outdir,
-      minify: false,
-      target: "node14",
-      format: "cjs",
-      platform: "node",
-      sourcemap: true,
-      onEnd(config) {
-        generateTypeDefs(tsconfig(config), config.entry, config.outdir);
-      },
-    });
+    await fse.emptyDir(baseOutDir);
+
+    await Promise.all([
+      build({
+        entryPoints,
+        outdir: cjsOutDir,
+        minify: false,
+        target: "node14",
+        format: "cjs",
+        platform: "node",
+        sourcemap: true,
+        onEnd(config) {
+          generateTypeDefs(tsconfig(config), config.entry, config.outdir);
+        },
+      }),
+      build({
+        entryPoints,
+        outdir: esmOutDir,
+        minify: false,
+        target: "node14",
+        format: "esm",
+        platform: "node",
+        sourcemap: true,
+        onEnd(config) {
+          generateTypeDefs(tsconfig(config), config.entry, config.outdir);
+        },
+      }),
+    ]);
   }
 
   function generateTypeDefs(tsconfig, entryfiles, outdir) {

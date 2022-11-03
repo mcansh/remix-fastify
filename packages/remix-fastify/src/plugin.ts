@@ -1,4 +1,5 @@
 import * as path from "node:path";
+import { pathToFileURL } from "node:url";
 
 import fastifyStatic from "@fastify/static";
 import type { ServerBuild } from "@remix-run/node";
@@ -16,14 +17,23 @@ interface PluginOptions {
   getLoadContext?: GetLoadContextFunction;
 }
 
+async function loadBuild(build: ServerBuild | string) {
+  if (typeof build === "string") {
+    let fileURL = pathToFileURL(build);
+    let module = await import(fileURL.toString());
+    return module.default;
+  }
+
+  return build;
+}
+
 let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   fastify,
   options = {}
 ) => {
   let { build, mode = process.env.NODE_ENV } = options;
   invariant(build, "You must provide a build");
-  let resolvedBuild: ServerBuild =
-    typeof build === "string" ? require(build) : build;
+  let resolvedBuild: ServerBuild = await loadBuild(build);
 
   if (!fastify.hasContentTypeParser("*")) {
     fastify.addContentTypeParser("*", (_request, payload, done) => {
@@ -94,7 +104,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
       : undefined;
 
   if (mode === "development" && typeof build === "string") {
-    fastify.all("*", (request, reply) => {
+    fastify.all("*", async (request, reply) => {
       invariant(build, `we lost the build`);
       invariant(
         typeof build === "string",
@@ -102,7 +112,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
       );
       purgeRequireCache(build);
       return createRequestHandler({
-        build: require(build),
+        build: await loadBuild(build),
         mode,
         getLoadContext,
       })(request, reply);
