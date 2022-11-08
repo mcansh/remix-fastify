@@ -11,11 +11,11 @@ let packages = glob.sync("packages/*/package.json", {
 });
 
 async function run() {
-  for (let package of packages) {
-    let pkg = require(package);
-    let packageDir = path.dirname(package);
+  for (let packageName of packages) {
+    let pkg = require(packageName);
+    let packageDir = path.dirname(packageName);
     let entryPoints = glob.sync(
-      path.join(packageDir, "src", "**", "*.{mts,cts,ts}")
+      path.join(packageDir, "src", "**", "*.{mts,cts,ts}"),
     );
     let baseOutDir = path.join(packageDir, "dist");
     let cjsOutDir = path.join(baseOutDir, "cjs");
@@ -62,7 +62,7 @@ async function run() {
 
     log.info(
       "Generating type declaration files for",
-      files.map((file) => path.relative(rootdir, file)).join(", ")
+      files.map((file) => path.relative(rootdir, file)).join(", "),
     );
 
     let compilerOptions = {
@@ -81,12 +81,12 @@ async function run() {
       targetSourceFile,
       writeFile,
       cancellationToken,
-      emitOnlyDtsFiles
+      emitOnlyDtsFiles,
     );
     let generated = glob.sync(`${outdir}/*.d.ts`);
     log.info(
       `Wrote ${generated.length} files`,
-      generated.map((file) => path.relative(rootdir, file)).join(", ")
+      generated.map((file) => path.relative(rootdir, file)).join(", "),
     );
   }
 }
@@ -98,5 +98,5 @@ run().then(
   (error) => {
     console.error(error);
     process.exit(1);
-  }
+  },
 );

@@ -12,16 +12,16 @@ export interface StaticFile {
 
 export function getStaticFiles(
   assetsBuildDirectory: string,
-  publicPath: string
+  publicPath: string,
 ): Array<StaticFile> {
-  let staticFilePaths = glob.sync(`public/**/*`, { dot: true, nodir: true });
+  let staticFilePaths = glob.sync("public/**/*", { dot: true, nodir: true });
 
   return staticFilePaths.map((filepath) => {
     let isBuildAsset = filepath.startsWith(assetsBuildDirectory);
 
     let filePublicPath = filepath.replace(
       isBuildAsset ? assetsBuildDirectory : "public",
-      ""
+      "",
     );
 
     let browserAssetUrl = isBuildAsset

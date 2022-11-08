@@ -22,12 +22,12 @@ import {
  */
 export type GetLoadContextFunction = (
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) => AppLoadContext;
 
 export type RequestHandler = (
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) => Promise<void>;
 
 /**
@@ -53,7 +53,7 @@ export function createRequestHandler({
 
     let response = (await handleRequest(
       remixRequest,
-      loadContext
+      loadContext,
     )) as NodeResponse;
 
     await sendRemixResponse(reply, response);
@@ -61,7 +61,7 @@ export function createRequestHandler({
 }
 
 export function createRemixHeaders(
-  requestHeaders: FastifyRequest["headers"]
+  requestHeaders: FastifyRequest["headers"],
 ): NodeHeaders {
   let headers = new NodeHeaders();
 
@@ -101,7 +101,7 @@ export function createRemixRequest(request: FastifyRequest): NodeRequest {
 
 export async function sendRemixResponse(
   reply: FastifyReply,
-  nodeResponse: NodeResponse
+  nodeResponse: NodeResponse,
 ): Promise<void> {
   reply.status(nodeResponse.status);
 

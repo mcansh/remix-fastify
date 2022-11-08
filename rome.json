@@ -1,0 +1,30 @@
+{
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "noDelete": "off"
+      },
+      "style": {
+        "useBlockStatements": "off",
+        "useShorthandArrayType": "off"
+      }
+    },
+    "ignore": [
+      "./packages/remix-fastify/dist",
+      "./example/build",
+      "./example/public/build"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "ignore": [
+      "./packages/remix-fastify/dist",
+      "./example/build",
+      "./example/public/build"
+    ],
+    "indentStyle": "space",
+    "indentSize": 2
+  }
+}
