@@ -20,6 +20,7 @@ interface PluginOptions {
 async function loadBuild(build: ServerBuild | string) {
   if (typeof build === "string") {
     let fileURL = pathToFileURL(build);
+    fileURL.searchParams.set("ts", Date.now().toString());
     let module = await import(fileURL.toString());
     return module.default;
   }
@@ -105,7 +106,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
 
   if (mode === "development" && typeof build === "string") {
     fastify.all("*", async (request, reply) => {
-      invariant(build, `we lost the build`);
+      invariant(build, "we lost the build");
       invariant(
         typeof build === "string",
         `to support "HMR" you must pass a path to the build`
