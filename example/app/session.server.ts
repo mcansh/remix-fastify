@@ -5,7 +5,7 @@ if (!sessionSecret) {
   throw new Error("SESSION_SECRET must be set");
 }
 
-let storage = createCookieSessionStorage({
+export let sessionStorage = createCookieSessionStorage({
   cookie: {
     name: "RJ_session",
     secrets: [sessionSecret],
@@ -15,5 +15,3 @@ let storage = createCookieSessionStorage({
     httpOnly: true,
   },
 });
-
-export { storage };

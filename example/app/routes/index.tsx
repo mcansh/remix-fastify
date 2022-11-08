@@ -3,34 +3,21 @@ import {
   json,
   LinksFunction,
   LoaderFunction,
-  MetaFunction,
   redirect,
 } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
-import { storage } from "~/session.server";
-import stylesUrl from "~/styles/index.css";
-
-export let meta: MetaFunction = () => {
-  return {
-    title: "Remix Starter",
-    description: "Welcome to remix!",
-  };
-};
-
-export let links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: stylesUrl }];
-};
+import { sessionStorage } from "~/session.server";
 
 export let loader: LoaderFunction = async ({ request, context }) => {
   let cookie = request.headers.get("Cookie");
-  let session = await storage.getSession(cookie);
+  let session = await sessionStorage.getSession(cookie);
   let name = session.get("name") || context?.defaultName || "Stranger";
   return json({ name });
 };
 
 export let action: ActionFunction = async ({ request }) => {
   let cookie = request.headers.get("Cookie");
-  let session = await storage.getSession(cookie);
+  let session = await sessionStorage.getSession(cookie);
   let formData = await request.formData();
 
   let name = formData.get("name");
@@ -43,7 +30,7 @@ export let action: ActionFunction = async ({ request }) => {
 
   return redirect("/", {
     headers: {
-      "Set-Cookie": await storage.commitSession(session),
+      "Set-Cookie": await sessionStorage.commitSession(session),
     },
   });
 };
@@ -52,24 +39,34 @@ export default function Index() {
   let data = useLoaderData();
 
   return (
-    <div className="container">
+    <div style={{ padding: 20, textAlign: "center" }}>
       <h1>
         Welcome to{" "}
-        <a target="_blank" rel="nofollow noopener" href="https://remix.run">
+        <a
+          target="_blank"
+          rel="noreferrer nofollow noopener"
+          href="https://remix.run"
+        >
           Remix
         </a>{" "}
         running on{" "}
-        <a target="_blank" rel="nofollow noopener" href="https://fastify.io">
+        <a
+          target="_blank"
+          rel="noreferrer nofollow noopener"
+          href="https://fastify.io"
+        >
           Fastify
         </a>
       </h1>
 
       <h2>Hello {data.name}</h2>
 
-      <Form method="post">
-        <label>
-          <span>Name:</span> <input type="text" name="name" />
-        </label>{" "}
+      <Form
+        method="post"
+        style={{ display: "flex", justifyContent: "center", gap: 4 }}
+      >
+        <label htmlFor="name">Name:</label>
+        <input type="text" name="name" id="name" />
         <button type="submit">Submit</button>
       </Form>
     </div>

@@ -1,4 +1,4 @@
-import { LinksFunction } from "@remix-run/node";
+import { LinksFunction, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -11,6 +11,14 @@ import stylesUrl from "./styles/global.css";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
+};
+
+export let meta: MetaFunction = () => {
+  return {
+    title: "Remix Starter",
+    description: "Welcome to remix!",
+    viewport: "width=device-width, initial-scale=1",
+  };
 };
 
 export default function App() {
