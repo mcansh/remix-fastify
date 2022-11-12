@@ -5,7 +5,7 @@
   "source": "./src/index.ts",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
-  "types": "./dist/esm/index.d.ts",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm run build",
     "dev": "../../scripts/build.js --watch",
@@ -18,7 +18,7 @@
       "default": "./dist/cjs/index.js",
       "require": "./dist/cjs/index.js",
       "import": "./dist/esm/index.js",
-      "types": "./dist/esm/index.d.ts"
+      "types": "./dist/index.d.ts"
     }
   },
   "repository": "mcansh/remix-fastify",

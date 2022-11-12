@@ -2,7 +2,7 @@
 
 let path = require("node:path");
 let fse = require("fs-extra");
-let { build, ts, tsconfig, log } = require("estrella");
+let { build, ts, tsconfig, log, dirname } = require("estrella");
 let glob = require("glob");
 
 let packages = glob.sync("packages/*/package.json", {
@@ -32,7 +32,11 @@ async function run() {
         platform: "node",
         sourcemap: true,
         onEnd(config) {
-          generateTypeDefs(tsconfig(config), config.entry, config.outdir);
+          generateTypeDefs(
+            tsconfig(config),
+            config.entry,
+            dirname(config.outdir)
+          );
         },
       }),
       build({
@@ -43,9 +47,6 @@ async function run() {
         format: "esm",
         platform: "node",
         sourcemap: true,
-        onEnd(config) {
-          generateTypeDefs(tsconfig(config), config.entry, config.outdir);
-        },
       }),
     ]);
   }
