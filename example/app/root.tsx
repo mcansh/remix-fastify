@@ -1,4 +1,4 @@
-import { LinksFunction, MetaFunction } from "@remix-run/node";
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -7,6 +7,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+
 import stylesUrl from "./styles/global.css";
 
 export let links: LinksFunction = () => {

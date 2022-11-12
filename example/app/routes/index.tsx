@@ -1,11 +1,7 @@
-import {
-  ActionFunction,
-  json,
-  LinksFunction,
-  LoaderFunction,
-  redirect,
-} from "@remix-run/node";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
+
 import { sessionStorage } from "~/session.server";
 
 export let loader: LoaderFunction = async ({ request, context }) => {

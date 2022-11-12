@@ -1,6 +1,5 @@
 import * as path from "node:path";
 import { pathToFileURL } from "node:url";
-
 import fastifyStatic from "@fastify/static";
 import type { ServerBuild } from "@remix-run/node";
 import type { FastifyPluginAsync, FastifyReply } from "fastify";
@@ -8,8 +7,10 @@ import fp from "fastify-plugin";
 import fastifyRacing from "fastify-racing";
 import invariant from "tiny-invariant";
 
-import { createRequestHandler, GetLoadContextFunction } from "./server";
-import { getStaticFiles, purgeRequireCache, StaticFile } from "./utils";
+import type { GetLoadContextFunction } from "./server";
+import { createRequestHandler } from "./server";
+import type { StaticFile } from "./utils";
+import { getStaticFiles, purgeRequireCache } from "./utils";
 
 interface PluginOptions {
   build?: ServerBuild | string;
@@ -30,7 +31,7 @@ async function loadBuild(build: ServerBuild | string) {
 
 let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   fastify,
-  options = {},
+  options = {}
 ) => {
   let { build, mode = process.env.NODE_ENV } = options;
   invariant(build, "You must provide a build");
@@ -63,7 +64,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
       {
         maxAge: file.isBuildAsset ? "1y" : "1h",
         immutable: file.isBuildAsset,
-      },
+      }
     );
   }
 
@@ -71,7 +72,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     fastify.addHook("onRequest", (request, reply, done) => {
       let staticFiles = getStaticFiles(
         resolvedBuild.assetsBuildDirectory,
-        resolvedBuild.publicPath,
+        resolvedBuild.publicPath
       );
 
       let staticFile = staticFiles.find((file) => {
@@ -90,9 +91,9 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   } else {
     let staticFiles = getStaticFiles(
       resolvedBuild.assetsBuildDirectory,
-      resolvedBuild.publicPath,
+      resolvedBuild.publicPath
     );
-    for (const staticFile of staticFiles) {
+    for (let staticFile of staticFiles) {
       fastify.get(staticFile.browserAssetUrl, (_request, reply) => {
         return sendAsset(reply, staticFile);
       });
@@ -109,7 +110,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
       invariant(build, "we lost the build");
       invariant(
         typeof build === "string",
-        `to support "HMR" you must pass a path to the build`,
+        `to support "HMR" you must pass a path to the build`
       );
       purgeRequireCache(build);
       return createRequestHandler({
@@ -125,7 +126,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
         build: resolvedBuild,
         mode,
         getLoadContext,
-      }),
+      })
     );
   }
 };
