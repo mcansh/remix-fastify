@@ -20,6 +20,9 @@ interface PluginOptions {
 
 async function loadBuild(build: ServerBuild | string) {
   if (typeof build === "string") {
+    if (!build.endsWith(".js")) {
+      build = path.join(build, "index.js");
+    }
     let fileURL = pathToFileURL(build);
     fileURL.searchParams.set("ts", Date.now().toString());
     let module = await import(fileURL.toString());
