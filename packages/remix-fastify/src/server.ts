@@ -107,9 +107,9 @@ export async function sendRemixResponse(
 
   for (let [key, values] of Object.entries(nodeResponse.headers.raw())) {
     if (key.toLowerCase() === "set-cookie") {
-      reply.raw.setHeader(key, values);
+      reply.header(key, values);
     } else {
-      reply.raw.setHeader(key, values.join("; "));
+      reply.header(key, values.join("; "));
     }
   }
 
