@@ -14,7 +14,7 @@ async function run() {
   for (let packageName of packages) {
     let packageDir = path.dirname(packageName);
     let entryPoints = glob.sync(
-      path.join(packageDir, "src", "**", "*.{mts,cts,ts}")
+      path.posix.join(packageDir, "src", "**", "*.{mts,cts,ts}")
     );
     let baseOutDir = path.join(packageDir, "dist");
     let cjsOutDir = path.join(baseOutDir, "cjs");
