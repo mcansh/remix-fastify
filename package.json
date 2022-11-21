@@ -12,10 +12,10 @@
   },
   "dependencies": {
     "@changesets/cli": "^2.25.2",
-    "@remix-run/eslint-config": "1.7.5",
+    "@remix-run/eslint-config": "1.7.6",
     "@types/glob": "^8.0.0",
     "@types/jest": "^29.2.1",
-    "eslint": "8.27.0",
+    "eslint": "8.28.0",
     "eslint-plugin-prefer-let": "3.0.1",
     "estrella": "^1.4.1",
     "fs-extra": "^10.1.0",
