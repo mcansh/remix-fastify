@@ -1,4 +1,5 @@
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -6,6 +7,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 
 import stylesUrl from "./styles/global.css";
@@ -22,7 +24,12 @@ export let meta: MetaFunction = () => {
   };
 };
 
+export function loader() {
+  return json({ message: "Hello world!" });
+}
+
 export default function App() {
+  let data = useLoaderData<typeof loader>();
   return (
     <html lang="en">
       <head>
@@ -32,6 +39,7 @@ export default function App() {
         <Links />
       </head>
       <body>
+        <div className="root-message">{data.message}</div>
         <Outlet />
         <Scripts />
         <ScrollRestoration />
