@@ -1,3 +1,4 @@
+import { Writable } from "node:stream";
 import type { FastifyRequest, FastifyReply } from "fastify";
 import type {
   AppLoadContext,
@@ -5,12 +6,12 @@ import type {
   RequestInit as NodeRequestInit,
   Response as NodeResponse,
 } from "@remix-run/node";
+import { writeReadableStreamToWritable } from "@remix-run/node";
 import {
   AbortController,
   createRequestHandler as createRemixRequestHandler,
   Headers as NodeHeaders,
   Request as NodeRequest,
-  writeReadableStreamToWritable,
 } from "@remix-run/node";
 
 /**
@@ -106,18 +107,22 @@ export async function sendRemixResponse(
   reply.status(nodeResponse.status);
 
   for (let [key, values] of Object.entries(nodeResponse.headers.raw())) {
-    if (key.toLowerCase() === "set-cookie") {
-      reply.header(key, values);
-    } else {
-      reply.header(key, values.join("; "));
+    for (let value of values) {
+      reply.header(key, value);
     }
   }
 
   if (nodeResponse.body) {
-    await writeReadableStreamToWritable(nodeResponse.body, reply.raw);
-    return reply;
+    await writeReadableStreamToWritable(
+      nodeResponse.body,
+      new Writable({
+        write(chunk, _encoding, callback) {
+          reply.send(chunk);
+          callback();
+        },
+      })
+    );
   } else {
     reply.send();
-    return reply;
   }
 }
