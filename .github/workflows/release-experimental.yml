@@ -1,0 +1,46 @@
+name: 🚀 Release (experimental)
+
+on:
+  release:
+    types: [published]
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+env:
+  CI: true
+
+jobs:
+  release:
+    name: 🧑‍🔬 Experimental Release
+    if: |
+      github.repository == 'mcansh/remix-fastify' &&
+      contains(github.ref, 'experimental')
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 🟧 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: pnpm
+          registry-url: "https://registry.npmjs.org"
+
+      - name: 📥 Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: 🏗 Build
+        run: npm run build
+
+      - name: 🚀 Publish
+        run: npm run publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
