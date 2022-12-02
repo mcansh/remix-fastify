@@ -254,6 +254,7 @@ describe("fastify createRemixRequest", () => {
           "type": null,
         },
         Symbol(Request internals): {
+          "credentials": "same-origin",
           "headers": Headers {
             Symbol(query): [
               "cache-control",
