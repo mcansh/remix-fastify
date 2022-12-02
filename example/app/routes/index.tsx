@@ -1,6 +1,6 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 
 import { sessionStorage } from "~/session.server";
 
@@ -65,6 +65,10 @@ export default function Index() {
         <input type="text" name="name" id="name" />
         <button type="submit">Submit</button>
       </Form>
+
+      <Link style={{ marginTop: 10, display: "block" }} to="/page-2">
+        Go to page 2
+      </Link>
     </div>
   );
 }
