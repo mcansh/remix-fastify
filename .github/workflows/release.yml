@@ -44,10 +44,10 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          version: yarn run changeset:version
+          version: pnpm run changeset:version
           commit: "chore: Update version for release"
           title: "chore: Update version for release"
-          publish: yarn run changeset:release
+          publish: pnpm run changeset:release
           createGithubReleases: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
