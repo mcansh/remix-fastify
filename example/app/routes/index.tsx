@@ -7,8 +7,13 @@ import { sessionStorage } from "~/session.server";
 export let loader: LoaderFunction = async ({ request, context }) => {
   let cookie = request.headers.get("Cookie");
   let session = await sessionStorage.getSession(cookie);
-  let name = session.get("name") || context?.defaultName || "Stranger";
-  return json({ name });
+  let name = session.get("name");
+
+  return json({
+    message: "this is awesome 😎",
+    name: name || "Anonymous",
+    loadContextName: context.loadContextName,
+  });
 };
 
 export let action: ActionFunction = async ({ request }) => {
@@ -55,7 +60,9 @@ export default function Index() {
         </a>
       </h1>
 
-      <h2>Hello {data.name}</h2>
+      <h2>
+        Hello {data.name}, with context name {data.loadContextName}
+      </h2>
 
       <Form
         method="post"
