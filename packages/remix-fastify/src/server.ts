@@ -113,15 +113,18 @@ export async function sendRemixResponse(
   }
 
   if (nodeResponse.body) {
+    let chunks: Buffer[] = [];
     await writeReadableStreamToWritable(
       nodeResponse.body,
       new Writable({
         write(chunk, _encoding, callback) {
-          reply.send(chunk);
+          chunks.push(chunk);
           callback();
         },
       })
     );
+
+    reply.send(Buffer.concat(chunks));
   } else {
     reply.send();
   }
