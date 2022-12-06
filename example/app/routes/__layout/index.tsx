@@ -40,7 +40,7 @@ export default function Index() {
   let data = useLoaderData();
 
   return (
-    <div style={{ padding: 20, textAlign: "center" }}>
+    <div>
       <h1>
         Welcome to{" "}
         <a
