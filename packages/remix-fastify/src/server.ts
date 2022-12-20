@@ -49,7 +49,7 @@ export function createRequestHandler({
     let remixRequest = createRemixRequest(request, reply);
     let loadContext =
       typeof getLoadContext === "function"
-        ? getLoadContext(request, reply)
+        ? getLoadContext(request, reply, remixRequest)
         : undefined;
 
     let response = (await handleRequest(
