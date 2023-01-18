@@ -3,8 +3,8 @@
   "repository": "mcansh/remix-fastify",
   "license": "MIT",
   "scripts": {
-    "dev": "./scripts/build.js --watch",
-    "build": "./scripts/build.js",
+    "dev": "node ./scripts/build.js --watch",
+    "build": "node ./scripts/build.js",
     "test": "pnpm --filter ./packages/* test --if-present",
     "publish": "./scripts/publish.js",
     "lint": "eslint --cache --ignore-path .gitignore --fix .",

@@ -8,7 +8,7 @@
     "build": "remix build",
     "dev:remix": "remix watch",
     "dev:server": "node --require dotenv/config ./server.js",
-    "dev": "run-p dev:*",
+    "dev": "npm run build && run-p dev:*",
     "start": "node ./server.js"
   },
   "dependencies": {
