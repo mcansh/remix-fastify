@@ -114,12 +114,12 @@ export async function sendRemixResponse(
 
   if (nodeResponse.body) {
     let passthrough = new PassThrough();
+    reply.send(passthrough);
+    
     await writeReadableStreamToWritable(
       nodeResponse.body,
       passthrough
     );
-
-    reply.send(passthrough);
   } else {
     reply.send();
   }
