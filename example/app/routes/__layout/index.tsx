@@ -1,22 +1,25 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, Link, useLoaderData } from "@remix-run/react";
+import * as React from "react";
+import type { DataFunctionArgs } from "@remix-run/node";
+import { defer, redirect } from "@remix-run/node";
+import { Await, Form, Link, useLoaderData } from "@remix-run/react";
 
 import { sessionStorage } from "~/session.server";
 
-export let loader: LoaderFunction = async ({ request, context }) => {
+export async function loader({ request, context }: DataFunctionArgs) {
   let cookie = request.headers.get("Cookie");
   let session = await sessionStorage.getSession(cookie);
-  let name = session.get("name");
+  let name = new Promise((resolve) =>
+    setTimeout(() => resolve(session.get("name")), 1000)
+  );
 
-  return json({
+  return defer({
     message: "this is awesome 😎",
     name: name || "Anonymous",
     loadContextName: context.loadContextName,
   });
-};
+}
 
-export let action: ActionFunction = async ({ request }) => {
+export async function action({ request }: DataFunctionArgs) {
   let cookie = request.headers.get("Cookie");
   let session = await sessionStorage.getSession(cookie);
   let formData = await request.formData();
@@ -34,7 +37,7 @@ export let action: ActionFunction = async ({ request }) => {
       "Set-Cookie": await sessionStorage.commitSession(session),
     },
   });
-};
+}
 
 export default function Index() {
   let data = useLoaderData();
@@ -60,9 +63,13 @@ export default function Index() {
         </a>
       </h1>
 
-      <h2>
-        Hello {data.name}, with context name {data.loadContextName}
-      </h2>
+      <React.Suspense fallback={<p>loading...</p>}>
+        <Await resolve={data.name} errorElement={<div>failed...</div>}>
+          <h2>
+            Hello {data.name}, with context name {data.loadContextName}
+          </h2>
+        </Await>
+      </React.Suspense>
 
       <Form
         method="post"
