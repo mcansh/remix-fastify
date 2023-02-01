@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 2.3.1
+
+### Patch Changes
+
+- a581f54: Fix Fetch Request creation for incoming URLs with double slashes
+
 ## 2.3.0
 
 ### Minor Changes
