@@ -83,7 +83,7 @@ export function createRemixHeaders(
 
 export function createRemixRequest(request: FastifyRequest): NodeRequest {
   let origin = `${request.protocol}://${request.hostname}`;
-  let url = new URL(request.url, origin);
+  let url = `${origin}${request.url}`;
 
   let controller = new AbortController();
 
@@ -97,7 +97,7 @@ export function createRemixRequest(request: FastifyRequest): NodeRequest {
     init.body = request.raw;
   }
 
-  return new NodeRequest(url.href, init);
+  return new NodeRequest(url, init);
 }
 
 export async function sendRemixResponse(

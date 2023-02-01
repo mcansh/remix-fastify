@@ -66,6 +66,32 @@ describe("fastify createRequestHandler", () => {
       expect(response.body).toBe("URL: /foo/bar");
     });
 
+    it("handles root // URLs", async () => {
+      mockedCreateRequestHandler.mockImplementation(() => async (req) => {
+        return new Response("URL: " + new URL(req.url).pathname);
+      });
+
+      let app = createApp();
+
+      let response = await app.inject("//");
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toBe("URL: //");
+    });
+
+    it("handles nested // URLs", async () => {
+      mockedCreateRequestHandler.mockImplementation(() => async (req) => {
+        return new Response("URL: " + new URL(req.url).pathname);
+      });
+
+      let app = createApp();
+
+      let response = await app.inject("//foo//bar");
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toBe("URL: //foo//bar");
+    });
+
     it("handles null body", async () => {
       mockedCreateRequestHandler.mockImplementation(() => async () => {
         return new Response(null, { status: 200 });
