@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 2.4.0
+
+### Minor Changes
+
+- e2b4224: Make Remix root directory location configurable.
+
 ## 2.3.1
 
 ### Patch Changes
