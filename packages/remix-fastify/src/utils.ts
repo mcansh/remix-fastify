@@ -12,9 +12,14 @@ export interface StaticFile {
 
 export function getStaticFiles(
   assetsBuildDirectory: string,
-  publicPath: string
+  publicPath: string,
+  rootDir: string
 ): Array<StaticFile> {
-  let staticFilePaths = glob.sync(`public/**/*`, { dot: true, nodir: true });
+  let staticFilePaths = glob.sync(`public/**/*`, {
+    dot: true,
+    nodir: true,
+    cwd: rootDir,
+  });
 
   return staticFilePaths.map((filepath) => {
     let isBuildAsset = filepath.startsWith(assetsBuildDirectory);

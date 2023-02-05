@@ -15,6 +15,7 @@ import { getStaticFiles, purgeRequireCache } from "./utils";
 interface PluginOptions {
   build?: ServerBuild | string;
   mode?: string;
+  rootDir?: string;
   getLoadContext?: GetLoadContextFunction;
 }
 
@@ -36,7 +37,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   fastify,
   options = {}
 ) => {
-  let { build, mode = process.env.NODE_ENV } = options;
+  let { build, mode = process.env.NODE_ENV, rootDir = process.cwd() } = options;
   invariant(build, "You must provide a build");
   let resolvedBuild: ServerBuild = await loadBuild(build);
 
@@ -48,9 +49,8 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
 
   fastify.register(fastifyRacing, { handleError: true });
 
-  let ROOT_DIR = process.cwd();
-  let PUBLIC_DIR = path.join(ROOT_DIR, "public");
-  let ASSET_DIR = path.join(ROOT_DIR, resolvedBuild.assetsBuildDirectory);
+  let PUBLIC_DIR = path.join(rootDir, "public");
+  let ASSET_DIR = path.join(rootDir, resolvedBuild.assetsBuildDirectory);
 
   fastify.register(fastifyStatic, {
     root: PUBLIC_DIR,
@@ -75,7 +75,8 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     fastify.addHook("onRequest", (request, reply, done) => {
       let staticFiles = getStaticFiles(
         resolvedBuild.assetsBuildDirectory,
-        resolvedBuild.publicPath
+        resolvedBuild.publicPath,
+        rootDir
       );
 
       let staticFile = staticFiles.find((file) => {
@@ -94,7 +95,8 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   } else {
     let staticFiles = getStaticFiles(
       resolvedBuild.assetsBuildDirectory,
-      resolvedBuild.publicPath
+      resolvedBuild.publicPath,
+      rootDir
     );
     for (let staticFile of staticFiles) {
       fastify.get(staticFile.browserAssetUrl, (_request, reply) => {
