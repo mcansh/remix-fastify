@@ -9,7 +9,7 @@ export async function loader({ request, context }: DataFunctionArgs) {
   let cookie = request.headers.get("Cookie");
   let session = await sessionStorage.getSession(cookie);
   let name = new Promise((resolve) =>
-    setTimeout(() => resolve(session.get("name")), 1000)
+    setTimeout(() => resolve(session.get("name")), 1_000)
   );
 
   return defer({
