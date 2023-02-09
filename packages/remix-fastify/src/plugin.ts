@@ -7,7 +7,10 @@ import fp from "fastify-plugin";
 import fastifyRacing from "fastify-racing";
 import invariant from "tiny-invariant";
 
-import type { GetLoadContextFunction } from "./server";
+import type {
+  AdapterMiddlewareFunction,
+  GetLoadContextFunction,
+} from "./server";
 import { createRequestHandler } from "./server";
 import type { StaticFile } from "./utils";
 import { getStaticFiles, purgeRequireCache } from "./utils";
@@ -18,6 +21,7 @@ interface PluginOptions {
   rootDir?: string;
   getLoadContext?: GetLoadContextFunction;
   purgeRequireCacheInDevelopment?: boolean;
+  adapterMiddleware?: AdapterMiddlewareFunction;
 }
 
 async function loadBuild(build: ServerBuild | string) {
@@ -28,7 +32,7 @@ async function loadBuild(build: ServerBuild | string) {
     let fileURL = pathToFileURL(build);
     fileURL.searchParams.set("ts", Date.now().toString());
     let module = await import(fileURL.toString());
-    return module.default;
+    return module.default || module;
   }
 
   return build;
@@ -44,6 +48,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     rootDir = process.cwd(),
     purgeRequireCacheInDevelopment = process.env.NODE_ENV === "development",
   } = options;
+
   invariant(build, "You must provide a build");
   let resolvedBuild: ServerBuild = await loadBuild(build);
 
@@ -130,6 +135,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
         build: await loadBuild(build),
         mode,
         getLoadContext,
+        adapterMiddleware: options.adapterMiddleware,
       })(request, reply);
     });
   } else {

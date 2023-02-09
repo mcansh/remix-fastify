@@ -1,8 +1,25 @@
-let path = require("node:path");
-let fastify = require("fastify");
-let { remixFastifyPlugin } = require("@mcansh/remix-fastify");
+import path from "node:path";
+import fastify from "fastify";
+import { remixFastifyPlugin } from "@mcansh/remix-fastify";
 
 let MODE = process.env.NODE_ENV;
+
+/** @type {import('@mcansh/remix-fastify').AdapterMiddlewareFunction} */
+const adapterMiddleware = async ({ request, reply, context }) => {
+  // Stick stuff in context on the way in
+  context.set("userContext", reply);
+
+  // Run the remix pipeline
+  // - create a Fetch Request from the Express Request
+  // - run all route middlewares/loaders/actions
+  // - get back a Fetch Response
+  let fetchResponse = await context.next();
+
+  // Set response stuff on the way out
+  fetchResponse.headers.set("x-whatever", "hello from middleware on fastify");
+
+  return fetchResponse;
+};
 
 async function start() {
   let app = fastify();
@@ -10,9 +27,8 @@ async function start() {
   await app.register(remixFastifyPlugin, {
     build: path.join(process.cwd(), "build/index.js"),
     mode: MODE,
-    getLoadContext() {
-      return { loadContextName: "John Doe" };
-    },
+    purgeRequireCacheInDevelopment: false,
+    adapterMiddleware,
   });
 
   let port = process.env.PORT ? Number(process.env.PORT) || 3000 : 3000;

@@ -4,6 +4,7 @@
   "description": "",
   "license": "",
   "sideEffects": false,
+  "type": "module",
   "scripts": {
     "build": "remix build",
     "dev:remix": "remix dev",
@@ -13,15 +14,15 @@
   },
   "dependencies": {
     "@mcansh/remix-fastify": "workspace:*",
-    "@remix-run/node": "1.12.0",
-    "@remix-run/react": "1.12.0",
+    "@remix-run/node": "0.0.0-experimental-9de9d7d88",
+    "@remix-run/react": "0.0.0-experimental-9de9d7d88",
     "fastify": "^4.12.0",
     "isbot": "^3.6.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "1.12.0",
+    "@remix-run/dev": "0.0.0-experimental-9de9d7d88",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "dotenv": "^16.0.3",

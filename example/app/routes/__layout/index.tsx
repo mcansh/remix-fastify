@@ -12,10 +12,7 @@ export async function loader({ request, context }: DataFunctionArgs) {
     setTimeout(() => resolve(session.get("name") || "Anonymous"), 1_000)
   );
 
-  return defer({
-    name,
-    loadContextName: context.loadContextName,
-  });
+  return defer({ name });
 }
 
 export async function action({ request }: DataFunctionArgs) {
@@ -64,11 +61,7 @@ export default function Index() {
 
       <React.Suspense fallback={<h2>loading...</h2>}>
         <Await resolve={data.name} errorElement={<h2>failed...</h2>}>
-          {(resolvedName) => (
-            <h2>
-              Hello {resolvedName}, with context name {data.loadContextName}
-            </h2>
-          )}
+          {(resolvedName) => <h2>Hello {resolvedName}</h2>}
         </Await>
       </React.Suspense>
 

@@ -1,10 +1,11 @@
-import { PassThrough, Readable } from "node:stream";
+import { PassThrough } from "node:stream";
 import type { FastifyRequest, FastifyReply } from "fastify";
 import type {
   AppLoadContext,
   ServerBuild,
   RequestInit as NodeRequestInit,
   Response as NodeResponse,
+  MiddlewareContext,
 } from "@remix-run/node";
 import {
   AbortController,
@@ -13,6 +14,10 @@ import {
   Request as NodeRequest,
   writeReadableStreamToWritable,
 } from "@remix-run/node";
+import {
+  UNSAFE_createMiddlewareStore as createMiddlewareStore,
+  UNSAFE_getRouteAwareMiddlewareContext as getRouteAwareMiddlewareContext,
+} from "@remix-run/router";
 
 /**
  * A function that returns the value to use as `context` in route `loader` and
@@ -26,6 +31,16 @@ export type GetLoadContextFunction = (
   reply: FastifyReply
 ) => AppLoadContext;
 
+export type AdapterMiddlewareFunction = ({
+  request,
+  reply,
+  context,
+}: {
+  request: FastifyRequest;
+  reply: FastifyReply;
+  context: MiddlewareContext;
+}) => Promise<Response>;
+
 export type RequestHandler = (
   request: FastifyRequest,
   reply: FastifyReply
@@ -37,28 +52,72 @@ export type RequestHandler = (
 export function createRequestHandler({
   build,
   getLoadContext,
+  adapterMiddleware,
   mode = process.env.NODE_ENV,
 }: {
   build: ServerBuild;
+  adapterMiddleware?: AdapterMiddlewareFunction;
   getLoadContext?: GetLoadContextFunction;
   mode?: string;
 }): RequestHandler {
   let handleRequest = createRemixRequestHandler(build, mode);
 
-  return async (request, reply) => {
-    let remixRequest = createRemixRequest(request);
-    let loadContext =
-      typeof getLoadContext === "function"
-        ? getLoadContext(request, reply)
-        : undefined;
+  if (build.future.unstable_middleware) {
+    return async (request, reply) => {
+      let remixResponse: NodeResponse | undefined;
 
-    let response = (await handleRequest(
-      remixRequest,
-      loadContext
-    )) as NodeResponse;
+      if (adapterMiddleware) {
+        let context = createMiddlewareStore();
+        let callRemix = async () => {
+          let remixRequest = createRemixRequest(request);
+          remixResponse = (await handleRequest(
+            remixRequest,
+            undefined,
+            context
+          )) as NodeResponse;
+          return remixResponse;
+        };
+        let routeAwareContext = getRouteAwareMiddlewareContext(
+          context,
+          -1,
+          callRemix
+        );
 
-    await sendRemixResponse(reply, response);
-  };
+        await adapterMiddleware({
+          request,
+          reply,
+          context: routeAwareContext,
+        });
+
+        if (!remixResponse) {
+          remixResponse = await callRemix();
+        }
+
+        if (!reply.sent) {
+          await sendRemixResponse(reply, remixResponse);
+        }
+      } else {
+        let remixRequest = createRemixRequest(request);
+        remixResponse = (await handleRequest(remixRequest)) as NodeResponse;
+        await sendRemixResponse(reply, remixResponse);
+      }
+    };
+  } else {
+    return async (request, reply) => {
+      let remixRequest = createRemixRequest(request);
+      let loadContext =
+        typeof getLoadContext === "function"
+          ? getLoadContext(request, reply)
+          : undefined;
+
+      let response = (await handleRequest(
+        remixRequest,
+        loadContext
+      )) as NodeResponse;
+
+      await sendRemixResponse(reply, response);
+    };
+  }
 }
 
 export function createRemixHeaders(
