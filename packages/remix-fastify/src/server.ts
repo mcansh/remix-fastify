@@ -1,4 +1,4 @@
-import { PassThrough } from "node:stream";
+import { PassThrough, Readable } from "node:stream";
 import type { FastifyRequest, FastifyReply } from "fastify";
 import type {
   AppLoadContext,
@@ -113,9 +113,9 @@ export async function sendRemixResponse(
   }
 
   if (nodeResponse.body) {
-    let passthrough = new PassThrough();
-    reply.send(passthrough);
-    await writeReadableStreamToWritable(nodeResponse.body, passthrough);
+    let stream = new PassThrough();
+    reply.send(stream);
+    await writeReadableStreamToWritable(nodeResponse.body, stream);
   } else {
     reply.send();
   }

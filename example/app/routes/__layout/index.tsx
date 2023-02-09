@@ -9,12 +9,11 @@ export async function loader({ request, context }: DataFunctionArgs) {
   let cookie = request.headers.get("Cookie");
   let session = await sessionStorage.getSession(cookie);
   let name = new Promise((resolve) =>
-    setTimeout(() => resolve(session.get("name")), 1_000)
+    setTimeout(() => resolve(session.get("name") || "Anonymous"), 1_000)
   );
 
   return defer({
-    message: "this is awesome 😎",
-    name: name || "Anonymous",
+    name,
     loadContextName: context.loadContextName,
   });
 }
@@ -40,7 +39,7 @@ export async function action({ request }: DataFunctionArgs) {
 }
 
 export default function Index() {
-  let data = useLoaderData();
+  let data = useLoaderData<typeof loader>();
 
   return (
     <div>
@@ -63,11 +62,13 @@ export default function Index() {
         </a>
       </h1>
 
-      <React.Suspense fallback={<p>loading...</p>}>
-        <Await resolve={data.name} errorElement={<div>failed...</div>}>
-          <h2>
-            Hello {data.name}, with context name {data.loadContextName}
-          </h2>
+      <React.Suspense fallback={<h2>loading...</h2>}>
+        <Await resolve={data.name} errorElement={<h2>failed...</h2>}>
+          {(resolvedName) => (
+            <h2>
+              Hello {resolvedName}, with context name {data.loadContextName}
+            </h2>
+          )}
         </Await>
       </React.Suspense>
 
