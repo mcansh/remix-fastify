@@ -5,7 +5,7 @@ import { RemixServer } from "@remix-run/react";
 import isbot from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 
-const ABORT_DELAY = 5000;
+const ABORT_DELAY = 5_000;
 
 export default function handleRequest(
   request: Request,
@@ -35,8 +35,6 @@ function handleBotRequest(
   remixContext: EntryContext
 ) {
   return new Promise((resolve, reject) => {
-    let didError = false;
-
     let { pipe, abort } = renderToPipeableStream(
       <RemixServer
         context={remixContext}
@@ -52,7 +50,7 @@ function handleBotRequest(
           resolve(
             new Response(body, {
               headers: responseHeaders,
-              status: didError ? 500 : responseStatusCode,
+              status: responseStatusCode,
             })
           );
 
@@ -62,9 +60,8 @@ function handleBotRequest(
           reject(error);
         },
         onError(error: unknown) {
-          didError = true;
-
           console.error(error);
+          responseStatusCode = 500;
         },
       }
     );
@@ -80,8 +77,6 @@ function handleBrowserRequest(
   remixContext: EntryContext
 ) {
   return new Promise((resolve, reject) => {
-    let didError = false;
-
     let { pipe, abort } = renderToPipeableStream(
       <RemixServer context={remixContext} url={request.url} />,
       {
@@ -93,19 +88,18 @@ function handleBrowserRequest(
           resolve(
             new Response(body, {
               headers: responseHeaders,
-              status: didError ? 500 : responseStatusCode,
+              status: responseStatusCode,
             })
           );
 
           pipe(body);
         },
-        onShellError(err: unknown) {
-          reject(err);
+        onShellError(error: unknown) {
+          reject(error);
         },
         onError(error: unknown) {
-          didError = true;
-
           console.error(error);
+          responseStatusCode = 500;
         },
       }
     );

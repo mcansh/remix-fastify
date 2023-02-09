@@ -18,7 +18,7 @@ async function start() {
   let port = process.env.PORT ? Number(process.env.PORT) || 3000 : 3000;
 
   let address = await app.listen({ port, host: "0.0.0.0" });
-  console.log(`Fastify server listening at ${address}`);
+  console.log(`✅ app ready: ${address}`);
 }
 
 start().catch((error) => {

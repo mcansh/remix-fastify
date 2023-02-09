@@ -17,6 +17,7 @@ interface PluginOptions {
   mode?: string;
   rootDir?: string;
   getLoadContext?: GetLoadContextFunction;
+  purgeRequireCacheInDevelopment?: boolean;
 }
 
 async function loadBuild(build: ServerBuild | string) {
@@ -37,7 +38,12 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   fastify,
   options = {}
 ) => {
-  let { build, mode = process.env.NODE_ENV, rootDir = process.cwd() } = options;
+  let {
+    build,
+    mode = process.env.NODE_ENV,
+    rootDir = process.cwd(),
+    purgeRequireCacheInDevelopment = process.env.NODE_ENV === "development",
+  } = options;
   invariant(build, "You must provide a build");
   let resolvedBuild: ServerBuild = await loadBuild(build);
 
@@ -117,7 +123,9 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
         typeof build === "string",
         `to support "HMR" you must pass a path to the build`
       );
-      purgeRequireCache(build);
+      if (purgeRequireCacheInDevelopment) {
+        purgeRequireCache(build);
+      }
       return createRequestHandler({
         build: await loadBuild(build),
         mode,
