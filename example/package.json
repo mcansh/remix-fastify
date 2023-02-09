@@ -6,8 +6,8 @@
   "sideEffects": false,
   "scripts": {
     "build": "remix build",
-    "dev:remix": "remix watch",
-    "dev:server": "node --require dotenv/config ./server.js",
+    "dev:remix": "remix dev",
+    "dev:server": "node --require dotenv/config --watch ./server.js",
     "dev": "npm run build && run-p dev:*",
     "start": "node ./server.js"
   },
