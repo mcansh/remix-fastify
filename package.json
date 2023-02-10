@@ -3,8 +3,8 @@
   "repository": "mcansh/remix-fastify",
   "license": "MIT",
   "scripts": {
-    "dev": "node ./scripts/build.js --watch",
-    "build": "node ./scripts/build.js",
+    "dev": "pnpm run --recursive dev",
+    "build": "pnpm run --recursive build",
     "test": "pnpm --filter ./packages/* test --if-present",
     "publish": "./scripts/publish.js",
     "lint": "eslint --cache --ignore-path .gitignore --fix .",
@@ -20,7 +20,6 @@
     "@types/jest": "^29.4.0",
     "eslint": "8.33.0",
     "eslint-plugin-prefer-let": "3.0.1",
-    "estrella": "^1.4.1",
     "fs-extra": "^11.1.0",
     "glob": "^8.1.0",
     "jest": "^29.4.1",
