@@ -30,7 +30,7 @@ export function getStaticFiles(
     );
 
     let browserAssetUrl = isBuildAsset
-      ? path.join(publicPath, filePublicPath)
+      ? path.posix.join(publicPath, filePublicPath)
       : filePublicPath;
 
     return {

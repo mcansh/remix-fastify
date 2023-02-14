@@ -45,7 +45,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     purgeRequireCacheInDevelopment = process.env.NODE_ENV === "development",
   } = options;
   invariant(build, "You must provide a build");
-  let resolvedBuild: ServerBuild = await loadBuild(build);
+  let serverBuild: ServerBuild = await loadBuild(build);
 
   if (!fastify.hasContentTypeParser("*")) {
     fastify.addContentTypeParser("*", (_request, payload, done) => {
@@ -56,7 +56,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   fastify.register(fastifyRacing, { handleError: true });
 
   let PUBLIC_DIR = path.join(rootDir, "public");
-  let ASSET_DIR = path.join(rootDir, resolvedBuild.assetsBuildDirectory);
+  let ASSET_DIR = path.join(rootDir, serverBuild.assetsBuildDirectory);
 
   fastify.register(fastifyStatic, {
     root: PUBLIC_DIR,
@@ -80,8 +80,8 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   if (mode === "development") {
     fastify.addHook("onRequest", (request, reply, done) => {
       let staticFiles = getStaticFiles(
-        resolvedBuild.assetsBuildDirectory,
-        resolvedBuild.publicPath,
+        serverBuild.assetsBuildDirectory,
+        serverBuild.publicPath,
         rootDir
       );
 
@@ -100,8 +100,8 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     });
   } else {
     let staticFiles = getStaticFiles(
-      resolvedBuild.assetsBuildDirectory,
-      resolvedBuild.publicPath,
+      serverBuild.assetsBuildDirectory,
+      serverBuild.publicPath,
       rootDir
     );
     for (let staticFile of staticFiles) {
@@ -136,7 +136,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     fastify.all(
       "*",
       createRequestHandler({
-        build: resolvedBuild,
+        build: serverBuild,
         mode,
         getLoadContext,
       })
