@@ -3,13 +3,14 @@
  */
 module.exports = {
   ignoredRouteFiles: ["**/.*"],
-  // just showing that you can customize this and it will work with the plugin
-  publicPath: "/modules/",
-  // appDirectory: "app",
-  // assetsBuildDirectory: "public/build",
-  // serverBuildPath: "build/index.js",
-  // publicPath: "/build/",
+  appDirectory: "app",
+  assetsBuildDirectory: "public/build",
+  serverBuildPath: "build/index.js",
+  publicPath: "/build/",
   future: {
     unstable_dev: true,
+    v2_routeConvention: true,
   },
+  // just showing that you can customize this and it will work with the plugin
+  publicPath: "/modules/",
 };
