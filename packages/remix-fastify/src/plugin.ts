@@ -85,13 +85,12 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
         rootDir
       );
 
-      let pathname = new URL(
-        request.url,
-        request.protocol + "://" + request.hostname
-      ).pathname;
+      let origin = `${request.protocol}://${request.hostname}`;
+      let url = new URL(`${origin}${request.url}`);
+
       let staticFile = staticFiles.find((file) => {
         return (
-          pathname ===
+          url.pathname ===
           (file.isBuildAsset ? file.browserAssetUrl : file.filePublicPath)
         );
       });
