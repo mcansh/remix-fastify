@@ -1,5 +1,5 @@
 import * as path from "node:path";
-import { pathToFileURL } from "node:url";
+import { pathToFileURL, URL } from "node:url";
 import fastifyStatic from "@fastify/static";
 import type { ServerBuild } from "@remix-run/node";
 import type { FastifyPluginAsync, FastifyReply } from "fastify";
@@ -85,9 +85,13 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
         rootDir
       );
 
+      let pathname = new URL(
+        request.url,
+        request.protocol + "://" + request.hostname
+      ).pathname;
       let staticFile = staticFiles.find((file) => {
         return (
-          request.url ===
+          pathname ===
           (file.isBuildAsset ? file.browserAssetUrl : file.filePublicPath)
         );
       });
