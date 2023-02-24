@@ -4,6 +4,13 @@
 
 ### Patch Changes
 
+- Updated dependencies [394c89c]
+  - @mcansh/remix-fastify@2.5.0
+
+## null
+
+### Patch Changes
+
 - f3bdaa9: allow disabling purging of require cache
 
   useful when using the `future.unstable_dev` remix config flag
