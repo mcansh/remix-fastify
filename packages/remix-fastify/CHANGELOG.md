@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 2.5.0
+
+### Minor Changes
+
+- 394c89c: Match static files in development based on the pathname to fix HMR.
+
 ## 2.4.1
 
 ### Patch Changes
