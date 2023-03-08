@@ -12,10 +12,10 @@ pnpm i @mcansh/remix-fastify
 
 ## Quick Start
 
-1. `npx create-remix@latest --template express`
-2. [install](#installation) this
-3. remove `compression`, `express`, `morgan`, `nodemon`
-4. update your `server.js` with the following [./example/server.js](./example/server.js)
+1. `npx create-remix@latest --template mcansh/remix-fastify`
+2. opt out of installing dependencies due to pnpm workspaces
+3. install this package manually using the instructions [above](#installation)
+
 
 > **Note**
 >
