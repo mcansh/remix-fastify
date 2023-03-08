@@ -12,7 +12,7 @@ pnpm i @mcansh/remix-fastify
 
 ## Quick Start
 
-1. `npx create-remix@latest --template mcansh/remix-fastify`
+1. `npx create-remix@latest --template https://github.com/mcansh/remix-fastify/tree/main/example`
 2. opt out of installing dependencies due to pnpm workspaces
 3. install this package manually using the instructions [above](#installation)
 
