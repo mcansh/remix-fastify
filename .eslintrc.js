@@ -1,9 +1,6 @@
-const { glob } = require("glob");
+const { globSync } = require("glob");
 
-let packages = glob.sync("packages/*", {
-  absolute: true,
-  cwd: process.cwd(),
-});
+let packages = globSync("packages/*", { absolute: true });
 
 /** @type {import('eslint').Linter.Config} */
 module.exports = {

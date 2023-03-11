@@ -2,9 +2,9 @@
 
 let { execSync } = require("node:child_process");
 let semver = require("semver");
-let glob = require("glob");
+let { globSync } = require("glob");
 
-let packages = glob.sync("packages/*", { absolute: true });
+let packages = globSync("packages/*", { absolute: true });
 
 function getTaggedVersion() {
   let output = execSync("git tag --list --points-at HEAD").toString().trim();

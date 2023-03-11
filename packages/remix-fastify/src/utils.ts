@@ -1,5 +1,5 @@
 import path from "node:path";
-import * as glob from "glob";
+import { globSync } from "glob";
 
 export interface StaticFile {
   // whether or not the file is in the build directory
@@ -15,7 +15,7 @@ export function getStaticFiles(
   publicPath: string,
   rootDir: string
 ): Array<StaticFile> {
-  let staticFilePaths = glob.sync(`public/**/*`, {
+  let staticFilePaths = globSync(`public/**/*`, {
     dot: true,
     nodir: true,
     cwd: rootDir,
