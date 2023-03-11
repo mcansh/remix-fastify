@@ -2,34 +2,34 @@
   "name": "@mcansh/remix-fastify",
   "version": "2.5.0",
   "description": "Fastify server request handler for Remix",
-  "source": "./src/index.ts",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/index.d.ts",
-  "scripts": {
-    "prepublishOnly": "npm run build",
-    "dev": "../../scripts/build.js --watch",
-    "build": "../../scripts/build.js",
-    "test": "jest"
-  },
+  "repository": "mcansh/remix-fastify",
+  "license": "MIT",
+  "author": "Logan McAnsh <logan@remix.run> (https://remix.run)",
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "default": "./dist/cjs/index.js",
-      "require": "./dist/cjs/index.js",
-      "import": "./dist/esm/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.js"
     }
   },
-  "repository": "mcansh/remix-fastify",
-  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist",
     "package.json",
     "README.md",
     "LICENSE"
   ],
-  "author": "Logan McAnsh <logan@remix.run> (https://remix.run)",
+  "scripts": {
+    "prepublishOnly": "npm run build && publint",
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "test": "jest"
+  },
   "dependencies": {
     "@fastify/static": "^6.9.0",
     "fastify-plugin": "^4.5.0",

@@ -3,12 +3,14 @@
   "repository": "mcansh/remix-fastify",
   "license": "MIT",
   "scripts": {
-    "dev": "node ./scripts/build.js --watch",
-    "build": "node ./scripts/build.js",
+    "dev": "pnpm run --recursive dev",
+    "build": "pnpm run --recursive build",
     "test": "pnpm --filter ./packages/* test --if-present",
     "publish": "./scripts/publish.js",
+    "publint": "publint ./packages/**",
     "lint": "eslint --cache --ignore-path .gitignore --fix .",
     "format": "prettier --write --ignore-path .gitignore .",
+    "validate": "run-p lint format publint",
     "changeset": "changeset",
     "changeset:version": "changeset version",
     "changeset:release": "pnpm run build && changeset publish"
@@ -20,14 +22,16 @@
     "@types/jest": "^29.4.0",
     "eslint": "8.34.0",
     "eslint-plugin-prefer-let": "3.0.1",
-    "estrella": "^1.4.1",
     "fs-extra": "^11.1.0",
     "glob": "^8.1.0",
     "jest": "^29.4.3",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.8.4",
+    "publint": "^0.1.10",
     "react": "^18.2.0",
     "semver": "^7.3.8",
     "ts-jest": "^29.0.5",
+    "tsup": "^6.6.3",
     "typescript": "^4.9.5"
   }
 }

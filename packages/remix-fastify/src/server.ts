@@ -1,4 +1,4 @@
-import { PassThrough, Readable } from "node:stream";
+import { PassThrough } from "node:stream";
 import type { FastifyRequest, FastifyReply } from "fastify";
 import type {
   AppLoadContext,
