@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 2.6.0
+
+### Minor Changes
+
+- b52d31b: use tsup for building/bundling, no user facing changes
+
 ## 2.5.0
 
 ### Minor Changes
