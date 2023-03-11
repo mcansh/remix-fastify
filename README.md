@@ -16,10 +16,9 @@ pnpm i @mcansh/remix-fastify
 2. opt out of installing dependencies due to pnpm workspaces
 3. install this package manually using the instructions [above](#installation)
 
-
 > **Note**
 >
-> on windows, you may need to manually call `installGlobals()` inside server.ts
+> on Windows, you may need to manually call `installGlobals()` inside server.ts
 
 > ```ts
 > import fastify from "fastify";
