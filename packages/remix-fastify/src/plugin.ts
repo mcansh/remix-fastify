@@ -21,6 +21,7 @@ interface PluginOptions {
   rootDir?: string;
   getLoadContext?: GetLoadContextFunction;
   purgeRequireCacheInDevelopment?: boolean;
+  earlyHints?: boolean;
 }
 
 async function loadBuild(build: ServerBuild | string): Promise<ServerBuild> {
@@ -46,6 +47,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     mode = process.env.NODE_ENV,
     rootDir = process.cwd(),
     purgeRequireCacheInDevelopment = process.env.NODE_ENV === "development",
+    earlyHints = true,
   } = options;
   invariant(build, "You must provide a build");
   let serverBuild: ServerBuild = await loadBuild(build);
@@ -56,7 +58,9 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     });
   }
 
-  fastify.register(fastifyEarlyHints, { warn: true });
+  if (earlyHints) {
+    fastify.register(fastifyEarlyHints, { warn: true });
+  }
   fastify.register(fastifyRacing, { handleError: true });
 
   let PUBLIC_DIR = path.join(rootDir, "public");
@@ -131,9 +135,10 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
 
       let loaded = await loadBuild(build);
 
-      let links = getPrefetch(request, loaded);
-
-      await reply.writeEarlyHintsLinks(links);
+      if (earlyHints) {
+        let links = getPrefetch(request, loaded);
+        await reply.writeEarlyHintsLinks(links);
+      }
 
       return createRequestHandler({
         build: loaded,
@@ -143,8 +148,10 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     });
   } else {
     fastify.all("*", async (request, reply) => {
-      let links = getPrefetch(request, serverBuild);
-      await reply.writeEarlyHintsLinks(links);
+      if (earlyHints) {
+        let links = getPrefetch(request, serverBuild);
+        await reply.writeEarlyHintsLinks(links);
+      }
       createRequestHandler({
         build: serverBuild,
         mode,
