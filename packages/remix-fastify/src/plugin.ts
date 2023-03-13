@@ -1,11 +1,14 @@
 import * as path from "node:path";
 import { pathToFileURL, URL } from "node:url";
+import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
 import fastifyStatic from "@fastify/static";
+import type { EarlyHintItem } from "@fastify/early-hints";
+import fastifyEarlyHints from "@fastify/early-hints";
 import type { ServerBuild } from "@remix-run/node";
-import type { FastifyPluginAsync, FastifyReply } from "fastify";
 import fp from "fastify-plugin";
 import fastifyRacing from "fastify-racing";
 import invariant from "tiny-invariant";
+import { matchRoutes } from "@remix-run/router";
 
 import type { GetLoadContextFunction } from "./server";
 import { createRequestHandler } from "./server";
@@ -20,7 +23,7 @@ interface PluginOptions {
   purgeRequireCacheInDevelopment?: boolean;
 }
 
-async function loadBuild(build: ServerBuild | string) {
+async function loadBuild(build: ServerBuild | string): Promise<ServerBuild> {
   if (typeof build === "string") {
     if (!build.endsWith(".js")) {
       build = path.join(build, "index.js");
@@ -53,6 +56,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     });
   }
 
+  fastify.register(fastifyEarlyHints, { warn: true });
   fastify.register(fastifyRacing, { handleError: true });
 
   let PUBLIC_DIR = path.join(rootDir, "public");
@@ -124,21 +128,29 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
       if (purgeRequireCacheInDevelopment) {
         purgeRequireCache(build);
       }
+
+      let loaded = await loadBuild(build);
+
+      let links = getPrefetch(request, loaded);
+
+      await reply.writeEarlyHintsLinks(links);
+
       return createRequestHandler({
-        build: await loadBuild(build),
+        build: loaded,
         mode,
         getLoadContext,
       })(request, reply);
     });
   } else {
-    fastify.all(
-      "*",
+    fastify.all("*", async (request, reply) => {
+      let links = getPrefetch(request, serverBuild);
+      await reply.writeEarlyHintsLinks(links);
       createRequestHandler({
         build: serverBuild,
         mode,
         getLoadContext,
-      })
-    );
+      })(request, reply);
+    });
   }
 };
 
@@ -146,3 +158,33 @@ export let remixFastifyPlugin = fp(remixFastify, {
   name: "@mcansh/remix-fastify",
   fastify: "^3.29.0 || ^4.0.0",
 });
+
+function getPrefetch(
+  request: FastifyRequest,
+  serverBuild: ServerBuild
+): EarlyHintItem[] {
+  let origin = `${request.protocol}://${request.hostname}`;
+  let url = new URL(`${origin}${request.url}`);
+  let routes = Object.values(serverBuild.assets.routes);
+  let matches = matchRoutes(routes, url.pathname);
+
+  if (!matches?.length) return [];
+
+  let links = matches.flatMap((match) => {
+    let routeImports = match.route.imports || [];
+    let routeModule = match.route.module;
+    let imports = [
+      routeModule,
+      ...routeImports,
+      serverBuild.assets.url,
+      serverBuild.assets.entry.module,
+      ...serverBuild.assets.entry.imports,
+    ];
+
+    return imports;
+  });
+
+  return links.map((link) => {
+    return { href: link, as: "script", rel: "preload" };
+  });
+}
