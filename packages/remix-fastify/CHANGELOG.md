@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 2.6.1
+
+### Patch Changes
+
+- 4eef90e: fix: better windows file path support
+
 ## 2.6.0
 
 ### Minor Changes
