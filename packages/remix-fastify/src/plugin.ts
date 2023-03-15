@@ -56,7 +56,6 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   fastify.register(fastifyRacing, { handleError: true });
 
   let PUBLIC_DIR = path.join(rootDir, "public");
-  let ASSET_DIR = path.join(rootDir, serverBuild.assetsBuildDirectory);
 
   fastify.register(fastifyStatic, {
     root: PUBLIC_DIR,
@@ -67,32 +66,25 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   });
 
   function sendAsset(reply: FastifyReply, file: StaticFile) {
-    return reply.sendFile(
-      file.filePublicPath,
-      file.isBuildAsset ? ASSET_DIR : PUBLIC_DIR,
-      {
-        maxAge: file.isBuildAsset ? "1y" : "1h",
-        immutable: file.isBuildAsset,
-      }
-    );
+    return reply.sendFile(file.filePublicPath, rootDir, {
+      maxAge: file.isBuildAsset ? "1y" : "1h",
+      immutable: file.isBuildAsset,
+    });
   }
 
   if (mode === "development") {
     fastify.addHook("onRequest", (request, reply, done) => {
-      let staticFiles = getStaticFiles(
-        serverBuild.assetsBuildDirectory,
-        serverBuild.publicPath,
-        rootDir
-      );
+      let staticFiles = getStaticFiles({
+        assetsBuildDirectory: serverBuild.assetsBuildDirectory,
+        publicPath: serverBuild.publicPath,
+        rootDir,
+      });
 
       let origin = `${request.protocol}://${request.hostname}`;
       let url = new URL(`${origin}${request.url}`);
 
       let staticFile = staticFiles.find((file) => {
-        return (
-          url.pathname ===
-          (file.isBuildAsset ? file.browserAssetUrl : file.filePublicPath)
-        );
+        return url.pathname === file.browserAssetUrl;
       });
 
       if (staticFile) {
@@ -102,11 +94,11 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
       done();
     });
   } else {
-    let staticFiles = getStaticFiles(
-      serverBuild.assetsBuildDirectory,
-      serverBuild.publicPath,
-      rootDir
-    );
+    let staticFiles = getStaticFiles({
+      assetsBuildDirectory: serverBuild.assetsBuildDirectory,
+      publicPath: serverBuild.publicPath,
+      rootDir,
+    });
     for (let staticFile of staticFiles) {
       fastify.get(staticFile.browserAssetUrl, (_request, reply) => {
         return sendAsset(reply, staticFile);
