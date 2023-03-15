@@ -1,4 +1,3 @@
-import path from "node:path";
 import { globSync } from "glob";
 
 export interface StaticFile {
@@ -10,11 +9,15 @@ export interface StaticFile {
   browserAssetUrl: string;
 }
 
-export function getStaticFiles(
-  assetsBuildDirectory: string,
-  publicPath: string,
-  rootDir: string
-): Array<StaticFile> {
+export function getStaticFiles({
+  assetsBuildDirectory,
+  publicPath,
+  rootDir,
+}: {
+  assetsBuildDirectory: string;
+  publicPath: string;
+  rootDir: string;
+}): Array<StaticFile> {
   let staticFilePaths = globSync(`public/**/*`, {
     dot: true,
     nodir: true,
@@ -22,20 +25,19 @@ export function getStaticFiles(
   });
 
   return staticFilePaths.map((filepath) => {
-    let isBuildAsset = filepath.startsWith(assetsBuildDirectory);
-
-    let filePublicPath = filepath.replace(
-      isBuildAsset ? assetsBuildDirectory : "public",
-      ""
-    );
+    let normalized = filepath.replace(/\\/g, "/");
+    let isBuildAsset = normalized.startsWith(assetsBuildDirectory);
 
     let browserAssetUrl = isBuildAsset
-      ? path.posix.join(publicPath, filePublicPath)
-      : filePublicPath;
+      ? normalized.replace(
+          assetsBuildDirectory,
+          `/${publicPath.split("/").filter(Boolean).join("/")}`
+        )
+      : normalized;
 
     return {
       isBuildAsset,
-      filePublicPath,
+      filePublicPath: filepath,
       browserAssetUrl,
     };
   });
