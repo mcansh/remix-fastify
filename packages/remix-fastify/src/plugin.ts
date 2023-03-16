@@ -73,6 +73,8 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   }
 
   if (mode === "development") {
+    // TODO: investigate a more streamline way to do this
+    // this doesn't *feel* right
     fastify.addHook("onRequest", (request, reply, done) => {
       let staticFiles = getStaticFiles({
         assetsBuildDirectory: serverBuild.assetsBuildDirectory,
@@ -99,6 +101,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
       publicPath: serverBuild.publicPath,
       rootDir,
     });
+
     for (let staticFile of staticFiles) {
       fastify.get(staticFile.browserAssetUrl, (_request, reply) => {
         return sendAsset(reply, staticFile);
