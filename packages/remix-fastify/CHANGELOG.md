@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 2.6.2
+
+### Patch Changes
+
+- 9337062: add leading slash to browserAssetUrl
+
 ## 2.6.1
 
 ### Patch Changes
