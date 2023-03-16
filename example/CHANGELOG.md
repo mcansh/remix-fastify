@@ -4,6 +4,13 @@
 
 ### Patch Changes
 
+- Updated dependencies [4f30f2a]
+  - @mcansh/remix-fastify@2.6.3
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [9337062]
   - @mcansh/remix-fastify@2.6.2
 
