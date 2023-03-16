@@ -24,21 +24,25 @@ export function getStaticFiles({
     cwd: rootDir,
   });
 
-  return staticFilePaths.map((filepath) => {
-    let normalized = filepath.replace(/\\/g, "/");
+  return staticFilePaths.map((filePublicPath) => {
+    let normalized = filePublicPath.replace(/\\/g, "/");
     let isBuildAsset = normalized.startsWith(assetsBuildDirectory);
 
-    let browserAssetUrl = isBuildAsset
-      ? normalized.replace(
-          assetsBuildDirectory,
-          `/${publicPath.split("/").filter(Boolean).join("/")}`
-        )
-      : normalized;
+    let browserAssetUrl = "/";
+
+    if (isBuildAsset) {
+      browserAssetUrl += normalized.replace(
+        assetsBuildDirectory,
+        publicPath.split("/").filter(Boolean).join("/")
+      );
+    } else {
+      browserAssetUrl += normalized.replace("public/", "");
+    }
 
     return {
       isBuildAsset,
-      filePublicPath: filepath,
-      browserAssetUrl: `/${browserAssetUrl}`,
+      filePublicPath,
+      browserAssetUrl,
     };
   });
 }
