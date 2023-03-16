@@ -38,7 +38,7 @@ export function getStaticFiles({
     return {
       isBuildAsset,
       filePublicPath: filepath,
-      browserAssetUrl,
+      browserAssetUrl: `/${browserAssetUrl}`,
     };
   });
 }
