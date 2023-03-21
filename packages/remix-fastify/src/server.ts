@@ -84,8 +84,10 @@ export function createRemixHeaders(
 export function createRemixRequest(request: FastifyRequest): NodeRequest {
   let origin = `${request.protocol}://${request.hostname}`;
   let url = `${origin}${request.url}`;
-
   let controller = new AbortController();
+
+  // Pass fastify-racing's AbortEvent on to AbortController
+  request.race(() => controller.abort());
 
   let init: NodeRequestInit = {
     method: request.method,
