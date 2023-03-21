@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 2.6.3
+
+### Patch Changes
+
+- 4f30f2a: ensure browserAssetUrl has a leading slash when it makes it to fastify
+
 ## 2.6.2
 
 ### Patch Changes
