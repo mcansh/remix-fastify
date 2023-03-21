@@ -46,7 +46,7 @@ export function createRequestHandler({
   let handleRequest = createRemixRequestHandler(build, mode);
 
   return async (request, reply) => {
-    let remixRequest = createRemixRequest(request);
+    let remixRequest = createRemixRequest(request, reply);
     let loadContext =
       typeof getLoadContext === "function"
         ? getLoadContext(request, reply)
@@ -81,13 +81,20 @@ export function createRemixHeaders(
   return headers;
 }
 
-export function createRemixRequest(request: FastifyRequest): NodeRequest {
+export function createRemixRequest(
+  request: FastifyRequest,
+  reply: FastifyReply
+): NodeRequest {
   let origin = `${request.protocol}://${request.hostname}`;
   let url = `${origin}${request.url}`;
   let controller = new AbortController();
 
   // Pass fastify-racing's AbortEvent on to AbortController
-  request.race(() => controller.abort());
+  if (typeof request.race === "function") {
+    request.race(() => controller.abort());
+  } else {
+    reply.raw.on("close", () => controller.abort());
+  }
 
   let init: NodeRequestInit = {
     method: request.method,
