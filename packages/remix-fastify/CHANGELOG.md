@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 2.6.4
+
+### Patch Changes
+
+- c4bc305: Pass fastify-racing's AbortEvent on to AbortController
+
 ## 2.6.3
 
 ### Patch Changes
