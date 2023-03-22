@@ -1,6 +1,7 @@
 import { Readable } from "stream";
+import type { FastifyReply } from "fastify";
 import fastify from "fastify";
-import { createRequest } from "node-mocks-http";
+import { createRequest, createResponse } from "node-mocks-http";
 import {
   createRequestHandler as createRemixRequestHandler,
   Response as NodeResponse,
@@ -262,7 +263,10 @@ describe("fastify createRemixRequest", () => {
       },
     });
 
-    expect(createRemixRequest(fastifyRequest)).toMatchInlineSnapshot(`
+    let fastifyReply = { raw: { on: jest.fn() } } as unknown as FastifyReply;
+
+    expect(createRemixRequest(fastifyRequest, fastifyReply))
+      .toMatchInlineSnapshot(`
       NodeRequest {
         "agent": undefined,
         "compress": true,
