@@ -7,7 +7,7 @@ import type {
   Response as NodeResponse,
 } from "@remix-run/node";
 import {
-  AbortController,
+  AbortController as NodeAbortController,
   createRequestHandler as createRemixRequestHandler,
   Headers as NodeHeaders,
   Request as NodeRequest,
@@ -87,19 +87,16 @@ export function createRemixRequest(
 ): NodeRequest {
   let origin = `${request.protocol}://${request.hostname}`;
   let url = `${origin}${request.url}`;
-  let controller = new AbortController();
 
-  // Pass fastify-racing's AbortEvent on to AbortController
-  if (typeof request.race === "function") {
-    request.race(() => controller.abort());
-  } else {
-    reply.raw.on("close", () => controller.abort());
-  }
+  // Abort action/loaders once we can no longer write a response
+  let controller = new NodeAbortController();
 
   let init: NodeRequestInit = {
     method: request.method,
     headers: createRemixHeaders(request.headers),
-    signal: controller.signal as AbortSignal,
+    // @ts-expect-error reason/throwIfAborted added
+    // https://github.com/mysticatea/abort-controller/issues/36
+    signal: controller.signal,
   };
 
   if (request.method !== "GET" && request.method !== "HEAD") {
