@@ -13,6 +13,7 @@ import {
   Request as NodeRequest,
   writeReadableStreamToWritable,
 } from "@remix-run/node";
+import { isDeferredData } from "@remix-run/server-runtime/dist/responses";
 
 /**
  * A function that returns the value to use as `context` in route `loader` and
@@ -90,13 +91,14 @@ export function createRemixRequest(
 
   // Abort action/loaders once we can no longer write a response
   let controller = new NodeAbortController();
+  reply.raw.on("close", () => controller.abort());
 
   let init: NodeRequestInit = {
     method: request.method,
     headers: createRemixHeaders(request.headers),
-    // @ts-expect-error reason/throwIfAborted added
+    // Cast until reason/throwIfAborted added
     // https://github.com/mysticatea/abort-controller/issues/36
-    signal: controller.signal,
+    signal: controller.signal as NodeRequestInit["signal"],
   };
 
   if (request.method !== "GET" && request.method !== "HEAD") {
@@ -110,9 +112,24 @@ export async function sendRemixResponse(
   reply: FastifyReply,
   nodeResponse: NodeResponse
 ): Promise<void> {
-  reply.status(nodeResponse.status);
+  let status: number;
+  let headers: NodeHeaders;
 
-  for (let [key, values] of Object.entries(nodeResponse.headers.raw())) {
+  if (isDeferredData(nodeResponse)) {
+    status = nodeResponse.init?.status || 200;
+    if (nodeResponse.init?.headers) {
+      headers = nodeResponse.init?.headers
+        ? new NodeHeaders(nodeResponse.init.headers)
+        : new NodeHeaders();
+    }
+  } else {
+    status = nodeResponse.status;
+    headers = nodeResponse.headers;
+  }
+
+  reply.status(status);
+
+  for (let [key, values] of Object.entries(headers!.raw())) {
     for (let value of values) {
       reply.header(key, value);
     }

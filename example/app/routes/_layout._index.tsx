@@ -6,16 +6,20 @@ import { Await, Form, Link, useLoaderData } from "@remix-run/react";
 import { sessionStorage } from "~/session.server";
 
 export async function loader({ request, context }: DataFunctionArgs) {
+  function sleep<T>(ms: number, value: T) {
+    return new Promise<T>((resolve) => setTimeout(() => resolve(value), ms));
+  }
+
   let cookie = request.headers.get("Cookie");
   let session = await sessionStorage.getSession(cookie);
-  let name = new Promise((resolve) =>
-    setTimeout(() => resolve(session.get("name") || "Anonymous"), 1_000)
-  );
+  let name = sleep<string>(1_000, session.get("name") || "Anonymous");
+  let loadContextName = context.loadContextName;
 
-  return defer({
-    name,
-    loadContextName: context.loadContextName,
-  });
+  if (!loadContextName) {
+    loadContextName = "no load context name";
+  }
+
+  return defer({ name, loadContextName }, { status: 200, headers: {} });
 }
 
 export async function action({ request }: DataFunctionArgs) {
@@ -39,7 +43,7 @@ export async function action({ request }: DataFunctionArgs) {
 }
 
 export default function Index() {
-  let data = useLoaderData<typeof loader>();
+  let { loadContextName, name } = useLoaderData<typeof loader>();
 
   return (
     <div>
@@ -62,11 +66,13 @@ export default function Index() {
         </a>
       </h1>
 
+      <h3>{loadContextName}</h3>
+
       <React.Suspense fallback={<h2>loading...</h2>}>
-        <Await resolve={data.name} errorElement={<h2>failed...</h2>}>
+        <Await resolve={name} errorElement={<h2>failed...</h2>}>
           {(resolvedName) => (
             <h2>
-              Hello {resolvedName}, with context name {data.loadContextName}
+              Hello {resolvedName}, with context name {loadContextName}
             </h2>
           )}
         </Await>

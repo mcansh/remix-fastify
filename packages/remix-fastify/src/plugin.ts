@@ -4,7 +4,6 @@ import fastifyStatic from "@fastify/static";
 import type { ServerBuild } from "@remix-run/node";
 import type { FastifyPluginAsync, FastifyReply } from "fastify";
 import fp from "fastify-plugin";
-import fastifyRacing from "fastify-racing";
 import invariant from "tiny-invariant";
 
 import type { GetLoadContextFunction } from "./server";
@@ -52,8 +51,6 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
       done(null, payload);
     });
   }
-
-  fastify.register(fastifyRacing, { handleError: true });
 
   let PUBLIC_DIR = path.join(rootDir, "public");
 
@@ -109,11 +106,6 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     }
   }
 
-  let getLoadContext =
-    typeof options.getLoadContext === "function"
-      ? options.getLoadContext
-      : undefined;
-
   if (mode === "development" && typeof build === "string") {
     fastify.all("*", async (request, reply) => {
       invariant(build, "we lost the build");
@@ -127,7 +119,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
       return createRequestHandler({
         build: await loadBuild(build),
         mode,
-        getLoadContext,
+        getLoadContext: options.getLoadContext,
       })(request, reply);
     });
   } else {
@@ -136,7 +128,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
       createRequestHandler({
         build: serverBuild,
         mode,
-        getLoadContext,
+        getLoadContext: options.getLoadContext,
       })
     );
   }

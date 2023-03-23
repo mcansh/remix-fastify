@@ -78,6 +78,7 @@ importers:
       '@fastify/static': ^6.9.0
       '@remix-run/node': 1.14.1
       '@remix-run/react': 1.14.1
+      '@remix-run/server-runtime': 1.14.1
       '@types/glob': ^8.1.0
       '@types/node': ^18.15.0
       '@types/react': ^18.0.28
@@ -101,6 +102,7 @@ importers:
     devDependencies:
       '@remix-run/node': 1.14.1
       '@remix-run/react': 1.14.1_biqbaboplfbrettd7655fr4n2y
+      '@remix-run/server-runtime': 1.14.1
       '@types/glob': 8.1.0
       '@types/node': 18.15.0
       '@types/react': 18.0.28
