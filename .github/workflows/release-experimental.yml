@@ -4,7 +4,9 @@ on:
   release:
     types: [published]
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   CI: true
@@ -44,3 +46,22 @@ jobs:
         run: npm run publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  comment:
+    name: 📝 Comment on issues and pull requests
+    if: github.repository == 'mcansh/remix-fastify' && needs.release.outputs.published == 'true' }}
+    needs: [release]
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 📝 Comment on issues
+        uses: mcansh/release-comment-action@v0.1.3
+        env:
+          DIRECTORY_TO_CHECK: "./packages"
+          PACKAGE_VERSION_TO_FOLLOW: "@mcansh/remix-fastify"
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
