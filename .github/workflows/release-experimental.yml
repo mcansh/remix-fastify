@@ -63,5 +63,3 @@ jobs:
         env:
           DIRECTORY_TO_CHECK: "./packages"
           PACKAGE_VERSION_TO_FOLLOW: "@mcansh/remix-fastify"
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GH_TOKEN: ${{ github.token }}
