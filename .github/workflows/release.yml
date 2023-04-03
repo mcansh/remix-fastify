@@ -29,17 +29,16 @@ jobs:
       - name: 🟧 Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 7
+          version: 8
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: pnpm
           registry-url: "https://registry.npmjs.org"
-
-      - name: 📥 Install deps
-        run: pnpm install --frozen-lockfile
 
       - name: 🔐 Setup npm auth
         run: |
@@ -66,7 +65,7 @@ jobs:
 
   comment:
     name: 📝 Comment on issues and pull requests
-    if: github.repository == 'mcansh/remix-fastify' && needs.release.outputs.published == 'true' }}
+    if: github.repository == 'mcansh/remix-fastify' && needs.release.outputs.published == 'true'
     needs: [release]
     runs-on: ubuntu-latest
     steps:
