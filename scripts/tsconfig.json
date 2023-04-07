@@ -1,0 +1,14 @@
+{
+  "include": ["."],
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "nodenext",
+    "module": "ESNext",
+    "noEmit": true,
+    "strict": true,
+    "target": "ES2018"
+  }
+}
