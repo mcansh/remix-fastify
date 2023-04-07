@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 2.7.0
+
+### Minor Changes
+
+- 31f5883: fix for post requests getting aborted
+
 ## 2.6.4
 
 ### Patch Changes
