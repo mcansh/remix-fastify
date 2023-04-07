@@ -75,7 +75,7 @@ jobs:
           fetch-depth: 0
 
       - name: 📝 Comment on issues
-        uses: mcansh/release-comment-action@0.2.0
+        uses: mcansh/release-comment-action@v0.3.1
         env:
           DIRECTORY_TO_CHECK: "./packages"
-          PACKAGE_VERSION_TO_FOLLOW: "@mcansh/remix-fastify"
+          PACKAGE_NAME: "@mcansh/remix-fastify"
