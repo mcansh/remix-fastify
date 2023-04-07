@@ -9,7 +9,6 @@
     "strict": true,
     "outDir": "./dist",
     "skipLibCheck": true,
-    "importsNotUsedAsValues": "error",
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "isolatedModules": true,
