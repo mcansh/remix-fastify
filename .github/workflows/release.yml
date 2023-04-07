@@ -23,8 +23,11 @@ jobs:
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
         with:
-          fetch-depth: 0
+          node-version: 16
 
       - name: 🟧 Setup pnpm
         uses: pnpm/action-setup@v2
@@ -33,12 +36,6 @@ jobs:
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          registry-url: "https://registry.npmjs.org"
 
       - name: 🔐 Setup npm auth
         run: |
