@@ -89,12 +89,7 @@ export function createRemixRequest(
   let url = `${origin}${request.url}`;
   let controller = new AbortController();
 
-  // Pass fastify-racing's AbortEvent on to AbortController
-  if (typeof request.race === "function") {
-    request.race(() => controller.abort());
-  } else {
-    reply.raw.on("close", () => controller.abort());
-  }
+  reply.raw.on("close", () => controller.abort());
 
   let init: NodeRequestInit = {
     method: request.method,
