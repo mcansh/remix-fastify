@@ -8,7 +8,7 @@ import { sessionStorage } from "~/session.server";
 export async function loader({ request, context }: DataFunctionArgs) {
   let cookie = request.headers.get("Cookie");
   let session = await sessionStorage.getSession(cookie);
-  let name = new Promise((resolve) =>
+  let name = new Promise<string>((resolve) =>
     setTimeout(() => resolve(session.get("name") || "Anonymous"), 1_000)
   );
 
@@ -81,9 +81,9 @@ export default function Index() {
         <button type="submit">Submit</button>
       </Form>
 
-      <Link style={{ marginTop: 10, display: "block" }} to="/page-2">
-        Go to page 2
-      </Link>
+      <div style={{ marginTop: 10, display: "block" }}>
+        <Link to="/page-2">Go to page 2</Link>
+      </div>
     </div>
   );
 }
