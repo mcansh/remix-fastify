@@ -1,7 +1,13 @@
 import * as React from "react";
 import type { DataFunctionArgs } from "@remix-run/node";
 import { defer, redirect } from "@remix-run/node";
-import { Await, Form, Link, useLoaderData } from "@remix-run/react";
+import {
+  Await,
+  Form,
+  Link,
+  useAsyncValue,
+  useLoaderData,
+} from "@remix-run/react";
 
 import { sessionStorage } from "~/session.server";
 
@@ -24,6 +30,15 @@ export async function action({ request }: DataFunctionArgs) {
   let formData = await request.formData();
 
   let name = formData.get("name");
+
+  if (formData.has("reset")) {
+    session.unset("name");
+    return redirect("/", {
+      headers: {
+        "Set-Cookie": await sessionStorage.commitSession(session),
+      },
+    });
+  }
 
   if (!name) {
     throw new Response("Name is required", { status: 400 });
@@ -76,9 +91,18 @@ export default function Index() {
         method="post"
         style={{ display: "flex", justifyContent: "center", gap: 4 }}
       >
-        <label htmlFor="name">Name:</label>
-        <input type="text" name="name" id="name" />
+        <label>
+          <span>Name: </span>
+          <React.Suspense fallback={<FallbackNameInput />}>
+            <Await resolve={data.name}>
+              <NameInput />
+            </Await>
+          </React.Suspense>
+        </label>
         <button type="submit">Submit</button>
+        <button name="reset" type="submit">
+          Reset
+        </button>
       </Form>
 
       <div style={{ marginTop: 10, display: "block" }}>
@@ -86,4 +110,15 @@ export default function Index() {
       </div>
     </div>
   );
+}
+
+function NameInput() {
+  let resolvedName = useAsyncValue() as string;
+  let defaultValue = resolvedName === "Anonymous" ? "" : resolvedName;
+  return <input type="text" name="name" defaultValue={defaultValue} />;
+}
+
+function FallbackNameInput() {
+  // axe-ignore
+  return <input type="text" name="name" />;
 }
