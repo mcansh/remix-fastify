@@ -149,11 +149,6 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     }
   }
 
-  let getLoadContext =
-    typeof options.getLoadContext === "function"
-      ? options.getLoadContext
-      : undefined;
-
   if (mode === "development" && typeof build === "string") {
     fastify.all("*", async (request, reply) => {
       invariant(build, "we lost the build");
@@ -175,7 +170,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
       return createRequestHandler({
         build: loaded,
         mode,
-        getLoadContext,
+        getLoadContext: options.getLoadContext,
       })(request, reply);
     });
   } else {
@@ -187,7 +182,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
       createRequestHandler({
         build: serverBuild,
         mode,
-        getLoadContext,
+        getLoadContext: options.getLoadContext,
       })(request, reply);
     });
   }
