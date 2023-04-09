@@ -6,5 +6,5 @@ yalc.lock
 
 /example/build
 /example/public/build
-/example/changelog.md
+example/CHANGELOG.md
 .eslintcache
