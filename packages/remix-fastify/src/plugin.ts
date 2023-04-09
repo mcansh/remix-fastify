@@ -53,7 +53,7 @@ interface PluginOptions {
    * it will only include the js needed to render the current page
    * @default true
    */
-  earlyHints?: boolean;
+  unstable_earlyHints?: boolean;
 }
 
 async function loadBuild(build: ServerBuild | string): Promise<ServerBuild> {
@@ -79,7 +79,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     mode = process.env.NODE_ENV,
     rootDir = process.cwd(),
     purgeRequireCacheInDevelopment = process.env.NODE_ENV === "development",
-    earlyHints = true,
+    unstable_earlyHints: earlyHints,
   } = options;
   invariant(build, "You must provide a build");
   let serverBuild: ServerBuild = await loadBuild(build);
