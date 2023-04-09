@@ -1,8 +1,14 @@
-import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import * as React from "react";
+import { defer } from "@remix-run/node";
+import { Await, Link, useLoaderData } from "@remix-run/react";
+
+import { sleep } from "~/sleep";
 
 export function loader() {
-  return json({ message: "loader data from page 2" });
+  return defer({
+    message: "loader data from page 2",
+    deferred: sleep(2_000, "some text\n".repeat(2_000)),
+  });
 }
 
 export default function Page2() {
@@ -10,10 +16,18 @@ export default function Page2() {
 
   return (
     <div>
-      <h1>Page 2</h1>
-      <h2>{data.message}</h2>
+      <h2>Page 2</h2>
+      <h3>{data.message}</h3>
       <p>Here's some content for page 2.</p>
       <Link to="/">Go back home</Link>
+
+      <div style={{ marginTop: 10 }}>
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <Await resolve={data.deferred}>
+            {(text) => <pre style={{ marginTop: 0 }}>{text}</pre>}
+          </Await>
+        </React.Suspense>
+      </div>
     </div>
   );
 }

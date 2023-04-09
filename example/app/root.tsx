@@ -17,7 +17,7 @@ export let links: LinksFunction = () => {
 };
 
 export function loader() {
-  return json({ message: "Hello world!" });
+  return json({ message: "Hello from the root loader" });
 }
 
 export default function App() {
@@ -34,24 +34,22 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Outlet />
-        <Scripts />
-        <ScrollRestoration />
-        <LiveReload />
         <div
           style={{
-            position: "absolute",
-            bottom: 0,
-            left: "50%",
-            right: 0,
-            transform: "translate3d(-50%, 0, 0)",
-            paddingBottom: 20,
-            textAlign: "center",
+            background: "red",
+            border: "2px solid black",
+            color: "white",
+            padding: "1rem",
             width: "max-content",
+            margin: "0 auto",
           }}
         >
           {data.message}
         </div>
+        <Outlet />
+        <Scripts />
+        <ScrollRestoration />
+        <LiveReload />
       </body>
     </html>
   );
