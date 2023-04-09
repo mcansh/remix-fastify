@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 2.7.1
+
+### Patch Changes
+
+- d3c16fb: feat: add support for early hints (HTTP 103)
+
 ## 2.7.0
 
 ### Minor Changes
