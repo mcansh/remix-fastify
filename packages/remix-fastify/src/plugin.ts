@@ -16,11 +16,43 @@ import type { StaticFile } from "./utils";
 import { getStaticFiles, purgeRequireCache } from "./utils";
 
 interface PluginOptions {
+  /**
+   * The Remix build to use.
+   * This can either be a path to the build or the build itself.
+   */
   build?: ServerBuild | string;
+  /**
+   * The mode your app is running in.
+   * This is used to determine how to handle errors.
+   * @default process.env.NODE_ENV
+   */
   mode?: string;
+  /**
+   * The root directory of your app.
+   * This is used to resolve the `public` directory.
+   * @default process.cwd()
+   */
   rootDir?: string;
+  /**
+   * A function that returns the value to use as `context` in route `loader` and
+   * `action` functions.
+   *
+   * You can think of this as an escape hatch that allows you to pass
+   * environment/platform-specific values through to your loader/action.
+   */
   getLoadContext?: GetLoadContextFunction;
+  /**
+   * purge the require cache in development
+   * this should be disabled if you are using `unstable_dev`.
+   * @default process.env.NODE_ENV === "development"
+   */
   purgeRequireCacheInDevelopment?: boolean;
+  /**
+   * enable early hints
+   * note this won't include any imports from your remix `links()` function.
+   * it will only include the js needed to render the current page
+   * @default true
+   */
   earlyHints?: boolean;
 }
 
