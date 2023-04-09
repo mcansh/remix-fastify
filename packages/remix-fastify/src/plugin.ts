@@ -136,7 +136,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
       let loaded = await loadBuild(build);
 
       if (earlyHints) {
-        let links = getPrefetch(request, loaded);
+        let links = getEarlyHintLinks(request, loaded);
         await reply.writeEarlyHintsLinks(links);
       }
 
@@ -149,7 +149,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   } else {
     fastify.all("*", async (request, reply) => {
       if (earlyHints) {
-        let links = getPrefetch(request, serverBuild);
+        let links = getEarlyHintLinks(request, serverBuild);
         await reply.writeEarlyHintsLinks(links);
       }
       createRequestHandler({
@@ -166,22 +166,20 @@ export let remixFastifyPlugin = fp(remixFastify, {
   fastify: "^3.29.0 || ^4.0.0",
 });
 
-function getPrefetch(
+function getEarlyHintLinks(
   request: FastifyRequest,
   serverBuild: ServerBuild
 ): EarlyHintItem[] {
   let origin = `${request.protocol}://${request.hostname}`;
   let url = new URL(`${origin}${request.url}`);
+
   let routes = Object.values(serverBuild.assets.routes);
   let matches = matchRoutes(routes, url.pathname);
-
-  if (!matches?.length) return [];
-
+  if (!matches || matches.length === 0) return [];
   let links = matches.flatMap((match) => {
     let routeImports = match.route.imports || [];
-    let routeModule = match.route.module;
     let imports = [
-      routeModule,
+      match.route.module,
       ...routeImports,
       serverBuild.assets.url,
       serverBuild.assets.entry.module,
