@@ -1,5 +1,12 @@
 # @mcansh/remix-fastify
 
+## 2.7.2
+
+### Patch Changes
+
+- ab24416: fix(plugin): return handler in production
+- d92c468: automatically disable require cache purging when unstable_dev is truthy
+
 ## 2.7.1
 
 ### Patch Changes
