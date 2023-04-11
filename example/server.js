@@ -14,6 +14,7 @@ async function start() {
       return { loadContextName: "John Doe" };
     },
     purgeRequireCacheInDevelopment: false,
+    unstable_earlyHints: true,
   });
 
   let port = process.env.PORT ? Number(process.env.PORT) || 3000 : 3000;
