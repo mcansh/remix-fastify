@@ -179,7 +179,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
         let links = getEarlyHintLinks(request, serverBuild);
         await reply.writeEarlyHintsLinks(links);
       }
-      createRequestHandler({
+      return createRequestHandler({
         build: serverBuild,
         mode,
         getLoadContext: options.getLoadContext,
