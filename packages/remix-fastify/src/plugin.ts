@@ -1,18 +1,17 @@
 import * as path from "node:path";
 import { pathToFileURL, URL } from "node:url";
-import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
+import type { FastifyPluginAsync, FastifyReply } from "fastify";
 import fastifyStatic from "@fastify/static";
-import type { EarlyHintItem } from "@fastify/early-hints";
 import fastifyEarlyHints from "@fastify/early-hints";
 import type { ServerBuild } from "@remix-run/node";
 import fp from "fastify-plugin";
 import fastifyRacing from "fastify-racing";
 import invariant from "tiny-invariant";
-import { matchRoutes } from "@remix-run/router";
 
 import type { GetLoadContextFunction } from "./server";
 import { createRequestHandler } from "./server";
 import type { StaticFile } from "./utils";
+import { getEarlyHintLinks } from "./utils";
 import { getStaticFiles, purgeRequireCache } from "./utils";
 
 interface PluginOptions {
@@ -42,8 +41,7 @@ interface PluginOptions {
    */
   getLoadContext?: GetLoadContextFunction;
   /**
-   * purge the require cache in development
-   * this should be disabled if you are using `unstable_dev`.
+   * purge the require cache in development when not using the new dev server
    * @default process.env.NODE_ENV === "development"
    */
   purgeRequireCacheInDevelopment?: boolean;
@@ -84,6 +82,10 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   invariant(build, "You must provide a build");
   let serverBuild: ServerBuild = await loadBuild(build);
 
+  if (mode === "development" && !!serverBuild?.future?.unstable_dev) {
+    purgeRequireCacheInDevelopment = false;
+  }
+
   if (!fastify.hasContentTypeParser("*")) {
     fastify.addContentTypeParser("*", (_request, payload, done) => {
       done(null, payload);
@@ -91,9 +93,9 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   }
 
   if (earlyHints) {
-    fastify.register(fastifyEarlyHints, { warn: true });
+    await fastify.register(fastifyEarlyHints, { warn: true });
   }
-  fastify.register(fastifyRacing, { handleError: true });
+  await fastify.register(fastifyRacing, { handleError: true });
 
   let PUBLIC_DIR = path.join(rootDir, "public");
 
@@ -102,6 +104,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     // this needs to be false so our regular requests can still be served
     wildcard: false,
     // we handle serving the files ourselves as you cant stack roots (public/build, public)
+    // and it won't pick up new files in dev
     serve: false,
   });
 
@@ -192,31 +195,3 @@ export let remixFastifyPlugin = fp(remixFastify, {
   name: "@mcansh/remix-fastify",
   fastify: "^3.29.0 || ^4.0.0",
 });
-
-function getEarlyHintLinks(
-  request: FastifyRequest,
-  serverBuild: ServerBuild
-): EarlyHintItem[] {
-  let origin = `${request.protocol}://${request.hostname}`;
-  let url = new URL(`${origin}${request.url}`);
-
-  let routes = Object.values(serverBuild.assets.routes);
-  let matches = matchRoutes(routes, url.pathname);
-  if (!matches || matches.length === 0) return [];
-  let links = matches.flatMap((match) => {
-    let routeImports = match.route.imports || [];
-    let imports = [
-      match.route.module,
-      ...routeImports,
-      serverBuild.assets.url,
-      serverBuild.assets.entry.module,
-      ...serverBuild.assets.entry.imports,
-    ];
-
-    return imports;
-  });
-
-  return links.map((link) => {
-    return { href: link, as: "script", rel: "preload" };
-  });
-}
