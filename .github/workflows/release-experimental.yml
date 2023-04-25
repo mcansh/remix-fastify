@@ -59,6 +59,6 @@ jobs:
 
       - name: 📝 Comment on issues
         uses: mcansh/release-comment-action@v0.3.1
-        env:
+        with:
           DIRECTORY_TO_CHECK: "./packages"
           PACKAGE_NAME: "@mcansh/remix-fastify"
