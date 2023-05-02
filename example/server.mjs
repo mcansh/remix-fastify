@@ -1,7 +1,7 @@
 import fastify from "fastify";
 import { remixFastifyPlugin } from "@mcansh/remix-fastify";
 
-import * as serverBuild from "./build/index.js";
+import * as serverBuild from "./build/index.mjs";
 
 let MODE = process.env.NODE_ENV;
 
