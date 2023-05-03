@@ -6,9 +6,8 @@
   "sideEffects": false,
   "scripts": {
     "build": "remix build",
-    "dev:remix": "remix dev -c \"node ./server.mjs\"",
-    "dev": "npm run build && run-p dev:*",
-    "start": "node ./server.js"
+    "dev": "remix dev -c \"node ./server.mjs\"",
+    "start": "node ./server.mjs"
   },
   "dependencies": {
     "@mcansh/remix-fastify": "workspace:*",
