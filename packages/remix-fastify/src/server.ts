@@ -57,7 +57,7 @@ export function createRequestHandler({
       loadContext
     )) as NodeResponse;
 
-    await sendRemixResponse(reply, response);
+    return sendRemixResponse(reply, response);
   };
 }
 
@@ -123,4 +123,5 @@ export async function sendRemixResponse(
   } else {
     reply.send();
   }
+  return reply;
 }
