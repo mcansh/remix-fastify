@@ -1,6 +1,6 @@
 {
   "name": "@mcansh/remix-fastify",
-  "version": "2.7.2",
+  "version": "2.7.3",
   "description": "Fastify server request handler for Remix",
   "repository": "mcansh/remix-fastify",
   "license": "MIT",
