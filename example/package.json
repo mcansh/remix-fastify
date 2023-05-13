@@ -5,6 +5,7 @@
   "license": "",
   "sideEffects": false,
   "scripts": {
+    "preinstall": "node ./scripts/preinstall.mjs",
     "build": "remix build",
     "dev": "remix dev -c \"node ./server.mjs\"",
     "start": "node ./server.mjs"
