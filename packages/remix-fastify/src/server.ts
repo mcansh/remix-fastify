@@ -98,7 +98,7 @@ export function createRemixRequest(
   };
 
   if (request.method !== "GET" && request.method !== "HEAD") {
-    init.body = request.raw;
+    init.body = request.body;
   }
 
   return new NodeRequest(url, init);
