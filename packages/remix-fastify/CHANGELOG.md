@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 2.7.3
+
+### Patch Changes
+
+- c279e3a: return reply from response handler for async work (fastify/compression)
+
 ## 2.7.2
 
 ### Patch Changes
