@@ -5,9 +5,9 @@ Use [Remix](https://remix.run) with [Fastify](http://fastify.io)
 ## Installation
 
 ```sh
-npm i @mcansh/remix-fastify
-yarn add @mcansh/remix-fastify
-pnpm i @mcansh/remix-fastify
+npm i @mcansh/remix-fastify fastify
+yarn add @mcansh/remix-fastify fastify
+pnpm i @mcansh/remix-fastify fastify
 ```
 
 ## Quick Start
