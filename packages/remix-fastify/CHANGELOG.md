@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 2.7.4
+
+### Patch Changes
+
+- b7e5567: chore: move @remix-run/router to deps, bump to latest
+
 ## 2.7.3
 
 ### Patch Changes
