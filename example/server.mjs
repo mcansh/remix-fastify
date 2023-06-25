@@ -1,7 +1,10 @@
 import fastify from "fastify";
 import { remixFastifyPlugin } from "@mcansh/remix-fastify";
+import { installGlobals } from "@remix-run/node";
 
 import * as serverBuild from "./build/index.mjs";
+
+installGlobals();
 
 let MODE = process.env.NODE_ENV;
 
