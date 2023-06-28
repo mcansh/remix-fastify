@@ -7,7 +7,6 @@ import {
   Response as NodeResponse,
 } from "@remix-run/node";
 
-import "../src/globals";
 import {
   createRemixHeaders,
   createRemixRequest,
