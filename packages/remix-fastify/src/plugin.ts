@@ -11,8 +11,7 @@ import invariant from "tiny-invariant";
 import type { GetLoadContextFunction } from "./server";
 import { createRequestHandler } from "./server";
 import type { StaticFile } from "./utils";
-import { getEarlyHintLinks } from "./utils";
-import { getStaticFiles, purgeRequireCache } from "./utils";
+import { getEarlyHintLinks, getStaticFiles, purgeRequireCache } from "./utils";
 
 interface PluginOptions {
   /**
@@ -82,7 +81,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   invariant(build, "You must provide a build");
   let serverBuild: ServerBuild = await loadBuild(build);
 
-  if (mode === "development" && !!serverBuild?.future?.unstable_dev) {
+  if (mode === "development" && !!serverBuild.dev) {
     purgeRequireCacheInDevelopment = false;
   }
 
