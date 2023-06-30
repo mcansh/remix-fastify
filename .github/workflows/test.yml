@@ -53,6 +53,11 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
       - name: 🟧 Setup pnpm
         uses: pnpm/action-setup@v2
         with:
@@ -61,11 +66,6 @@ jobs:
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
               cwd: ./
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
 
       - name: 🧪 Run Primary Tests
         run: pnpm run test
