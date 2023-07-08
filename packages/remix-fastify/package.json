@@ -33,26 +33,26 @@
   "dependencies": {
     "@fastify/early-hints": "^1.0.1",
     "@fastify/static": "^6.10.2",
-    "@remix-run/router": "^1.6.2",
+    "@remix-run/router": "^1.7.1",
     "fastify-plugin": "^4.5.0",
     "fastify-racing": "^1.1.0",
-    "glob": "^10.2.6",
+    "glob": "^10.3.2",
     "tiny-invariant": "^1.3.1"
   },
   "devDependencies": {
-    "@remix-run/node": "^1.16.1",
-    "@remix-run/react": "^1.16.1",
-    "@remix-run/server-runtime": "^1.16.1",
+    "@remix-run/node": "^1.18.1",
+    "@remix-run/react": "^1.18.1",
+    "@remix-run/server-runtime": "^1.18.1",
     "@types/glob": "^8.1.0",
-    "@types/node": "^20.2.5",
-    "@types/react": "^18.2.7",
-    "@types/react-dom": "^18.2.4",
-    "@typescript/lib-dom": "npm:@types/web@^0.0.99",
-    "fastify": "^4.17.0",
+    "@types/node": "^20.4.1",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "@typescript/lib-dom": "npm:@types/web@^0.0.103",
+    "fastify": "^4.19.2",
     "node-mocks-http": "^1.12.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^5.0.4"
+    "typescript": "^5.1.6"
   },
   "peerDependencies": {
     "@remix-run/node": "^1.6.0",
