@@ -37,7 +37,7 @@ function createApp() {
       // won't ever call through to the real createRequestHandler
       // @ts-expect-error
       build: undefined,
-    })
+    }),
   );
 
   return app;
@@ -134,15 +134,15 @@ describe("fastify createRequestHandler", () => {
         let headers = new Headers({ "X-Time-Of-Year": "most wonderful" });
         headers.append(
           "Set-Cookie",
-          "first=one; Expires=0; Path=/; HttpOnly; Secure; SameSite=Lax"
+          "first=one; Expires=0; Path=/; HttpOnly; Secure; SameSite=Lax",
         );
         headers.append(
           "Set-Cookie",
-          "second=two; MaxAge=1209600; Path=/; HttpOnly; Secure; SameSite=Lax"
+          "second=two; MaxAge=1209600; Path=/; HttpOnly; Secure; SameSite=Lax",
         );
         headers.append(
           "Set-Cookie",
-          "third=three; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Path=/; HttpOnly; Secure; SameSite=Lax"
+          "third=three; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Path=/; HttpOnly; Secure; SameSite=Lax",
         );
         return new Response(null, { headers });
       });
@@ -233,7 +233,7 @@ describe("fastify createRemixHeaders", () => {
             "__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax",
             "__other=some_other_value; Path=/; Secure; HttpOnly; MaxAge=3600; SameSite=Lax",
           ],
-        })
+        }),
       ).toMatchInlineSnapshot(`
         Headers {
           Symbol(query): [

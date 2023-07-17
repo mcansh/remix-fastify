@@ -23,12 +23,12 @@ import {
  */
 export type GetLoadContextFunction = (
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) => AppLoadContext;
 
 export type RequestHandler = (
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) => Promise<void>;
 
 /**
@@ -54,15 +54,15 @@ export function createRequestHandler({
 
     let response = (await handleRequest(
       remixRequest,
-      loadContext
-    )) as NodeResponse;
+      loadContext,
+    )) as unknown as NodeResponse;
 
     return sendRemixResponse(reply, response);
   };
 }
 
 export function createRemixHeaders(
-  requestHeaders: FastifyRequest["headers"]
+  requestHeaders: FastifyRequest["headers"],
 ): NodeHeaders {
   let headers = new NodeHeaders();
 
@@ -83,7 +83,7 @@ export function createRemixHeaders(
 
 export function createRemixRequest(
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ): NodeRequest {
   let origin = `${request.protocol}://${request.hostname}`;
   let url = `${origin}${request.url}`;
@@ -106,7 +106,7 @@ export function createRemixRequest(
 
 export async function sendRemixResponse(
   reply: FastifyReply,
-  nodeResponse: NodeResponse
+  nodeResponse: NodeResponse,
 ): Promise<void> {
   reply.status(nodeResponse.status);
 

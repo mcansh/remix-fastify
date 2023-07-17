@@ -69,7 +69,7 @@ async function loadBuild(build: ServerBuild | string): Promise<ServerBuild> {
 
 let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   fastify,
-  options = {}
+  options = {},
 ) => {
   let {
     build,
@@ -78,7 +78,7 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     purgeRequireCacheInDevelopment = process.env.NODE_ENV === "development",
     unstable_earlyHints: earlyHints,
   } = options;
-  invariant(build, "You must provide a build");
+  invariant(build, "you must pass a remix build to the plugin");
   let serverBuild: ServerBuild = await loadBuild(build);
 
   if (mode === "development" && !!serverBuild.dev) {
@@ -153,14 +153,13 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
 
   if (mode === "development" && typeof build === "string") {
     fastify.all("*", async (request, reply) => {
-      invariant(build, "we lost the build");
+      invariant(build, "you must pass a remix build to the plugin");
       invariant(
         typeof build === "string",
-        `to support "HMR" you must pass a path to the build`
+        `to support "HMR" you must pass a path to the build`,
       );
-      if (purgeRequireCacheInDevelopment) {
-        purgeRequireCache(build);
-      }
+
+      if (purgeRequireCacheInDevelopment) purgeRequireCache(build);
 
       let loaded = await loadBuild(build);
 
