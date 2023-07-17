@@ -16,7 +16,7 @@
     "@mcansh/remix-fastify": "workspace:*",
     "@remix-run/node": "^1.18.1",
     "@remix-run/react": "^1.18.1",
-    "fastify": "^4.19.2",
+    "fastify": "^4.20.0",
     "isbot": "^3.6.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -24,11 +24,11 @@
   "devDependencies": {
     "@remix-run/dev": "^1.18.1",
     "@remix-run/eslint-config": "^1.18.1",
-    "@types/react": "^18.2.14",
-    "@types/react-dom": "^18.2.6",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
-    "eslint": "^8.44.0",
+    "eslint": "^8.45.0",
     "npm-run-all": "^4.1.5",
     "typescript": "^5.1.6"
   },
