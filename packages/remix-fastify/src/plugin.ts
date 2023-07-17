@@ -41,7 +41,7 @@ interface PluginOptions {
   getLoadContext?: GetLoadContextFunction;
   /**
    * purge the require cache in development when not using the new dev server
-   * @default process.env.NODE_ENV === "development"
+   * @default false
    */
   purgeRequireCacheInDevelopment?: boolean;
   /**
@@ -75,15 +75,11 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
     build,
     mode = process.env.NODE_ENV,
     rootDir = process.cwd(),
-    purgeRequireCacheInDevelopment = process.env.NODE_ENV === "development",
-    unstable_earlyHints: earlyHints,
+    purgeRequireCacheInDevelopment = false,
+    unstable_earlyHints: earlyHints = true,
   } = options;
   invariant(build, "you must pass a remix build to the plugin");
   let serverBuild: ServerBuild = await loadBuild(build);
-
-  if (mode === "development" && !!serverBuild.dev) {
-    purgeRequireCacheInDevelopment = false;
-  }
 
   if (!fastify.hasContentTypeParser("*")) {
     fastify.addContentTypeParser("*", (_request, payload, done) => {
