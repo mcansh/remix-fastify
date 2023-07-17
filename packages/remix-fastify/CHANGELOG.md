@@ -1,5 +1,13 @@
 # @mcansh/remix-fastify
 
+## 2.8.0
+
+### Minor Changes
+
+- 31c3507: feat: require explicit `installGlobals` call in server entry
+
+  newer versions of node include `Request`, `Response`, `Headers`, `fetch`, etc globals
+
 ## 2.7.4
 
 ### Patch Changes
