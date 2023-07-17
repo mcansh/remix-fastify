@@ -6,6 +6,9 @@ import {
   createRequestHandler as createRemixRequestHandler,
   Response as NodeResponse,
 } from "@remix-run/node";
+import "@remix-run/node/install";
+import type { MockedFunction } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   createRemixHeaders,
@@ -14,18 +17,20 @@ import {
 } from "../src/server";
 
 // We don't want to test that the remix server works here (that's what the
-// puppetteer tests do), we just want to test the fastify adapter
-jest.mock("@remix-run/node", () => {
-  let original = jest.requireActual("@remix-run/node");
+// playwright tests do), we just want to test the fastify adapter
+vi.mock("@remix-run/node", async () => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  let original = await vi.importActual<typeof import("@remix-run/node")>(
+    "@remix-run/node",
+  );
   return {
     ...original,
-    createRequestHandler: jest.fn(),
+    createRequestHandler: vi.fn(),
   };
 });
-let mockedCreateRequestHandler =
-  createRemixRequestHandler as jest.MockedFunction<
-    typeof createRemixRequestHandler
-  >;
+let mockedCreateRequestHandler = createRemixRequestHandler as MockedFunction<
+  typeof createRemixRequestHandler
+>;
 
 function createApp() {
   let app = fastify();
@@ -50,7 +55,7 @@ describe("fastify createRequestHandler", () => {
     });
 
     afterAll(() => {
-      jest.restoreAllMocks();
+      vi.restoreAllMocks();
     });
 
     it("handles requests", async () => {
@@ -108,7 +113,7 @@ describe("fastify createRequestHandler", () => {
     it("handles body as stream", async () => {
       mockedCreateRequestHandler.mockImplementation(() => async () => {
         let stream = Readable.from("hello world");
-        return new NodeResponse(stream, { status: 200 }) as unknown as Response;
+        return new NodeResponse(stream, { status: 200 });
       });
 
       let app = createApp();
@@ -262,7 +267,7 @@ describe("fastify createRemixRequest", () => {
       },
     });
 
-    let fastifyReply = { raw: { on: jest.fn() } } as unknown as FastifyReply;
+    let fastifyReply = { raw: { on: vi.fn() } } as unknown as FastifyReply;
 
     expect(createRemixRequest(fastifyRequest, fastifyReply))
       .toMatchInlineSnapshot(`
