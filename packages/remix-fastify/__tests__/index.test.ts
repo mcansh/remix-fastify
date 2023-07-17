@@ -6,8 +6,10 @@ import {
   createRequestHandler as createRemixRequestHandler,
   Response as NodeResponse,
 } from "@remix-run/node";
+import "@remix-run/node/install";
+import type { MockedFunction } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
-import "../src/globals";
 import {
   createRemixHeaders,
   createRemixRequest,
@@ -15,18 +17,20 @@ import {
 } from "../src/server";
 
 // We don't want to test that the remix server works here (that's what the
-// puppetteer tests do), we just want to test the fastify adapter
-jest.mock("@remix-run/node", () => {
-  let original = jest.requireActual("@remix-run/node");
+// playwright tests do), we just want to test the fastify adapter
+vi.mock("@remix-run/node", async () => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  let original = await vi.importActual<typeof import("@remix-run/node")>(
+    "@remix-run/node",
+  );
   return {
     ...original,
-    createRequestHandler: jest.fn(),
+    createRequestHandler: vi.fn(),
   };
 });
-let mockedCreateRequestHandler =
-  createRemixRequestHandler as jest.MockedFunction<
-    typeof createRemixRequestHandler
-  >;
+let mockedCreateRequestHandler = createRemixRequestHandler as MockedFunction<
+  typeof createRemixRequestHandler
+>;
 
 function createApp() {
   let app = fastify();
@@ -38,7 +42,7 @@ function createApp() {
       // won't ever call through to the real createRequestHandler
       // @ts-expect-error
       build: undefined,
-    })
+    }),
   );
 
   return app;
@@ -51,7 +55,7 @@ describe("fastify createRequestHandler", () => {
     });
 
     afterAll(() => {
-      jest.restoreAllMocks();
+      vi.restoreAllMocks();
     });
 
     it("handles requests", async () => {
@@ -109,7 +113,7 @@ describe("fastify createRequestHandler", () => {
     it("handles body as stream", async () => {
       mockedCreateRequestHandler.mockImplementation(() => async () => {
         let stream = Readable.from("hello world");
-        return new NodeResponse(stream, { status: 200 }) as unknown as Response;
+        return new NodeResponse(stream, { status: 200 });
       });
 
       let app = createApp();
@@ -135,15 +139,15 @@ describe("fastify createRequestHandler", () => {
         let headers = new Headers({ "X-Time-Of-Year": "most wonderful" });
         headers.append(
           "Set-Cookie",
-          "first=one; Expires=0; Path=/; HttpOnly; Secure; SameSite=Lax"
+          "first=one; Expires=0; Path=/; HttpOnly; Secure; SameSite=Lax",
         );
         headers.append(
           "Set-Cookie",
-          "second=two; MaxAge=1209600; Path=/; HttpOnly; Secure; SameSite=Lax"
+          "second=two; MaxAge=1209600; Path=/; HttpOnly; Secure; SameSite=Lax",
         );
         headers.append(
           "Set-Cookie",
-          "third=three; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Path=/; HttpOnly; Secure; SameSite=Lax"
+          "third=three; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Path=/; HttpOnly; Secure; SameSite=Lax",
         );
         return new Response(null, { headers });
       });
@@ -234,7 +238,7 @@ describe("fastify createRemixHeaders", () => {
             "__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax",
             "__other=some_other_value; Path=/; Secure; HttpOnly; MaxAge=3600; SameSite=Lax",
           ],
-        })
+        }),
       ).toMatchInlineSnapshot(`
         Headers {
           Symbol(query): [
@@ -263,7 +267,7 @@ describe("fastify createRemixRequest", () => {
       },
     });
 
-    let fastifyReply = { raw: { on: jest.fn() } } as unknown as FastifyReply;
+    let fastifyReply = { raw: { on: vi.fn() } } as unknown as FastifyReply;
 
     expect(createRemixRequest(fastifyRequest, fastifyReply))
       .toMatchInlineSnapshot(`

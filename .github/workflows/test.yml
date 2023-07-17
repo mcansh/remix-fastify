@@ -18,6 +18,11 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
       - name: 🟧 Setup pnpm
         uses: pnpm/action-setup@v2
         with:
@@ -25,11 +30,7 @@ jobs:
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
+              cwd: ./
 
       - name: 🏗 Build
         run: npm run build
@@ -49,11 +50,13 @@ jobs:
           - 18
     runs-on: ${{ matrix.os }}
     steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.11.0
-
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
       - name: 🟧 Setup pnpm
         uses: pnpm/action-setup@v2
@@ -62,11 +65,7 @@ jobs:
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
+              cwd: ./
 
       - name: 🧪 Run Primary Tests
         run: pnpm run test

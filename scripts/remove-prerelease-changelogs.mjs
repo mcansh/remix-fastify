@@ -42,7 +42,7 @@ async function removePreReleaseChangelogs() {
             level: 2,
             startAtIndex: 0,
             matcher: PRE_RELEASE_HEADING_REGEXP,
-          }
+          },
         );
 
         while (preReleaseHeadingIndex !== -1) {
@@ -52,7 +52,7 @@ async function removePreReleaseChangelogs() {
               level: 2,
               startAtIndex: preReleaseHeadingIndex + 1,
               matcher: STABLE_HEADING_REGEXP,
-            }
+            },
           );
 
           // remove all lines between the pre-release heading and the next stable
@@ -76,10 +76,10 @@ async function removePreReleaseChangelogs() {
           await fs.promises.writeFile(
             changelogPath,
             changelogFileContents,
-            "utf-8"
+            "utf-8",
           );
         }
-      })()
+      })(),
     );
   }
   return Promise.all(processes);
@@ -100,7 +100,7 @@ function isPrereleaseMode() {
  */
 function findHeadingLineIndex(
   markdownContents,
-  { level, startAtIndex, matcher }
+  { level, startAtIndex, matcher },
 ) {
   let index = markdownContents.split("\n").findIndex((line, i) => {
     if (i < startAtIndex || !line.startsWith(`${"#".repeat(level)} `))

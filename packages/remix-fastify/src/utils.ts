@@ -37,7 +37,7 @@ export function getStaticFiles({
     if (isBuildAsset) {
       browserAssetUrl += normalized.replace(
         assetsBuildDirectory,
-        publicPath.split("/").filter(Boolean).join("/")
+        publicPath.split("/").filter(Boolean).join("/"),
       );
     } else {
       browserAssetUrl += normalized.replace("public/", "");
@@ -66,7 +66,7 @@ export function purgeRequireCache(BUILD_DIR: string) {
 
 export function getEarlyHintLinks(
   request: FastifyRequest,
-  serverBuild: ServerBuild
+  serverBuild: ServerBuild,
 ): EarlyHintItem[] {
   let origin = `${request.protocol}://${request.hostname}`;
   let url = new URL(`${origin}${request.url}`);
