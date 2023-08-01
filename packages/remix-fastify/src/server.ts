@@ -24,6 +24,7 @@ import {
 export type GetLoadContextFunction = (
   request: FastifyRequest,
   reply: FastifyReply,
+  remixRequest: NodeRequest,
 ) => AppLoadContext;
 
 export type RequestHandler = (
