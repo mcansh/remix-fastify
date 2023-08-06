@@ -26,6 +26,9 @@ jobs:
       - name: Install bun
         uses: oven-sh/setup-bun@v1
 
+      - name: Install dependencies
+        run: bun install
+
       - name: 🏗 Build
         run: npm run build
 
@@ -54,6 +57,9 @@ jobs:
 
       - name: Install bun
         uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        run: bun install
 
       - name: 🧪 Run Primary Tests
         run: npm run test
