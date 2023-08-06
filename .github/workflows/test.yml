@@ -23,14 +23,8 @@ jobs:
         with:
           node-version: 18
 
-      - name: 🟧 Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-          run_install: |
-            - recursive: true
-              args: [--frozen-lockfile, --strict-peer-dependencies]
-              cwd: ./
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
 
       - name: 🏗 Build
         run: npm run build
@@ -58,14 +52,8 @@ jobs:
         with:
           node-version: 18
 
-      - name: 🟧 Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-          run_install: |
-            - recursive: true
-              args: [--frozen-lockfile, --strict-peer-dependencies]
-              cwd: ./
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
 
       - name: 🧪 Run Primary Tests
-        run: pnpm run test
+        run: npm run test

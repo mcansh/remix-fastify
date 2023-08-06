@@ -2,6 +2,9 @@
   "private": true,
   "repository": "mcansh/remix-fastify",
   "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "dev": "pnpm run --recursive --parallel dev",
     "build": "pnpm run --recursive build",
@@ -13,7 +16,7 @@
     "validate": "run-p lint format publint",
     "changeset": "changeset",
     "changeset:version": "changeset version && node ./scripts/remove-prerelease-changelogs.mjs",
-    "changeset:release": "pnpm run build && changeset publish"
+    "changeset:release": "npm run build && changeset publish"
   },
   "dependencies": {
     "@changesets/cli": "^2.26.2",

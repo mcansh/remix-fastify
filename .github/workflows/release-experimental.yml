@@ -24,13 +24,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🟧 Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-          run_install: |
-            - recursive: true
-              args: [--frozen-lockfile, --strict-peer-dependencies]
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
