@@ -1,4 +1,5 @@
-import * as path from "node:path";
+import fs from "node:fs";
+import path from "node:path";
 import { pathToFileURL, URL } from "node:url";
 import type { FastifyPluginAsync, FastifyReply } from "fastify";
 import fastifyStatic from "@fastify/static";
@@ -55,11 +56,14 @@ interface PluginOptions {
 
 async function loadBuild(build: ServerBuild | string): Promise<ServerBuild> {
   if (typeof build === "string") {
-    if (!build.endsWith(".js")) {
-      build = path.join(build, "index.js");
+    let stat = fs.statSync(build);
+    if (stat.isDirectory()) {
+      throw new Error(
+        `you must pass a build file to the plugin, not a directory`,
+      );
     }
     let fileURL = pathToFileURL(build);
-    fileURL.searchParams.set("ts", Date.now().toString());
+    fileURL.searchParams.set("ts", stat.mtimeMs.toString());
     let module = await import(fileURL.toString());
     return module.default;
   }
