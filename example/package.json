@@ -4,35 +4,37 @@
   "description": "",
   "license": "",
   "sideEffects": false,
+  "type": "module",
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev -c \"node ./server.mjs\"",
-    "start": "node ./server.mjs",
+    "dev": "remix dev --manual --command \"node ./server.js\"",
+    "start": "node ./server.js",
     "lint": "eslint --cache --ignore-path .gitignore --fix .",
     "format": "prettier --write --ignore-path .gitignore .",
     "validate": "run-p lint format"
   },
   "dependencies": {
     "@mcansh/remix-fastify": "2.8.0",
+    "@remix-run/css-bundle": "^1.19.2",
     "@remix-run/node": "*",
     "@remix-run/react": "*",
     "fastify": "^4.21.0",
     "isbot": "^3.6.13",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "source-map-support": "^0.5.21"
   },
   "devDependencies": {
     "@remix-run/dev": "*",
     "@remix-run/eslint-config": "*",
     "@types/react": "^18.2.18",
     "@types/react-dom": "^18.2.7",
-    "cross-env": "^7.0.3",
-    "dotenv": "^16.3.1",
+    "@types/source-map-support": "^0.5.6",
     "eslint": "^8.46.0",
     "npm-run-all": "^4.1.5",
     "typescript": "^5.1.6"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=18"
   }
 }

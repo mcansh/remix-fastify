@@ -9,11 +9,15 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
+import { cssBundleHref } from "@remix-run/css-bundle";
 
 import stylesUrl from "./styles/global.css";
 
 export let links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: stylesUrl }];
+  return [
+    ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
+    { rel: "stylesheet", href: stylesUrl },
+  ];
 };
 
 export function loader() {
