@@ -18,7 +18,7 @@ await app.register(remixFastifyPlugin, {
   unstable_earlyHints: true,
 });
 
-let port = process.env.PORT ? Number(process.env.PORT) || 3000 : 3000;
+let port = Number(process.env.PORT) || 3000;
 
 let address = await app.listen({ port, host: "0.0.0.0" });
 console.log(`✅ app ready: ${address}`);

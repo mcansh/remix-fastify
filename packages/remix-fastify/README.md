@@ -16,4 +16,4 @@ npx create-remix@latest --template https://github.com/mcansh/remix-fastify/tree/
 
 ## Example
 
-checkout the example usage in [./example/server.ts](./example)
+checkout the example usage in [./example/server.mjs](./example/server.mjs)

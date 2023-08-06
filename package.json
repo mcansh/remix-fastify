@@ -3,12 +3,16 @@
   "repository": "mcansh/remix-fastify",
   "license": "MIT",
   "workspaces": [
-    "packages/*"
+    "./packages/*",
+    "./example"
   ],
   "scripts": {
-    "dev": "node ./scripts/cli.mjs dev",
-    "build": "node ./scripts/cli.mjs build",
-    "test": "node ./scripts/cli.mjs test",
+    "dev": "run-p dev:*",
+    "dev:packages": "npm run dev --workspaces=packages",
+    "dev:example": "npm run dev --workspace=remix-app-template",
+    "build:packages": "npm run build --workspaces=packages",
+    "build:example": "npm run build --workspace=remix-app-template",
+    "test": "npm run test --workspaces",
     "publish": "./scripts/publish.mjs",
     "publint": "publint ./packages/**",
     "lint": "eslint --cache --ignore-path .gitignore --fix .",
@@ -25,7 +29,6 @@
     "@types/glob": "^8.1.0",
     "eslint": "^8.46.0",
     "eslint-plugin-prefer-let": "^3.0.1",
-    "execa": "^7.2.0",
     "fs-extra": "^11.1.1",
     "glob": "^10.3.3",
     "npm-run-all": "^4.1.5",
