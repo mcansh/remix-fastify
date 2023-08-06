@@ -3,7 +3,7 @@ import { remixFastifyPlugin } from "@mcansh/remix-fastify";
 import { installGlobals } from "@remix-run/node";
 import sourceMapSupport from "source-map-support";
 
-import * as serverBuild from "./build/index.js";
+import * as serverBuild from "./build/index.mjs";
 
 sourceMapSupport.install();
 installGlobals();

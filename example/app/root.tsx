@@ -21,7 +21,7 @@ export let links: LinksFunction = () => {
 };
 
 export function loader() {
-  return json({ message: "Hello from the root loader" });
+  return json({ message: "Hello from the root loader!!!" });
 }
 
 export default function App() {
