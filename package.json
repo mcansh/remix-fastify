@@ -7,9 +7,9 @@
     "./example"
   ],
   "scripts": {
-    "dev": "npm run dev --workspaces",
-    "build": "npm run build --workspaces",
-    "test": "npm run test --workspaces",
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "test": "turbo test",
     "publish": "./scripts/publish.mjs",
     "publint": "publint ./packages/**",
     "lint": "eslint --cache --ignore-path .gitignore --fix .",
@@ -34,6 +34,7 @@
     "react": "^18.2.0",
     "semver": "^7.5.4",
     "tsup": "^7.2.0",
+    "turbo": "^1.10.12",
     "typescript": "^5.1.6",
     "vitest": "^0.34.1"
   }

@@ -3,6 +3,7 @@ node_modules
 .ds_store
 .yalc
 yalc.lock
+.turbo
 
 /example/build
 /example/public/build
