@@ -7,11 +7,8 @@
     "./example"
   ],
   "scripts": {
-    "dev": "run-p dev:*",
-    "dev:packages": "npm run dev --workspaces=packages",
-    "dev:example": "npm run dev --workspace=remix-app-template",
-    "build:packages": "npm run build --workspaces=packages",
-    "build:example": "npm run build --workspace=remix-app-template",
+    "dev": "npm run dev --workspaces",
+    "build": "npm run build --workspaces",
     "test": "npm run test --workspaces",
     "publish": "./scripts/publish.mjs",
     "publint": "publint ./packages/**",

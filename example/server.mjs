@@ -3,15 +3,13 @@ import { remixFastifyPlugin } from "@mcansh/remix-fastify";
 import { installGlobals } from "@remix-run/node";
 import sourceMapSupport from "source-map-support";
 
-import * as serverBuild from "./build/index.mjs";
-
 sourceMapSupport.install();
 installGlobals();
 
 let app = fastify();
 
 await app.register(remixFastifyPlugin, {
-  build: serverBuild,
+  build: "./build/index.mjs",
   mode: process.env.NODE_ENV,
   getLoadContext: () => ({ loadContextName: "John Doe" }),
   unstable_earlyHints: true,
