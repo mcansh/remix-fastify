@@ -1,18 +1,17 @@
 import fs from "node:fs";
 import path from "node:path";
-import { pathToFileURL, URL } from "node:url";
-import type { FastifyPluginAsync, FastifyReply } from "fastify";
+import { pathToFileURL } from "node:url";
+import type { FastifyPluginAsync } from "fastify";
 import fastifyStatic from "@fastify/static";
 import fastifyEarlyHints from "@fastify/early-hints";
-import type { ServerBuild } from "@remix-run/node";
+import { broadcastDevReady, type ServerBuild } from "@remix-run/node";
 import fp from "fastify-plugin";
 import fastifyRacing from "fastify-racing";
 import invariant from "tiny-invariant";
 
 import type { GetLoadContextFunction } from "./server";
 import { createRequestHandler } from "./server";
-import type { StaticFile } from "./utils";
-import { getEarlyHintLinks, getStaticFiles, purgeRequireCache } from "./utils";
+import { getEarlyHintLinks } from "./utils";
 
 interface PluginOptions {
   /**
@@ -41,20 +40,21 @@ interface PluginOptions {
    */
   getLoadContext?: GetLoadContextFunction;
   /**
-   * purge the require cache in development when not using the new dev server
-   * @default false
-   */
-  purgeRequireCacheInDevelopment?: boolean;
-  /**
    * enable early hints
    * note this won't include any imports from your remix `links()` function.
    * it will only include the js needed to render the current page
    * @default true
    */
-  unstable_earlyHints?: boolean;
+  earlyHints?: boolean;
 }
 
-async function loadBuild(build: ServerBuild | string): Promise<ServerBuild> {
+async function loadBuild(
+  build: ServerBuild | string | undefined,
+): Promise<ServerBuild> {
+  if (!build) {
+    throw new Error(`you must pass a build to the plugin`);
+  }
+
   if (typeof build === "string") {
     let stat = fs.statSync(build);
     if (stat.isDirectory()) {
@@ -65,128 +65,98 @@ async function loadBuild(build: ServerBuild | string): Promise<ServerBuild> {
     let fileURL = pathToFileURL(build);
     fileURL.searchParams.set("ts", stat.mtimeMs.toString());
     let module = await import(fileURL.toString());
-    return module.default;
+    return module;
   }
 
   return build;
 }
 
 let remixFastify: FastifyPluginAsync<PluginOptions> = async (
-  fastify,
+  app,
   options = {},
 ) => {
   let {
     build,
     mode = process.env.NODE_ENV,
     rootDir = process.cwd(),
-    purgeRequireCacheInDevelopment = false,
-    unstable_earlyHints: earlyHints = true,
+    earlyHints = true,
   } = options;
   invariant(build, "you must pass a remix build to the plugin");
   let serverBuild: ServerBuild = await loadBuild(build);
 
-  if (!fastify.hasContentTypeParser("*")) {
-    fastify.addContentTypeParser("*", (_request, payload, done) => {
+  if (!app.hasContentTypeParser("*")) {
+    app.addContentTypeParser("*", (_request, payload, done) => {
       done(null, payload);
     });
   }
 
   if (earlyHints) {
-    await fastify.register(fastifyEarlyHints, { warn: true });
+    await app.register(fastifyEarlyHints, { warn: true });
   }
-  await fastify.register(fastifyRacing, { handleError: true });
+  await app.register(fastifyRacing, { handleError: true });
 
   let PUBLIC_DIR = path.join(rootDir, "public");
 
-  fastify.register(fastifyStatic, {
+  app.register(fastifyStatic, {
     root: PUBLIC_DIR,
-    // this needs to be false so our regular requests can still be served
-    wildcard: false,
-    // we handle serving the files ourselves as you cant stack roots (public/build, public)
-    // and it won't pick up new files in dev
     serve: false,
+    wildcard: false,
   });
 
-  function sendAsset(reply: FastifyReply, file: StaticFile) {
-    return reply.sendFile(file.filePublicPath, rootDir, {
-      maxAge: file.isBuildAsset ? "1y" : "1h",
-      immutable: file.isBuildAsset,
-    });
+  let regex = new RegExp(`^${bothSlashes(serverBuild.publicPath)}`);
+
+  function leadingSlash(str: string) {
+    return str.startsWith("/") ? str : `/${str}`;
   }
 
-  if (mode === "development") {
-    // TODO: investigate a more streamline way to do this
-    // this doesn't *feel* right
-    fastify.addHook("onRequest", (request, reply, done) => {
-      let staticFiles = getStaticFiles({
-        assetsBuildDirectory: serverBuild.assetsBuildDirectory,
-        publicPath: serverBuild.publicPath,
-        rootDir,
-      });
+  function trailingSlash(str: string) {
+    return str.endsWith("/") ? str : `${str}/`;
+  }
 
-      let origin = `${request.protocol}://${request.hostname}`;
-      let url = new URL(`${origin}${request.url}`);
+  function bothSlashes(route: string) {
+    return leadingSlash(trailingSlash(route));
+  }
 
-      let staticFile = staticFiles.find((file) => {
-        return url.pathname === file.browserAssetUrl;
-      });
+  app.all("*", async (request, reply) => {
+    let url = request.url;
 
-      if (staticFile) {
-        return sendAsset(reply, staticFile);
-      }
+    // check if the request is for a static asset in the public directory
+    let publicPath = path.join(PUBLIC_DIR, url);
 
-      done();
-    });
-  } else {
-    let staticFiles = getStaticFiles({
-      assetsBuildDirectory: serverBuild.assetsBuildDirectory,
-      publicPath: serverBuild.publicPath,
-      rootDir,
-    });
-
-    for (let staticFile of staticFiles) {
-      fastify.get(staticFile.browserAssetUrl, (_request, reply) => {
-        return sendAsset(reply, staticFile);
-      });
+    if (url !== "/" && fs.existsSync(publicPath)) {
+      return reply.sendFile(url, PUBLIC_DIR);
     }
-  }
 
-  if (mode === "development" && typeof build === "string") {
-    fastify.all("*", async (request, reply) => {
-      invariant(build, "you must pass a remix build to the plugin");
-      invariant(
-        typeof build === "string",
-        `to support "HMR" you must pass a path to the build`,
+    // check if the request is for a build asset
+    let isBuildAsset = url.startsWith(bothSlashes(serverBuild.publicPath));
+
+    if (isBuildAsset) {
+      let assetPath = url.replace(
+        regex,
+        bothSlashes(serverBuild.assetsBuildDirectory),
       );
 
-      if (purgeRequireCacheInDevelopment) purgeRequireCache(build);
+      let normalizedAssetPath = assetPath.split("/").join(path.sep);
 
-      let loaded = await loadBuild(build);
+      return reply.sendFile(normalizedAssetPath, rootDir);
+    }
 
-      if (earlyHints) {
-        let links = getEarlyHintLinks(request, loaded);
-        await reply.writeEarlyHintsLinks(links);
-      }
+    if (earlyHints) {
+      let links = getEarlyHintLinks(request, serverBuild);
+      await reply.writeEarlyHintsLinks(links);
+    }
 
-      return createRequestHandler({
-        build: loaded,
-        mode,
-        getLoadContext: options.getLoadContext,
-      })(request, reply);
-    });
-  } else {
-    fastify.all("*", async (request, reply) => {
-      if (earlyHints) {
-        let links = getEarlyHintLinks(request, serverBuild);
-        await reply.writeEarlyHintsLinks(links);
-      }
-      return createRequestHandler({
-        build: serverBuild,
-        mode,
-        getLoadContext: options.getLoadContext,
-      })(request, reply);
-    });
-  }
+    if (process.env.NODE_ENV === "development") {
+      serverBuild = await loadBuild(build);
+      broadcastDevReady(serverBuild);
+    }
+
+    return createRequestHandler({
+      build: serverBuild,
+      mode,
+      getLoadContext: options.getLoadContext,
+    })(request, reply);
+  });
 };
 
 export let remixFastifyPlugin = fp(remixFastify, {
