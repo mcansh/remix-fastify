@@ -5,7 +5,7 @@ node_modules
 yalc.lock
 .turbo
 
-/example/build
-/example/public/build
-example/CHANGELOG.md
+/playground/build
+/playground/public/build
+/playground/CHANGELOG.md
 .eslintcache

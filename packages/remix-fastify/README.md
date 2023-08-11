@@ -49,4 +49,4 @@ if (process.env.NODE_ENV === "development") {
 
 ## Example
 
-checkout the example usage in [./example/server.mjs](./example/server.mjs)
+checkout the example in mcansh/remix-fastify-example

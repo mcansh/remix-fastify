@@ -11,6 +11,7 @@ import {
 
 import { sessionStorage } from "~/session.server";
 import { sleep } from "~/sleep";
+import image from "~/554828.jpeg";
 
 export async function loader({ request, context }: DataFunctionArgs) {
   let cookie = request.headers.get("Cookie");
@@ -83,8 +84,25 @@ export default function Index() {
         </button>
       </Form>
 
-      <div style={{ marginTop: 10, display: "block" }}>
+      <div
+        style={{
+          marginTop: 10,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 10,
+        }}
+      >
         <Link to="/page-2">Go to page 2</Link>
+
+        <img style={{ maxWidth: 300, width: "100%" }} src={image} alt="" />
+
+        <img
+          style={{ maxWidth: 300, width: "100%" }}
+          src="/favicon.png"
+          alt=""
+        />
       </div>
     </div>
   );

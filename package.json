@@ -1,15 +1,16 @@
 {
-  "private": true,
   "repository": "mcansh/remix-fastify",
+  "private": true,
   "license": "MIT",
+  "packageManager": "pnpm@8.6.12",
   "workspaces": [
     "./packages/*",
-    "./example"
+    "./playground"
   ],
   "scripts": {
-    "dev": "turbo dev",
-    "build": "turbo build",
-    "test": "turbo test",
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
     "publish": "./scripts/publish.mjs",
     "publint": "publint ./packages/**",
     "lint": "eslint --cache --ignore-path .gitignore --fix .",
@@ -22,9 +23,9 @@
   "dependencies": {
     "@changesets/cli": "^2.26.2",
     "@manypkg/get-packages": "^2.2.0",
-    "@remix-run/eslint-config": "1.19.2",
+    "@remix-run/eslint-config": "^1.19.3",
     "@types/glob": "^8.1.0",
-    "eslint": "^8.46.0",
+    "eslint": "^8.47.0",
     "eslint-plugin-prefer-let": "^3.0.1",
     "fs-extra": "^11.1.1",
     "glob": "^10.3.3",

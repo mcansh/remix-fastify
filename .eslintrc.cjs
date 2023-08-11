@@ -17,7 +17,7 @@ module.exports = {
   rules: {
     "import/no-extraneous-dependencies": [
       "error",
-      { packageDir: [...packages, "example", "."] },
+      { packageDir: [...packages, "playground", "."] },
     ],
   },
   overrides: [
