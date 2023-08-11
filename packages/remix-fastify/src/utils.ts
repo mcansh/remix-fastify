@@ -28,3 +28,10 @@ export function getEarlyHintLinks(
     return { href: link, as: "script", rel: "preload" };
   });
 }
+
+export function ensureSlashes(pathname: string) {
+  let route = pathname;
+  if (!route.startsWith("/")) route = "/" + route;
+  if (!route.endsWith("/")) route += "/";
+  return route;
+}
