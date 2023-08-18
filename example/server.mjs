@@ -1,10 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import fastify from "fastify";
-import { createRequestHandler, getStaticFiles } from "@mcansh/remix-fastify";
+import { createRequestHandler, staticFilePlugin } from "@mcansh/remix-fastify";
 import { installGlobals } from "@remix-run/node";
 import sourceMapSupport from "source-map-support";
-import fastifyStatic from "@fastify/static";
 import chokidar from "chokidar";
 
 sourceMapSupport.install();
@@ -26,44 +25,10 @@ let noopContentParser = (_request, payload, done) => {
 app.addContentTypeParser("application/json", noopContentParser);
 app.addContentTypeParser("*", noopContentParser);
 
-app.register(fastifyStatic, {
-  wildcard: false,
-  root: "/public",
-  serve: false,
-  prefix: "/build/*",
-  decorateReply: false,
-});
-
-app.register(fastifyStatic, {
-  wildcard: false,
-  root: "/public",
-  serve: false,
-});
-
-let staticFiles = await getStaticFiles({
+app.register(staticFilePlugin, {
   assetsBuildDirectory: "public/build",
   publicPath: "/build/",
-  rootDir: process.cwd(),
 });
-
-for (let file of staticFiles) {
-  app.get(file.browserAssetUrl, (request, reply) => {
-    return reply.sendFile(
-      file.filePublicPath,
-      path.join(process.cwd(), "public"),
-      {
-        cacheControl: true,
-        acceptRanges: true,
-        dotfiles: "allow",
-        etag: true,
-        immutable: file.isBuildAsset,
-        lastModified: true,
-        maxAge: file.isBuildAsset ? "1y" : "1h",
-        serveDotFiles: true,
-      },
-    );
-  });
-}
 
 app.all(
   "*",
