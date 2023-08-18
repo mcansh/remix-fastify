@@ -14,6 +14,5 @@ module.exports = {
     v2_meta: true,
     v2_normalizeFormMethod: true,
   },
-  // just showing that you can customize this and it will work with the plugin
-  publicPath: "/modules/",
+  publicPath: "/build/",
 };

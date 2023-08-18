@@ -3,6 +3,7 @@ import type { ServerBuild } from "@remix-run/node";
 import { matchRoutes } from "@remix-run/router";
 import type { FastifyRequest } from "fastify";
 import { globSync } from "glob";
+import path from "node:path";
 
 export interface StaticFile {
   // whether or not the file is in the build directory
@@ -22,10 +23,10 @@ export function getStaticFiles({
   publicPath: string;
   rootDir: string;
 }): Array<StaticFile> {
-  let staticFilePaths = globSync(`public/**/*`, {
+  let staticFilePaths = globSync(`**/*`, {
     dot: true,
     nodir: true,
-    cwd: rootDir,
+    cwd: path.posix.join(rootDir, "public"),
   });
 
   return staticFilePaths.map((filePublicPath) => {
@@ -49,19 +50,6 @@ export function getStaticFiles({
       browserAssetUrl,
     };
   });
-}
-
-export function purgeRequireCache(BUILD_DIR: string) {
-  // purge require cache on requests for "server side HMR" this won't let
-  // you have in-memory objects between requests in development,
-  // alternatively you can set up nodemon/pm2-dev to restart the server on
-  // file changes, but then you'll have to reconnect to databases/etc on each
-  // change. We prefer the DX of this, so we've included it for you by default
-  for (let key in require.cache) {
-    if (key.startsWith(BUILD_DIR)) {
-      delete require.cache[key];
-    }
-  }
 }
 
 export function getEarlyHintLinks(
