@@ -4,5 +4,7 @@
   "initialVersions": {
     "@mcansh/remix-fastify": "2.8.0"
   },
-  "changesets": []
+  "changesets": [
+    "afraid-wombats-enjoy"
+  ]
 }
