@@ -1,0 +1,39 @@
+diff --git a/dist/assemble-release-plan.cjs.dev.js b/dist/assemble-release-plan.cjs.dev.js
+index e1376ca756d69816f8c79637ee7b45161f092167..a8a80d5b3e4fb3a438b310b5a9fc14dc52607145 100644
+--- a/dist/assemble-release-plan.cjs.dev.js
++++ b/dist/assemble-release-plan.cjs.dev.js
+@@ -436,7 +436,7 @@ function applyLinks(releases, packagesByName, linked) {
+
+ function getPreVersion(version) {
+   let parsed = semverParse__default['default'](version);
+-  let preVersion = parsed.prerelease[1] === undefined ? -1 : parsed.prerelease[1];
++  let preVersion = parsed?.prerelease[1] === undefined ? -1 : parsed?.prerelease[1];
+
+   if (typeof preVersion !== "number") {
+     throw new errors.InternalError("preVersion is not a number");
+diff --git a/dist/assemble-release-plan.cjs.prod.js b/dist/assemble-release-plan.cjs.prod.js
+index 3a83720644a94cdf6e62fa188a72c51c0384d00e..47a7cbbb9e752d50bc5953b03ec3ff9e893f1d47 100644
+--- a/dist/assemble-release-plan.cjs.prod.js
++++ b/dist/assemble-release-plan.cjs.prod.js
+@@ -214,7 +214,7 @@ function applyLinks(releases, packagesByName, linked) {
+ }
+
+ function getPreVersion(version) {
+-  let parsed = semverParse__default.default(version), preVersion = void 0 === parsed.prerelease[1] ? -1 : parsed.prerelease[1];
++  let parsed = semverParse__default.default(version), preVersion = void 0 === parsed?.prerelease[1] ? -1 : parsed?.prerelease[1];
+   if ("number" != typeof preVersion) throw new errors.InternalError("preVersion is not a number");
+   return preVersion++, preVersion;
+ }
+diff --git a/dist/assemble-release-plan.esm.js b/dist/assemble-release-plan.esm.js
+index 62891eb5dee97a33e6587514267c3cde5b314830..8393bc1093c6929f349da586bbfeaf51c4fca62b 100644
+--- a/dist/assemble-release-plan.esm.js
++++ b/dist/assemble-release-plan.esm.js
+@@ -425,7 +425,7 @@ function applyLinks(releases, packagesByName, linked) {
+
+ function getPreVersion(version) {
+   let parsed = semverParse(version);
+-  let preVersion = parsed.prerelease[1] === undefined ? -1 : parsed.prerelease[1];
++  let preVersion = parsed?.prerelease[1] === undefined ? -1 : parsed?.prerelease[1];
+
+   if (typeof preVersion !== "number") {
+     throw new InternalError("preVersion is not a number");
