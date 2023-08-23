@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 2.9.0-pre.0
+
+### Minor Changes
+
+- dbacf85: remove references to fetch polyfills
+
 ## 2.8.0
 
 ### Minor Changes
