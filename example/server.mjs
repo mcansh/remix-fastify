@@ -4,7 +4,12 @@ import { installGlobals } from "@remix-run/node";
 
 import * as serverBuild from "./build/index.mjs";
 
-installGlobals();
+if (process.env.GLOBALS !== "true") {
+  console.log(`installing remix globals`);
+  installGlobals();
+} else {
+  console.log(`using existing globals`);
+}
 
 let MODE = process.env.NODE_ENV;
 
