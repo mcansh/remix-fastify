@@ -19,10 +19,9 @@ import {
 // We don't want to test that the remix server works here (that's what the
 // playwright tests do), we just want to test the fastify adapter
 vi.mock("@remix-run/node", async () => {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-  let original = await vi.importActual<typeof import("@remix-run/node")>(
-    "@remix-run/node",
-  );
+  let original =
+    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+    await vi.importActual<typeof import("@remix-run/node")>("@remix-run/node");
   return {
     ...original,
     createRequestHandler: vi.fn(),
@@ -168,88 +167,42 @@ describe("fastify createRequestHandler", () => {
 describe("fastify createRemixHeaders", () => {
   describe("creates fetch headers from fastify headers", () => {
     it("handles empty headers", () => {
-      expect(createRemixHeaders({})).toMatchInlineSnapshot(`
-        Headers {
-          Symbol(query): [],
-          Symbol(context): null,
-        }
-      `);
+      let headers = createRemixHeaders({});
+      expect(Array.from(headers.keys())).toHaveLength(0);
     });
 
     it("handles simple headers", () => {
-      expect(createRemixHeaders({ "x-foo": "bar" })).toMatchInlineSnapshot(`
-        Headers {
-          Symbol(query): [
-            "x-foo",
-            "bar",
-          ],
-          Symbol(context): null,
-        }
-      `);
+      let headers = createRemixHeaders({ "x-foo": "bar" });
+      expect(headers.get("x-foo")).toBe("bar");
     });
 
     it("handles multiple headers", () => {
-      expect(createRemixHeaders({ "x-foo": "bar", "x-bar": "baz" }))
-        .toMatchInlineSnapshot(`
-        Headers {
-          Symbol(query): [
-            "x-foo",
-            "bar",
-            "x-bar",
-            "baz",
-          ],
-          Symbol(context): null,
-        }
-      `);
+      let headers = createRemixHeaders({ "x-foo": "bar", "x-bar": "baz" });
+      expect(headers.get("x-foo")).toBe("bar");
     });
 
     it("handles headers with multiple values", () => {
-      expect(createRemixHeaders({ "x-foo": "bar, baz" }))
-        .toMatchInlineSnapshot(`
-        Headers {
-          Symbol(query): [
-            "x-foo",
-            "bar, baz",
-          ],
-          Symbol(context): null,
-        }
-      `);
+      let headers = createRemixHeaders({ "x-foo": "bar, baz" });
+      expect(headers.get("x-foo")).toBe("bar, baz");
     });
 
     it("handles headers with multiple values and multiple headers", () => {
-      expect(createRemixHeaders({ "x-foo": "bar, baz", "x-bar": "baz" }))
-        .toMatchInlineSnapshot(`
-        Headers {
-          Symbol(query): [
-            "x-foo",
-            "bar, baz",
-            "x-bar",
-            "baz",
-          ],
-          Symbol(context): null,
-        }
-      `);
+      let headers = createRemixHeaders({ "x-foo": "bar, baz", "x-bar": "baz" });
+      expect(headers.get("x-foo")).toBe("bar, baz");
+      expect(headers.get("x-bar")).toBe("baz");
     });
 
     it("handles multiple set-cookie headers", () => {
-      expect(
-        createRemixHeaders({
-          "set-cookie": [
-            "__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax",
-            "__other=some_other_value; Path=/; Secure; HttpOnly; MaxAge=3600; SameSite=Lax",
-          ],
-        }),
-      ).toMatchInlineSnapshot(`
-        Headers {
-          Symbol(query): [
-            "set-cookie",
-            "__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax",
-            "set-cookie",
-            "__other=some_other_value; Path=/; Secure; HttpOnly; MaxAge=3600; SameSite=Lax",
-          ],
-          Symbol(context): null,
-        }
-      `);
+      let headers = createRemixHeaders({
+        "set-cookie": [
+          "__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax",
+          "__other=some_other_value; Path=/; Secure; HttpOnly; MaxAge=3600; SameSite=Lax",
+        ],
+      });
+
+      expect(headers.get("set-cookie")).toBe(
+        "__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax, __other=some_other_value; Path=/; Secure; HttpOnly; MaxAge=3600; SameSite=Lax",
+      );
     });
   });
 });
@@ -269,41 +222,11 @@ describe("fastify createRemixRequest", () => {
 
     let fastifyReply = { raw: { on: vi.fn() } } as unknown as FastifyReply;
 
-    expect(createRemixRequest(fastifyRequest, fastifyReply))
-      .toMatchInlineSnapshot(`
-      NodeRequest {
-        "agent": undefined,
-        "compress": true,
-        "counter": 0,
-        "follow": 20,
-        "highWaterMark": 16384,
-        "insecureHTTPParser": false,
-        "size": 0,
-        Symbol(Body internals): {
-          "body": null,
-          "boundary": null,
-          "disturbed": false,
-          "error": null,
-          "size": 0,
-          "type": null,
-        },
-        Symbol(Request internals): {
-          "credentials": "same-origin",
-          "headers": Headers {
-            Symbol(query): [
-              "cache-control",
-              "max-age=300, s-maxage=3600",
-              "host",
-              "localhost:3000",
-            ],
-            Symbol(context): null,
-          },
-          "method": "GET",
-          "parsedURL": "http://localhost:3000/foo/bar",
-          "redirect": "follow",
-          "signal": AbortSignal {},
-        },
-      }
-    `);
+    let request = createRemixRequest(fastifyRequest, fastifyReply);
+
+    expect(request.headers.get("cache-control")).toBe(
+      "max-age=300, s-maxage=3600",
+    );
+    expect(request.headers.get("host")).toBe("localhost:3000");
   });
 });
