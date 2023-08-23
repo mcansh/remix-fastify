@@ -1,0 +1,8 @@
+{
+  "mode": "pre",
+  "tag": "pre",
+  "initialVersions": {
+    "@mcansh/remix-fastify": "2.8.0"
+  },
+  "changesets": []
+}
