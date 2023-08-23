@@ -1,16 +1,9 @@
 import { PassThrough } from "node:stream";
 import type { FastifyRequest, FastifyReply } from "fastify";
-import type {
-  AppLoadContext,
-  ServerBuild,
-  RequestInit as NodeRequestInit,
-  Response as NodeResponse,
-} from "@remix-run/node";
+import type { AppLoadContext, ServerBuild } from "@remix-run/node";
 import {
-  AbortController,
   createRequestHandler as createRemixRequestHandler,
-  Headers as NodeHeaders,
-  Request as NodeRequest,
+  createReadableStreamFromReadable,
   writeReadableStreamToWritable,
 } from "@remix-run/node";
 
@@ -24,7 +17,7 @@ import {
 export type GetLoadContextFunction = (
   request: FastifyRequest,
   reply: FastifyReply,
-) => AppLoadContext;
+) => Promise<AppLoadContext> | AppLoadContext;
 
 export type RequestHandler = (
   request: FastifyRequest,
@@ -47,15 +40,9 @@ export function createRequestHandler({
 
   return async (request, reply) => {
     let remixRequest = createRemixRequest(request, reply);
-    let loadContext =
-      typeof getLoadContext === "function"
-        ? getLoadContext(request, reply)
-        : undefined;
+    let loadContext = await getLoadContext?.(request, reply);
 
-    let response = (await handleRequest(
-      remixRequest,
-      loadContext,
-    )) as unknown as NodeResponse;
+    let response = await handleRequest(remixRequest, loadContext);
 
     return sendRemixResponse(reply, response);
   };
@@ -63,18 +50,18 @@ export function createRequestHandler({
 
 export function createRemixHeaders(
   requestHeaders: FastifyRequest["headers"],
-): NodeHeaders {
-  let headers = new NodeHeaders();
+): Headers {
+  let headers = new Headers();
 
-  for (let [header, values] of Object.entries(requestHeaders)) {
-    if (!values) continue;
-
-    if (Array.isArray(values)) {
-      for (let value of values) {
-        headers.append(header, value);
+  for (let [key, values] of Object.entries(requestHeaders)) {
+    if (values) {
+      if (Array.isArray(values)) {
+        for (let value of values) {
+          headers.append(key, value);
+        }
+      } else {
+        headers.set(key, values);
       }
-    } else {
-      headers.set(header, values);
     }
   }
 
@@ -84,36 +71,36 @@ export function createRemixHeaders(
 export function createRemixRequest(
   request: FastifyRequest,
   reply: FastifyReply,
-): NodeRequest {
+): Request {
   let origin = `${request.protocol}://${request.hostname}`;
   let url = `${origin}${request.url}`;
-  let controller = new AbortController();
 
+  // Abort action/loaders once we can no longer write a response
+  let controller = new AbortController();
   reply.raw.on("close", () => controller.abort());
 
-  let init: NodeRequestInit = {
+  let init: RequestInit = {
     method: request.method,
     headers: createRemixHeaders(request.headers),
-    signal: controller.signal as AbortSignal,
+    signal: controller.signal,
   };
 
   if (request.method !== "GET" && request.method !== "HEAD") {
-    init.body = request.raw;
+    init.body = createReadableStreamFromReadable(request.raw);
+    (init as { duplex: "half" }).duplex = "half";
   }
 
-  return new NodeRequest(url, init);
+  return new Request(url, init);
 }
 
 export async function sendRemixResponse(
   reply: FastifyReply,
-  nodeResponse: NodeResponse,
+  nodeResponse: Response,
 ): Promise<void> {
   reply.status(nodeResponse.status);
 
-  for (let [key, values] of Object.entries(nodeResponse.headers.raw())) {
-    for (let value of values) {
-      reply.header(key, value);
-    }
+  for (let [key, values] of nodeResponse.headers.entries()) {
+    reply.headers({ [key]: values });
   }
 
   if (nodeResponse.body) {
