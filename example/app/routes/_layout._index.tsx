@@ -1,13 +1,7 @@
 import * as React from "react";
 import type { DataFunctionArgs } from "@remix-run/node";
 import { defer, redirect } from "@remix-run/node";
-import {
-  Await,
-  Form,
-  Link,
-  useAsyncValue,
-  useLoaderData,
-} from "@remix-run/react";
+import { Await, Form, useAsyncValue, useLoaderData } from "@remix-run/react";
 
 import { sessionStorage } from "~/session.server";
 import { sleep } from "~/sleep";
@@ -82,10 +76,6 @@ export default function Index() {
           Reset
         </button>
       </Form>
-
-      <div style={{ marginTop: 10, display: "block" }}>
-        <Link to="/page-2">Go to page 2</Link>
-      </div>
     </div>
   );
 }
