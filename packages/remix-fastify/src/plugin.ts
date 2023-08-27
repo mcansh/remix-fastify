@@ -81,11 +81,16 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   invariant(build, "you must pass a remix build to the plugin");
   let serverBuild: ServerBuild = await loadBuild(build);
 
-  if (!fastify.hasContentTypeParser("*")) {
-    fastify.addContentTypeParser("*", (_request, payload, done) => {
+  fastify.addContentTypeParser(
+    "application/json",
+    (_request, payload, done) => {
       done(null, payload);
-    });
-  }
+    },
+  );
+
+  fastify.addContentTypeParser("*", (_request, payload, done) => {
+    done(null, payload);
+  });
 
   if (earlyHints) {
     await fastify.register(fastifyEarlyHints, { warn: true });
