@@ -1,5 +1,13 @@
 # @mcansh/remix-fastify
 
+## 2.8.1
+
+### Patch Changes
+
+- 4789835: add custom contentParser for json
+
+  fastify automatically configures `application/json` which prevents fethcer.submit from working with json encoding
+
 ## 2.8.0
 
 ### Minor Changes
