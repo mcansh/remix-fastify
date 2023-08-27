@@ -1,6 +1,6 @@
 import * as React from "react";
 import { defer } from "@remix-run/node";
-import { Await, Link, useLoaderData } from "@remix-run/react";
+import { Await, useLoaderData } from "@remix-run/react";
 
 import { sleep } from "~/sleep";
 
@@ -19,7 +19,6 @@ export default function Page2() {
       <h2>Page 2</h2>
       <h3>{data.message}</h3>
       <p>Here's some content for page 2.</p>
-      <Link to="/">Go back home</Link>
 
       <div style={{ marginTop: 10 }}>
         <React.Suspense fallback={<div>Loading...</div>}>
