@@ -1,6 +1,10 @@
 import * as path from "node:path";
 import { pathToFileURL, URL } from "node:url";
-import type { FastifyPluginAsync, FastifyReply } from "fastify";
+import type {
+  FastifyContentTypeParser,
+  FastifyPluginAsync,
+  FastifyReply,
+} from "fastify";
 import fastifyStatic from "@fastify/static";
 import fastifyEarlyHints from "@fastify/early-hints";
 import type { ServerBuild } from "@remix-run/node";
@@ -81,16 +85,17 @@ let remixFastify: FastifyPluginAsync<PluginOptions> = async (
   invariant(build, "you must pass a remix build to the plugin");
   let serverBuild: ServerBuild = await loadBuild(build);
 
-  fastify.addContentTypeParser(
-    "application/json",
-    (_request, payload, done) => {
-      done(null, payload);
-    },
-  );
-
-  fastify.addContentTypeParser("*", (_request, payload, done) => {
+  let noopContentParser: FastifyContentTypeParser = (
+    _request,
+    payload,
+    done,
+  ) => {
     done(null, payload);
-  });
+  };
+
+  fastify.addContentTypeParser("application/json", noopContentParser);
+
+  fastify.addContentTypeParser("*", noopContentParser);
 
   if (earlyHints) {
     await fastify.register(fastifyEarlyHints, { warn: true });
