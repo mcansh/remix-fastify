@@ -1,10 +1,8 @@
 import fs from "node:fs";
-import path from "node:path";
 import fastify from "fastify";
 import { createRequestHandler, staticFilePlugin } from "@mcansh/remix-fastify";
 import { installGlobals } from "@remix-run/node";
 import sourceMapSupport from "source-map-support";
-import chokidar from "chokidar";
 
 sourceMapSupport.install();
 installGlobals();
@@ -31,16 +29,18 @@ app.register(staticFilePlugin, {
   publicPath: "/modules/",
 });
 
-app.all(
-  "*",
-  process.env.NODE_ENV === "development"
-    ? createDevRequestHandler()
-    : createRequestHandler({
-        build,
-        getLoadContext: () => ({ loadContextName: "John Doe" }),
-        mode: process.env.NODE_ENV,
-      }),
-);
+app.all("*", async (request, reply) => {
+  if (process.env.NODE_ENV === "development") {
+    let devHandler = await createDevRequestHandler();
+    return devHandler(request, reply);
+  }
+
+  return createRequestHandler({
+    build,
+    getLoadContext: () => ({ loadContextName: "John Doe" }),
+    mode: process.env.NODE_ENV,
+  })(request, reply);
+});
 
 let port = process.env.PORT ? Number(process.env.PORT) || 3000 : 3000;
 
@@ -52,8 +52,9 @@ if (process.env.NODE_ENV === "development") {
   broadcastDevReady(build);
 }
 
-function createDevRequestHandler() {
-  let watcher = chokidar.watch(BUILD_PATH, { ignoreInitial: true });
+async function createDevRequestHandler() {
+  let chokidar = await import("chokidar");
+  let watcher = chokidar.default.watch(BUILD_PATH, { ignoreInitial: true });
   watcher.on("all", async () => {
     // 1. purge require cache && load updated server build
     const stat = fs.statSync(BUILD_PATH);
