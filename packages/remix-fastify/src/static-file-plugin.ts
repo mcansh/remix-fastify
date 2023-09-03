@@ -19,7 +19,7 @@ let staticFiles: FastifyPluginAsync<PluginOptions> = async (
     wildcard: false,
     root: "/public",
     serve: false,
-    prefix: "/build/*",
+    prefix: makePublicPath(publicPath),
     decorateReply: false,
   });
 
@@ -34,6 +34,8 @@ let staticFiles: FastifyPluginAsync<PluginOptions> = async (
     publicPath,
     rootDir,
   });
+
+  console.log({ staticFiles });
 
   for (let file of staticFiles) {
     fastify.get(file.browserAssetUrl, (_request, reply) => {
@@ -54,6 +56,20 @@ let staticFiles: FastifyPluginAsync<PluginOptions> = async (
     });
   }
 };
+
+function makePublicPath(publicPath: string): string {
+  if (!publicPath.startsWith("/")) {
+    publicPath = `/${publicPath}`;
+  }
+  if (!publicPath.endsWith("/")) {
+    publicPath = `${publicPath}/`;
+  }
+  if (!publicPath.endsWith("*")) {
+    publicPath = `${publicPath}*`;
+  }
+
+  return publicPath;
+}
 
 export let staticFilePlugin = fp(staticFiles, {
   name: "@mcansh/remix-fastify",

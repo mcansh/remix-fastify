@@ -25,9 +25,10 @@ let noopContentParser = (_request, payload, done) => {
 app.addContentTypeParser("application/json", noopContentParser);
 app.addContentTypeParser("*", noopContentParser);
 
+// match with remix.config
 app.register(staticFilePlugin, {
   assetsBuildDirectory: "public/build",
-  publicPath: "/build/",
+  publicPath: "/modules/",
 });
 
 app.all(

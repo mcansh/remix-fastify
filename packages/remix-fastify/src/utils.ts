@@ -3,7 +3,6 @@ import type { ServerBuild } from "@remix-run/node";
 import { matchRoutes } from "@remix-run/router";
 import type { FastifyRequest } from "fastify";
 import { globSync } from "glob";
-import path from "node:path";
 
 export interface StaticFile {
   // whether or not the file is in the build directory
@@ -26,30 +25,33 @@ export function getStaticFiles({
   let staticFilePaths = globSync(`**/*`, {
     dot: true,
     nodir: true,
-    cwd: path.posix.join(rootDir, "public"),
+    cwd: rootDir,
+    ignore: ["**/node_modules/**"],
   });
 
-  return staticFilePaths.map((filePublicPath) => {
-    let normalized = filePublicPath.replace(/\\/g, "/");
-    let isBuildAsset = normalized.startsWith(assetsBuildDirectory);
+  return staticFilePaths
+    .filter((filepath) => filepath.startsWith("public"))
+    .map((filePublicPath) => {
+      let normalized = filePublicPath.replace(/\\/g, "/");
+      let isBuildAsset = normalized.startsWith(assetsBuildDirectory);
 
-    let browserAssetUrl = "/";
+      let browserAssetUrl = "/";
 
-    if (isBuildAsset) {
-      browserAssetUrl += normalized.replace(
-        assetsBuildDirectory,
-        publicPath.split("/").filter(Boolean).join("/"),
-      );
-    } else {
-      browserAssetUrl += normalized.replace("public/", "");
-    }
+      if (isBuildAsset) {
+        browserAssetUrl += normalized.replace(
+          assetsBuildDirectory,
+          publicPath.split("/").filter(Boolean).join("/"),
+        );
+      } else {
+        browserAssetUrl += normalized.replace("public/", "");
+      }
 
-    return {
-      isBuildAsset,
-      filePublicPath,
-      browserAssetUrl,
-    };
-  });
+      return {
+        isBuildAsset,
+        filePublicPath: filePublicPath.replace("public/", ""),
+        browserAssetUrl,
+      };
+    });
 }
 
 export function getEarlyHintLinks(
