@@ -30,14 +30,14 @@ importers:
         specifier: ^11.1.1
         version: 11.1.1
       glob:
-        specifier: ^10.3.3
-        version: 10.3.3
+        specifier: ^10.3.4
+        version: 10.3.4
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
       prettier:
-        specifier: ^3.0.2
-        version: 3.0.2
+        specifier: ^3.0.3
+        version: 3.0.3
       publint:
         specifier: ^0.2.2
         version: 0.2.2
@@ -60,8 +60,8 @@ importers:
   example:
     dependencies:
       '@fastify/static':
-        specifier: ^6.10.2
-        version: 6.10.2
+        specifier: ^6.11.0
+        version: 6.11.0
       '@mcansh/remix-fastify':
         specifier: workspace:*
         version: link:../packages/remix-fastify
@@ -72,7 +72,7 @@ importers:
         specifier: ^1.19.3
         version: 1.19.3(react-dom@18.2.0)(react@18.2.0)
       fastify:
-        specifier: ^4.22.0
+        specifier: ^4.22.2
         version: 4.22.2
       isbot:
         specifier: ^3.6.13
@@ -120,24 +120,18 @@ importers:
 
   packages/remix-fastify:
     dependencies:
-      '@fastify/early-hints':
-        specifier: ^1.0.1
-        version: 1.0.1
       '@fastify/static':
-        specifier: ^6.10.2
-        version: 6.10.2
+        specifier: ^6.11.0
+        version: 6.11.0
       '@remix-run/router':
         specifier: ^1.8.0
         version: 1.8.0
       fastify-plugin:
         specifier: ^4.5.1
         version: 4.5.1
-      fastify-racing:
-        specifier: ^1.1.0
-        version: 1.1.0
       glob:
-        specifier: ^10.3.3
-        version: 10.3.3
+        specifier: ^10.3.4
+        version: 10.3.4
       tiny-invariant:
         specifier: ^1.3.1
         version: 1.3.1
@@ -145,9 +139,6 @@ importers:
       '@remix-run/node':
         specifier: ^1.19.3
         version: 1.19.3
-      '@remix-run/react':
-        specifier: ^1.19.3
-        version: 1.19.3(react-dom@18.2.0)(react@18.2.0)
       '@remix-run/server-runtime':
         specifier: ^1.19.3
         version: 1.19.3
@@ -155,29 +146,17 @@ importers:
         specifier: ^8.1.0
         version: 8.1.0
       '@types/node':
-        specifier: ^20.5.6
+        specifier: ^20.5.9
         version: 20.5.9
-      '@types/react':
-        specifier: ^18.2.21
-        version: 18.2.21
-      '@types/react-dom':
-        specifier: ^18.2.7
-        version: 18.2.7
       '@typescript/lib-dom':
         specifier: npm:@types/web@^0.0.114
         version: /@types/web@0.0.114
       fastify:
-        specifier: ^4.22.0
+        specifier: ^4.22.2
         version: 4.22.2
       node-mocks-http:
         specifier: ^1.13.0
         version: 1.13.0
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.2.0(react@18.2.0)
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
@@ -2071,17 +2050,6 @@ packages:
   /@fastify/deepmerge@1.3.0:
     resolution: {integrity: sha512-J8TOSBq3SoZbDhM9+R/u77hP93gz/rajSA+K2kGyijPpORPWUXHUpTaleoj+92As0S9uPRP7Oi8IqMf0u+ro6A==}
 
-  /@fastify/early-hints@1.0.1:
-    resolution: {integrity: sha512-wtxJhz3cEf87MpIQzpxwu0g/ShwIr3/wDI8a3KUBDbpQkMjYNX9i+RM5JyM7m+WJGSSl3OvwxAsUp6br7Mk5lA==}
-    dependencies:
-      fastify-plugin: 4.5.1
-      process-warning: 2.1.0
-    dev: false
-
-  /@fastify/error@3.0.0:
-    resolution: {integrity: sha512-dPRyT40GiHRzSCll3/Jn2nPe25+E1VXc9tDwRAIKwFCxd5Np5wzgz1tmooWG3sV0qKgrBibihVoCna2ru4SEFg==}
-    dev: false
-
   /@fastify/error@3.2.0:
     resolution: {integrity: sha512-KAfcLa+CnknwVi5fWogrLXgidLic+GXnLjijXdpl8pvkvbXU5BGa37iZO9FGvsh9ZL4y+oFi5cbHBm5UOG+dmQ==}
 
@@ -2100,8 +2068,8 @@ packages:
       mime: 3.0.0
     dev: false
 
-  /@fastify/static@6.10.2:
-    resolution: {integrity: sha512-UoaMvIHSBLCZBYOVZwFRYqX2ufUhd7FFMYGDeSf0Z+D8jhYtwljjmuQGuanUP8kS4y/ZEV1a8mfLha3zNwsnnQ==}
+  /@fastify/static@6.11.0:
+    resolution: {integrity: sha512-jgnqpRojDqOLHnnKlZgvvUFzR8rrxqkqzbtmuHp1amIArxGVJDXyBMPbxb3yteklBA7tPilXbx5xzDRiGXR0RA==}
     dependencies:
       '@fastify/accept-negotiator': 1.1.0
       '@fastify/send': 2.0.1
@@ -2440,6 +2408,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-router-dom: 6.14.2(react-dom@18.2.0)(react@18.2.0)
+    dev: false
 
   /@remix-run/router@1.7.2:
     resolution: {integrity: sha512-7Lcn7IqGMV+vizMPoEl5F0XDshcdDYtMI6uJLQdQz5CfZAwy3vvGKYSUk789qndt5dEC4HfSjviSYlSoHGL2+A==}
@@ -4807,14 +4776,6 @@ packages:
     resolution: {integrity: sha512-stRHYGeuqpEZTL1Ef0Ovr2ltazUT9g844X5z/zEBFLG8RYlpDiOCIG+ATvYEp+/zmc7sN29mcIMp8gvYplYPIQ==}
     dev: false
 
-  /fastify-racing@1.1.0:
-    resolution: {integrity: sha512-Rx6wVhTkNF6Uz2omgq7wOEu0poEjTnBMzS657P9YBXMcEsT2nyeLNUQZY192zz1uSJ59poWu7CxqWhGH+gLKVg==}
-    engines: {node: '>=16.0.0'}
-    dependencies:
-      '@fastify/error': 3.0.0
-      fastify-plugin: 4.5.1
-    dev: false
-
   /fastify@4.22.2:
     resolution: {integrity: sha512-rK8mF/1mZJHH6H/L22OhmilTgrp5XMkk3RHcSy03LC+TJ6+wLhbq+4U62bjns15VzIbBNgxTqAForBqtGAa0NQ==}
     dependencies:
@@ -5109,14 +5070,14 @@ packages:
     dependencies:
       is-glob: 4.0.3
 
-  /glob@10.3.3:
-    resolution: {integrity: sha512-92vPiMb/iqpmEgsOoIDvTjc50wf9CCCvMzsi6W0JLPeUKE8TWP1a73PgqSrqy7iAZxaSD1YdzU7QZR5LF51MJw==}
+  /glob@10.3.4:
+    resolution: {integrity: sha512-6LFElP3A+i/Q8XQKEvZjkEWEOTgAIALR9AO2rwT8bgPhDd1anmqDJDZ6lLddI4ehxxxR1S5RIqKe1uapMQfYaQ==}
     engines: {node: '>=16 || 14 >=14.17'}
     hasBin: true
     dependencies:
       foreground-child: 3.1.1
       jackspeak: 2.2.1
-      minimatch: 9.0.2
+      minimatch: 9.0.3
       minipass: 6.0.2
       path-scurry: 1.10.1
     dev: false
@@ -6582,19 +6543,11 @@ packages:
       brace-expansion: 2.0.1
     dev: false
 
-  /minimatch@9.0.2:
-    resolution: {integrity: sha512-PZOT9g5v2ojiTL7r1xF6plNHLtOeTpSlDI007As2NlA2aYBMfVom17yqa6QzhmDP8QOhn7LjHTg7DFCVSSa6yg==}
-    engines: {node: '>=16 || 14 >=14.17'}
-    dependencies:
-      brace-expansion: 2.0.1
-    dev: false
-
   /minimatch@9.0.3:
     resolution: {integrity: sha512-RHiac9mvaRw0x3AYRgDC1CxAP7HTcNrrECeA8YYJeWnpo+2Q5CegtZjaotWTWxDG3UeGA1coE05iH1mPjT/2mg==}
     engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
       brace-expansion: 2.0.1
-    dev: true
 
   /minimist-options@4.1.0:
     resolution: {integrity: sha512-Q4r8ghd80yhO/0j1O3B2BjweX3fiHg9cdOwjJd2J76Q135c+NDxGCqdYKQ1SKBuFfgWbAUzBfvYjPUEeNgqN1A==}
@@ -7363,8 +7316,8 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  /prettier@3.0.2:
-    resolution: {integrity: sha512-o2YR9qtniXvwEZlOKbveKfDQVyqxbEIWn48Z8m3ZJjBjcCmUy3xZGIv+7AkaeuaTr6yPXJjwv07ZWlsWbEy1rQ==}
+  /prettier@3.0.3:
+    resolution: {integrity: sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==}
     engines: {node: '>=14'}
     hasBin: true
     dev: false
@@ -7396,10 +7349,6 @@ packages:
   /process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
     dev: true
-
-  /process-warning@2.1.0:
-    resolution: {integrity: sha512-9C20RLxrZU/rFnxWncDkuF6O999NdIf3E1ws4B0ZeY3sRVPzWBMsYDE2lxjxhiXxg464cQTgKUGm8/i6y2YGXg==}
-    dev: false
 
   /process-warning@2.2.0:
     resolution: {integrity: sha512-/1WZ8+VQjR6avWOgHeEPd7SDQmFQ1B5mC1eRXsCm5TarlNmx/wCsa5GEaxGm05BORRtyG/Ex/3xq3TuRvq57qg==}
@@ -7541,6 +7490,7 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
 
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -7568,6 +7518,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-router: 6.14.2(react@18.2.0)
+    dev: false
 
   /react-router@6.14.2(react@18.2.0):
     resolution: {integrity: sha512-09Zss2dE2z+T1D03IheqAFtK4UzQyX8nFPWx6jkwdYzGLXd5ie06A6ezS2fO6zJfEb/SpG6UocN2O1hfD+2urQ==}
@@ -7577,6 +7528,7 @@ packages:
     dependencies:
       '@remix-run/router': 1.7.2
       react: 18.2.0
+    dev: false
 
   /react@18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
@@ -7931,6 +7883,7 @@ packages:
     resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
     dependencies:
       loose-envify: 1.4.0
+    dev: false
 
   /secure-json-parse@2.7.0:
     resolution: {integrity: sha512-6aU+Rwsezw7VR8/nyvKTx8QpWH9FrcYiXXlqC4z5d5XQBDRqtbfsRjnwGyqbi3gddNtWHuEk9OANUotL26qKUw==}

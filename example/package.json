@@ -13,11 +13,11 @@
     "validate": "run-p lint format"
   },
   "dependencies": {
-    "@fastify/static": "^6.10.2",
+    "@fastify/static": "^6.11.0",
     "@mcansh/remix-fastify": "workspace:*",
     "@remix-run/node": "^1.19.3",
     "@remix-run/react": "^1.19.3",
-    "fastify": "^4.22.0",
+    "fastify": "^4.22.2",
     "isbot": "^3.6.13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -36,27 +36,20 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@fastify/early-hints": "^1.0.1",
-    "@fastify/static": "^6.10.2",
+    "@fastify/static": "^6.11.0",
     "@remix-run/router": "^1.8.0",
     "fastify-plugin": "^4.5.1",
-    "fastify-racing": "^1.1.0",
-    "glob": "^10.3.3",
+    "glob": "^10.3.4",
     "tiny-invariant": "^1.3.1"
   },
   "devDependencies": {
     "@remix-run/node": "^1.19.3",
-    "@remix-run/react": "^1.19.3",
     "@remix-run/server-runtime": "^1.19.3",
     "@types/glob": "^8.1.0",
-    "@types/node": "^20.5.6",
-    "@types/react": "^18.2.21",
-    "@types/react-dom": "^18.2.7",
+    "@types/node": "^20.5.9",
     "@typescript/lib-dom": "npm:@types/web@^0.0.114",
-    "fastify": "^4.22.0",
+    "fastify": "^4.22.2",
     "node-mocks-http": "^1.13.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
@@ -66,5 +59,8 @@
   "publishConfig": {
     "access": "public",
     "provenance": true
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
