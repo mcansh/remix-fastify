@@ -6,13 +6,13 @@
     "dev": "pnpm run --recursive --parallel dev",
     "build": "pnpm run --recursive build",
     "test": "pnpm --filter ./packages/* test --if-present",
-    "publish": "./scripts/publish.mjs",
+    "publish": "./scripts/publish.js",
     "publint": "publint ./packages/**",
     "lint": "eslint --cache --ignore-path .gitignore --fix .",
     "format": "prettier --write --ignore-path .gitignore .",
     "validate": "run-p lint format publint",
     "changeset": "changeset",
-    "changeset:version": "changeset version && node ./scripts/remove-prerelease-changelogs.mjs",
+    "changeset:version": "changeset version && node ./scripts/remove-prerelease-changelogs.js",
     "changeset:release": "pnpm run build && changeset publish"
   },
   "dependencies": {

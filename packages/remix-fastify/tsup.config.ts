@@ -11,17 +11,11 @@ export default defineConfig(() => {
     external,
     tsconfig: "./tsconfig.json",
     dts: true,
+    clean: true,
   };
 
   return [
-    {
-      ...options,
-      format: "cjs",
-    },
-
-    {
-      ...options,
-      format: "esm",
-    },
+    { ...options, format: "cjs" },
+    { ...options, format: "esm" },
   ];
 });
