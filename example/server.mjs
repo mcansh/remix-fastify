@@ -4,7 +4,9 @@ import { installGlobals } from "@remix-run/node";
 
 import * as serverBuild from "./build/index.mjs";
 
-if (process.env.GLOBALS !== "true") {
+let nodeMajor = Number(process.versions.node.split(".")[0]);
+
+if (["true", "1"].includes(process.env.INSTALL_GLOBALS) || nodeMajor < 20) {
   console.log(`installing remix globals`);
   installGlobals();
 } else {
