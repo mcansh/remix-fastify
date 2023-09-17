@@ -35,8 +35,6 @@ let staticFiles: FastifyPluginAsync<PluginOptions> = async (
     rootDir,
   });
 
-  console.log({ staticFiles });
-
   for (let file of staticFiles) {
     fastify.get(file.browserAssetUrl, (_request, reply) => {
       return reply.sendFile(
