@@ -7,12 +7,7 @@ module.exports = {
   assetsBuildDirectory: "public/build",
   serverBuildPath: "build/index.mjs",
   serverModuleFormat: "esm",
-  future: {
-    v2_dev: true,
-    v2_routeConvention: true,
-    v2_errorBoundary: true,
-    v2_meta: true,
-    v2_normalizeFormMethod: true,
-  },
+  future: {},
+  // just confirming that a custom publicPath works
   publicPath: "/modules/",
 };

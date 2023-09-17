@@ -11,7 +11,6 @@ export default defineConfig(() => {
     external,
     tsconfig: "./tsconfig.json",
     dts: true,
-    clean: true,
   };
 
   return [

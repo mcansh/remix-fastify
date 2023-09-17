@@ -1,3 +1,4 @@
+import url from "node:url";
 import fs from "node:fs";
 import fastify from "fastify";
 import {
@@ -5,7 +6,7 @@ import {
   staticFilePlugin,
   getEarlyHintLinks,
 } from "@mcansh/remix-fastify";
-import { installGlobals } from "@remix-run/node";
+import { installGlobals, broadcastDevReady } from "@remix-run/node";
 import sourceMapSupport from "source-map-support";
 import { fastifyEarlyHints } from "@fastify/early-hints";
 
@@ -14,10 +15,9 @@ installGlobals();
 
 let BUILD_PATH = "./build/index.mjs";
 
-/**
- * @type { import('@remix-run/node').ServerBuild | Promise<import('@remix-run/node').ServerBuild> }
- */
-let build = await import(BUILD_PATH);
+/** @typedef {import('@remix-run/node').ServerBuild} ServerBuild */
+
+let initialBuild = await import(BUILD_PATH);
 
 let app = fastify();
 
@@ -37,18 +37,23 @@ app.register(staticFilePlugin, {
 });
 
 app.all("*", async (request, reply) => {
+  let getLoadContext = () => ({ loadContextName: "John Doe" });
+
   if (process.env.NODE_ENV === "development") {
-    let devHandler = await createDevRequestHandler();
+    let devHandler = await createDevRequestHandler(
+      initialBuild,
+      getLoadContext,
+    );
     return devHandler(request, reply);
   }
 
-  let links = getEarlyHintLinks(request, build);
+  let links = getEarlyHintLinks(request, initialBuild);
   await reply.writeEarlyHintsLinks(links);
 
   return createRequestHandler({
-    build,
-    getLoadContext: () => ({ loadContextName: "John Doe" }),
-    mode: process.env.NODE_ENV,
+    build: initialBuild,
+    getLoadContext,
+    mode: initialBuild.mode,
   })(request, reply);
 });
 
@@ -58,21 +63,29 @@ let address = await app.listen({ port, host: "0.0.0.0" });
 console.log(`✅ app ready: ${address}`);
 
 if (process.env.NODE_ENV === "development") {
-  let { broadcastDevReady } = await import("@remix-run/node");
-  broadcastDevReady(build);
+  broadcastDevReady(initialBuild);
 }
 
-async function createDevRequestHandler() {
+/**
+ * @param {ServerBuild} initialBuild
+ * @param {import('@mcansh/remix-fastify').GetLoadContextFunction} getLoadContext
+ * @returns {import('@remix-run/express').RequestHandler}
+ */
+async function createDevRequestHandler(initialBuild, getLoadContext) {
+  let build = initialBuild;
+
+  async function handleServerUpdate() {
+    // 1. re-import the server build
+    build = await reimportServer();
+    // 2. tell Remix that this app server is now up-to-date and ready
+    broadcastDevReady(build);
+  }
+
   let chokidar = await import("chokidar");
-  let watcher = chokidar.default.watch(BUILD_PATH, { ignoreInitial: true });
-  watcher.on("all", async () => {
-    // 1. purge require cache && load updated server build
-    const stat = fs.statSync(BUILD_PATH);
-    build = import(BUILD_PATH + "?t=" + stat.mtimeMs);
-    // 2. tell dev server that this app server is now ready
-    let { broadcastDevReady } = await import("@remix-run/node");
-    broadcastDevReady(await build);
-  });
+  chokidar
+    .watch(BUILD_PATH, { ignoreInitial: true })
+    .on("add", handleServerUpdate)
+    .on("change", handleServerUpdate);
 
   return async (request, reply) => {
     let links = getEarlyHintLinks(request, build);
@@ -80,8 +93,19 @@ async function createDevRequestHandler() {
 
     return createRequestHandler({
       build: await build,
-      getLoadContext: () => ({ loadContextName: "John Doe" }),
+      getLoadContext,
       mode: "development",
     })(request, reply);
   };
+}
+
+/** @returns {Promise<ServerBuild>} */
+async function reimportServer() {
+  const stat = fs.statSync(BUILD_PATH);
+
+  // convert build path to URL for Windows compatibility with dynamic `import`
+  const BUILD_URL = url.pathToFileURL(BUILD_PATH).href;
+
+  // use a timestamp query parameter to bust the import cache
+  return import(BUILD_URL + "?t=" + stat.mtimeMs);
 }

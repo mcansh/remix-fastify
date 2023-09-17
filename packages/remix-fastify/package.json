@@ -31,9 +31,11 @@
   ],
   "scripts": {
     "prepublishOnly": "npm run build && publint",
+    "typecheck": "tsc",
     "dev": "tsup --watch",
     "build": "tsup",
-    "test": "vitest"
+    "test": "vitest",
+    "validate": "run-p typecheck test"
   },
   "dependencies": {
     "@fastify/static": "^6.11.2",
