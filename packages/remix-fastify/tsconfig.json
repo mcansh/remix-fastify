@@ -5,6 +5,8 @@
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "target": "ES2022",
     "module": "ES2022",
+    "verbatimModuleSyntax": true,
+    "noUncheckedIndexedAccess": true,
 
     "moduleResolution": "Bundler",
     "moduleDetection": "force",

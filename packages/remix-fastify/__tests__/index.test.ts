@@ -3,8 +3,8 @@ import type { FastifyReply } from "fastify";
 import fastify from "fastify";
 import { createRequest } from "node-mocks-http";
 import {
+  createReadableStreamFromReadable,
   createRequestHandler as createRemixRequestHandler,
-  Response as NodeResponse,
 } from "@remix-run/node";
 import "@remix-run/node/install";
 import type { MockedFunction } from "vitest";
@@ -111,8 +111,9 @@ describe("fastify createRequestHandler", () => {
     // https://github.com/node-fetch/node-fetch/blob/4ae35388b078bddda238277142bf091898ce6fda/test/response.js#L142-L148
     it("handles body as stream", async () => {
       mockedCreateRequestHandler.mockImplementation(() => async () => {
-        let stream = Readable.from("hello world");
-        return new NodeResponse(stream, { status: 200 });
+        let readable = Readable.from("hello world");
+        let stream = createReadableStreamFromReadable(readable);
+        return new Response(stream, { status: 200 });
       });
 
       let app = createApp();
