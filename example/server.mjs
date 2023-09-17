@@ -1,8 +1,13 @@
 import fs from "node:fs";
 import fastify from "fastify";
-import { createRequestHandler, staticFilePlugin } from "@mcansh/remix-fastify";
+import {
+  createRequestHandler,
+  staticFilePlugin,
+  getEarlyHintLinks,
+} from "@mcansh/remix-fastify";
 import { installGlobals } from "@remix-run/node";
 import sourceMapSupport from "source-map-support";
+import { fastifyEarlyHints } from "@fastify/early-hints";
 
 sourceMapSupport.install();
 installGlobals();
@@ -23,6 +28,8 @@ let noopContentParser = (_request, payload, done) => {
 app.addContentTypeParser("application/json", noopContentParser);
 app.addContentTypeParser("*", noopContentParser);
 
+await app.register(fastifyEarlyHints, { warn: true });
+
 // match with remix.config
 app.register(staticFilePlugin, {
   assetsBuildDirectory: "public/build",
@@ -34,6 +41,9 @@ app.all("*", async (request, reply) => {
     let devHandler = await createDevRequestHandler();
     return devHandler(request, reply);
   }
+
+  let links = getEarlyHintLinks(request, build);
+  await reply.writeEarlyHintsLinks(links);
 
   return createRequestHandler({
     build,
@@ -65,6 +75,9 @@ async function createDevRequestHandler() {
   });
 
   return async (request, reply) => {
+    let links = getEarlyHintLinks(request, build);
+    await reply.writeEarlyHintsLinks(links);
+
     return createRequestHandler({
       build: await build,
       getLoadContext: () => ({ loadContextName: "John Doe" }),

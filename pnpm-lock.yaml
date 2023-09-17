@@ -59,6 +59,9 @@ importers:
 
   example:
     dependencies:
+      '@fastify/early-hints':
+        specifier: ^1.0.1
+        version: 1.0.1
       '@fastify/static':
         specifier: ^6.11.0
         version: 6.11.0
@@ -2058,7 +2061,6 @@ packages:
     dependencies:
       fastify-plugin: 4.5.1
       process-warning: 2.2.0
-    dev: true
 
   /@fastify/error@3.2.0:
     resolution: {integrity: sha512-KAfcLa+CnknwVi5fWogrLXgidLic+GXnLjijXdpl8pvkvbXU5BGa37iZO9FGvsh9ZL4y+oFi5cbHBm5UOG+dmQ==}
