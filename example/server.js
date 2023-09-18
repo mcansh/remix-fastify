@@ -14,6 +14,7 @@ sourceMapSupport.install();
 installGlobals();
 
 let BUILD_PATH = "./build/index.js";
+let VERSION_PATH = "./build/version.txt";
 
 /** @typedef {import('@remix-run/node').ServerBuild} ServerBuild */
 
@@ -77,7 +78,7 @@ async function createDevRequestHandler(initialBuild, getLoadContext) {
 
   let chokidar = await import("chokidar");
   chokidar
-    .watch(BUILD_PATH, { ignoreInitial: true })
+    .watch(VERSION_PATH, { ignoreInitial: true })
     .on("add", handleServerUpdate)
     .on("change", handleServerUpdate);
 
