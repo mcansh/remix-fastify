@@ -37,13 +37,8 @@ app.register(staticFilePlugin, {
 });
 
 app.all("*", async (request, reply) => {
-  let getLoadContext = () => ({ loadContextName: "John Doe" });
-
   if (process.env.NODE_ENV === "development") {
-    let devHandler = await createDevRequestHandler(
-      initialBuild,
-      getLoadContext,
-    );
+    let devHandler = await createDevRequestHandler(initialBuild);
     return devHandler(request, reply);
   }
 
@@ -52,7 +47,6 @@ app.all("*", async (request, reply) => {
 
   return createRequestHandler({
     build: initialBuild,
-    getLoadContext,
     mode: initialBuild.mode,
   })(request, reply);
 });
@@ -68,7 +62,7 @@ if (process.env.NODE_ENV === "development") {
 
 /**
  * @param {ServerBuild} initialBuild
- * @param {import('@mcansh/remix-fastify').GetLoadContextFunction} getLoadContext
+ * @param {import('@mcansh/remix-fastify').GetLoadContextFunction} [getLoadContext]
  * @returns {import('@remix-run/express').RequestHandler}
  */
 async function createDevRequestHandler(initialBuild, getLoadContext) {
