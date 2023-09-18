@@ -9,6 +9,9 @@ on:
       - "!release-manual"
       - "!release-manual-*"
 
+permissions:
+  id-token: write
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
