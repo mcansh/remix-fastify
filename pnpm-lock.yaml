@@ -57,7 +57,7 @@ importers:
   example:
     dependencies:
       '@mcansh/remix-fastify':
-        specifier: 2.8.1
+        specifier: 3.0.0
         version: link:../packages/remix-fastify
       '@remix-run/css-bundle':
         specifier: ^2.0.0
