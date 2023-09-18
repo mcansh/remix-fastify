@@ -57,7 +57,7 @@ let address = await app.listen({ port, host: "0.0.0.0" });
 console.log(`✅ app ready: ${address}`);
 
 if (process.env.NODE_ENV === "development") {
-  broadcastDevReady(initialBuild);
+  await broadcastDevReady(initialBuild);
 }
 
 /**
@@ -72,7 +72,7 @@ async function createDevRequestHandler(initialBuild, getLoadContext) {
     // 1. re-import the server build
     build = await reimportServer();
     // 2. tell Remix that this app server is now up-to-date and ready
-    broadcastDevReady(build);
+    await broadcastDevReady(build);
   }
 
   let chokidar = await import("chokidar");
