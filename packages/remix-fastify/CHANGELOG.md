@@ -1,5 +1,17 @@
 # @mcansh/remix-fastify
 
+## 3.0.0
+
+### Major Changes
+
+- 40e8daa: remove plugin in favor of having server code in server. this allows live reload funcationally of `remix dev` to work
+
+  you can find an example of the updated server code in [/example/server.js](/example/server.js)
+
+### Minor Changes
+
+- 40e8daa: remove references to fetch polyfills
+
 ## 2.8.1
 
 ### Patch Changes
