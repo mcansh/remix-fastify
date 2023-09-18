@@ -1,43 +1,34 @@
 {
-  "name": "remix-app-template",
+  "name": "example",
   "private": true,
-  "description": "",
-  "license": "",
   "sideEffects": false,
+  "type": "module",
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev -c \"node ./server.mjs\"",
-    "start": "node ./server.mjs",
-    "lint": "eslint --cache --ignore-path .gitignore --fix .",
-    "format": "prettier --write --ignore-path .gitignore .",
-    "typecheck": "tsc",
-    "validate": "run-p lint format typecheck"
+    "dev": "remix dev --manual",
+    "start": "remix-serve ./build/index.js",
+    "typecheck": "tsc"
   },
   "dependencies": {
-    "@fastify/early-hints": "^1.0.1",
-    "@fastify/static": "^6.11.2",
-    "@mcansh/remix-fastify": "workspace:*",
+    "@mcansh/remix-fastify": "2.8.1",
+    "@remix-run/css-bundle": "^2.0.0",
     "@remix-run/node": "^2.0.0",
     "@remix-run/react": "^2.0.0",
+    "@remix-run/serve": "^2.0.0",
     "fastify": "^4.23.2",
-    "isbot": "^3.6.13",
+    "isbot": "^3.6.8",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "source-map-support": "^0.5.21"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.0.0",
     "@remix-run/eslint-config": "^2.0.0",
-    "@types/react": "^18.2.21",
+    "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
-    "chokidar": "^3.5.3",
-    "cross-env": "^7.0.3",
-    "dotenv": "^16.3.1",
-    "eslint": "^8.49.0",
-    "npm-run-all": "^4.1.5",
-    "typescript": "^5.2.2"
+    "eslint": "^8.38.0",
+    "typescript": "^5.1.6"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=18.0.0"
   }
 }
