@@ -45,9 +45,9 @@ jobs:
           - macos-latest
           - windows-latest
         node:
-          - 14
-          - 16
           - 18
+          - 20
+          - latest
     runs-on: ${{ matrix.os }}
     steps:
       - name: ⬇️ Checkout repo
@@ -56,7 +56,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: ${{ matrix.node }}
 
       - name: 🟧 Setup pnpm
         uses: pnpm/action-setup@v2

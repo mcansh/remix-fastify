@@ -1,27 +1,28 @@
 {
   "name": "@mcansh/remix-fastify",
-  "version": "2.8.1",
+  "version": "0.0.0-experimental-c6eaa54",
   "description": "Fastify server request handler for Remix",
   "repository": "mcansh/remix-fastify",
   "license": "MIT",
   "author": "Logan McAnsh <logan@remix.run> (https://remix.run)",
+  "type": "module",
   "exports": {
     "./package.json": "./package.json",
     ".": {
       "types": {
-        "require": "./dist/index.d.ts",
-        "import": "./dist/index.d.mts",
-        "default": "./dist/index.d.ts"
+        "require": "./dist/index.d.cts",
+        "import": "./dist/index.d.ts",
+        "default": "./dist/index.d.cts"
       },
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "default": "./dist/index.js"
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "default": "./dist/index.cjs"
     }
   },
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "source": "./src/index.ts",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.cts",
   "files": [
     "dist",
     "package.json",
@@ -30,40 +31,44 @@
   ],
   "scripts": {
     "prepublishOnly": "npm run build && publint",
+    "typecheck": "tsc",
     "dev": "tsup --watch",
     "build": "tsup",
-    "test": "vitest"
+    "test": "vitest",
+    "validate": "run-p typecheck test"
   },
   "dependencies": {
-    "@fastify/early-hints": "^1.0.1",
-    "@fastify/static": "^6.10.2",
-    "@remix-run/router": "^1.8.0",
+    "@fastify/static": "^6.11.2",
+    "@remix-run/router": "^1.9.0",
     "fastify-plugin": "^4.5.1",
-    "fastify-racing": "^1.1.0",
-    "glob": "^10.3.3",
-    "tiny-invariant": "^1.3.1"
+    "glob": "^10.3.4"
   },
   "devDependencies": {
-    "@remix-run/node": "^1.19.3",
-    "@remix-run/react": "^1.19.3",
-    "@remix-run/server-runtime": "^1.19.3",
+    "@fastify/early-hints": "^1.0.1",
+    "@remix-run/node": "^2.0.0",
+    "@remix-run/server-runtime": "^2.0.0",
     "@types/glob": "^8.1.0",
-    "@types/node": "^20.5.6",
-    "@types/react": "^18.2.21",
-    "@types/react-dom": "^18.2.7",
+    "@types/node": "^20.6.2",
     "@typescript/lib-dom": "npm:@types/web@^0.0.114",
-    "fastify": "^4.22.0",
+    "fastify": "^4.23.2",
     "node-mocks-http": "^1.13.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "@remix-run/node": "^1.6.0",
+    "@fastify/early-hints": "^1.0.1",
+    "@remix-run/node": "^2.0.0",
     "fastify": "^3.29.0 || ^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@fastify/early-hints": {
+      "optional": true
+    }
   },
   "publishConfig": {
     "access": "public",
     "provenance": true
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

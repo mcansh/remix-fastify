@@ -1,4 +1,5 @@
 export type { GetLoadContextFunction, RequestHandler } from "./server";
 export { createRequestHandler } from "./server";
-export { remixFastifyPlugin } from "./plugin";
-export { getStaticFiles, purgeRequireCache } from "./utils";
+export type { StaticFile } from "./utils";
+export { getStaticFiles, getEarlyHintLinks } from "./utils";
+export { staticFilePlugin } from "./static-file-plugin";

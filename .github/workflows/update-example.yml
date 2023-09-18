@@ -1,0 +1,55 @@
+name: 🚀 Release (experimental)
+
+on:
+  release:
+    types: [published]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: true
+
+permissions:
+  contents: write
+
+jobs:
+  version:
+    name: 📦 Update Example Version
+    if: github.repository == 'mcansh/remix-fastify'
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🟧 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: "https://registry.npmjs.org"
+
+      - name: 🚀 Update Version
+        run: node ./scripts/update-example.js
+
+      - name: 📝 Commit and push changes
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "💿 no changes to commit"
+            exit 0
+          fi
+
+          git commit -a -m "chore: update example version"
+          git push

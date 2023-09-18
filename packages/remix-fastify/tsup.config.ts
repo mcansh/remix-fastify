@@ -14,14 +14,7 @@ export default defineConfig(() => {
   };
 
   return [
-    {
-      ...options,
-      format: "cjs",
-    },
-
-    {
-      ...options,
-      format: "esm",
-    },
+    { ...options, format: "cjs" },
+    { ...options, format: "esm" },
   ];
 });

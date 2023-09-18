@@ -2,10 +2,14 @@
   "exclude": ["./dist", "./__tests__", "./node_modules"],
   "include": ["./src"],
   "compilerOptions": {
-    "lib": ["ES2019", "DOM.Iterable"],
-    "target": "ES2019",
-    "module": "ES2020",
-    "moduleResolution": "node",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "target": "ES2022",
+    "module": "ES2022",
+    "verbatimModuleSyntax": true,
+    "noUncheckedIndexedAccess": true,
+
+    "moduleResolution": "Bundler",
+    "moduleDetection": "force",
     "strict": true,
     "outDir": "./dist",
     "skipLibCheck": true,
@@ -13,7 +17,7 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "rootDir": ".",
-    "noEmit": true,
-    "resolveJsonModule": true
+    "declaration": true,
+    "emitDeclarationOnly": true
   }
 }

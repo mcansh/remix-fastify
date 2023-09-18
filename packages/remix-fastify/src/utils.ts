@@ -22,46 +22,36 @@ export function getStaticFiles({
   publicPath: string;
   rootDir: string;
 }): Array<StaticFile> {
-  let staticFilePaths = globSync(`public/**/*`, {
+  let staticFilePaths = globSync(`**/*`, {
     dot: true,
     nodir: true,
     cwd: rootDir,
+    ignore: ["**/node_modules/**"],
   });
 
-  return staticFilePaths.map((filePublicPath) => {
-    let normalized = filePublicPath.replace(/\\/g, "/");
-    let isBuildAsset = normalized.startsWith(assetsBuildDirectory);
+  return staticFilePaths
+    .filter((filepath) => filepath.startsWith("public"))
+    .map((filePublicPath) => {
+      let normalized = filePublicPath.replace(/\\/g, "/");
+      let isBuildAsset = normalized.startsWith(assetsBuildDirectory);
 
-    let browserAssetUrl = "/";
+      let browserAssetUrl = "/";
 
-    if (isBuildAsset) {
-      browserAssetUrl += normalized.replace(
-        assetsBuildDirectory,
-        publicPath.split("/").filter(Boolean).join("/"),
-      );
-    } else {
-      browserAssetUrl += normalized.replace("public/", "");
-    }
+      if (isBuildAsset) {
+        browserAssetUrl += normalized.replace(
+          assetsBuildDirectory,
+          publicPath.split("/").filter(Boolean).join("/"),
+        );
+      } else {
+        browserAssetUrl += normalized.replace("public/", "");
+      }
 
-    return {
-      isBuildAsset,
-      filePublicPath,
-      browserAssetUrl,
-    };
-  });
-}
-
-export function purgeRequireCache(BUILD_DIR: string) {
-  // purge require cache on requests for "server side HMR" this won't let
-  // you have in-memory objects between requests in development,
-  // alternatively you can set up nodemon/pm2-dev to restart the server on
-  // file changes, but then you'll have to reconnect to databases/etc on each
-  // change. We prefer the DX of this, so we've included it for you by default
-  for (let key in require.cache) {
-    if (key.startsWith(BUILD_DIR)) {
-      delete require.cache[key];
-    }
-  }
+      return {
+        isBuildAsset,
+        filePublicPath: filePublicPath.replace("public/", ""),
+        browserAssetUrl,
+      };
+    });
 }
 
 export function getEarlyHintLinks(
