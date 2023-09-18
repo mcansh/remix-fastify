@@ -53,8 +53,8 @@ importers:
   example:
     dependencies:
       "@mcansh/remix-fastify":
-        specifier: 2.8.1
-        version: 2.8.1(@remix-run/node@2.0.0)(fastify@4.23.2)
+        specifier: 0.0.0-experimental-c6eaa54
+        version: link:../packages/remix-fastify
       "@remix-run/css-bundle":
         specifier: ^2.0.0
         version: 2.0.0
@@ -1770,26 +1770,6 @@ packages:
       globby: 11.1.0
       jju: 1.4.0
       read-yaml-file: 1.1.0
-    dev: false
-
-  /@mcansh/remix-fastify@2.8.1(@remix-run/node@2.0.0)(fastify@4.23.2):
-    resolution:
-      {
-        integrity: sha512-h18bU3bFxX9MFCAs13AiBqRrgcLF92dHs4vzstRaPcFW6ClbEdM3Sx8x+6FZ6u+5wI1xmmeTDJ9vd3OnxC5OYQ==,
-      }
-    peerDependencies:
-      "@remix-run/node": ^1.6.0
-      fastify: ^3.29.0 || ^4.0.0
-    dependencies:
-      "@fastify/early-hints": 1.0.1
-      "@fastify/static": 6.11.2
-      "@remix-run/node": 2.0.0(typescript@5.2.2)
-      "@remix-run/router": 1.9.0
-      fastify: 4.23.2
-      fastify-plugin: 4.5.1
-      fastify-racing: 1.1.0
-      glob: 10.3.4
-      tiny-invariant: 1.3.1
     dev: false
 
   /@mdx-js/mdx@2.3.0:
@@ -5164,17 +5144,6 @@ packages:
       {
         integrity: sha512-stRHYGeuqpEZTL1Ef0Ovr2ltazUT9g844X5z/zEBFLG8RYlpDiOCIG+ATvYEp+/zmc7sN29mcIMp8gvYplYPIQ==,
       }
-
-  /fastify-racing@1.1.0:
-    resolution:
-      {
-        integrity: sha512-Rx6wVhTkNF6Uz2omgq7wOEu0poEjTnBMzS657P9YBXMcEsT2nyeLNUQZY192zz1uSJ59poWu7CxqWhGH+gLKVg==,
-      }
-    engines: { node: ">=16.0.0" }
-    dependencies:
-      "@fastify/error": 3.2.0
-      fastify-plugin: 4.5.1
-    dev: false
 
   /fastify@4.23.2:
     resolution:
@@ -10103,13 +10072,6 @@ packages:
       readable-stream: 2.3.8
       xtend: 4.0.2
     dev: true
-
-  /tiny-invariant@1.3.1:
-    resolution:
-      {
-        integrity: sha512-AD5ih2NlSssTCwsMznbvwMZpJ1cbhkGd2uueNxzv2jDlEeZdU04JQfRnggJQ8DrcVBGjAsCKwFBbDlVNtEMlzw==,
-      }
-    dev: false
 
   /tinybench@2.5.0:
     resolution:
