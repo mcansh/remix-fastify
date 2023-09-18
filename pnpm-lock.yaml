@@ -56,6 +56,9 @@ importers:
 
   example:
     dependencies:
+      '@fastify/early-hints':
+        specifier: ^1.0.1
+        version: 1.0.1
       '@mcansh/remix-fastify':
         specifier: 3.0.0
         version: link:../packages/remix-fastify
@@ -71,6 +74,9 @@ importers:
       '@remix-run/serve':
         specifier: ^2.0.0
         version: 2.0.0(typescript@5.2.2)
+      chokidar:
+        specifier: ^3.5.3
+        version: 3.5.3
       fastify:
         specifier: ^4.23.2
         version: 4.23.2
@@ -83,6 +89,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      source-map-support:
+        specifier: ^0.5.21
+        version: 0.5.21
     devDependencies:
       '@remix-run/dev':
         specifier: ^2.0.0
