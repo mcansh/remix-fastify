@@ -75,7 +75,7 @@ importers:
         specifier: ^4.23.2
         version: 4.23.2
       isbot:
-        specifier: ^3.6.8
+        specifier: ^3.6.13
         version: 3.6.13
       react:
         specifier: ^18.2.0
@@ -91,16 +91,16 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(eslint@8.49.0)(react@18.2.0)(typescript@5.2.2)
       '@types/react':
-        specifier: ^18.2.20
+        specifier: ^18.2.21
         version: 18.2.21
       '@types/react-dom':
         specifier: ^18.2.7
         version: 18.2.7
       eslint:
-        specifier: ^8.38.0
+        specifier: ^8.49.0
         version: 8.49.0
       typescript:
-        specifier: ^5.1.6
+        specifier: ^5.2.2
         version: 5.2.2
 
   packages/remix-fastify:
