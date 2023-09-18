@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev --manual",
-    "start": "remix-serve ./build/index.js",
+    "dev": "remix dev --manual -c \"node --watch ./server.js\"",
+    "start": "node ./server.js",
     "typecheck": "tsc"
   },
   "dependencies": {

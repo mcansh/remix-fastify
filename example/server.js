@@ -13,7 +13,7 @@ import { fastifyEarlyHints } from "@fastify/early-hints";
 sourceMapSupport.install();
 installGlobals();
 
-let BUILD_PATH = "./build/index.mjs";
+let BUILD_PATH = "./build/index.js";
 
 /** @typedef {import('@remix-run/node').ServerBuild} ServerBuild */
 
