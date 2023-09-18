@@ -1,6 +1,21 @@
 const { globSync } = require("glob");
 
-let packages = globSync("packages/*", { absolute: true });
+let packages = globSync("packages/*/", {});
+
+// get files in packages
+const noExtraneousOverrides = packages.map((entry) => {
+  return {
+    files: `${entry}**/*`,
+    rules: {
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          packageDir: [__dirname, entry],
+        },
+      ],
+    },
+  };
+});
 
 const vitestFiles = [
   "packages/**/__tests__/**/*",
@@ -14,13 +29,8 @@ module.exports = {
     "@remix-run/eslint-config/node",
     "@remix-run/eslint-config/internal",
   ],
-  rules: {
-    "import/no-extraneous-dependencies": [
-      "error",
-      { packageDir: [...packages, "example", "playground", "."] },
-    ],
-  },
   overrides: [
+    ...noExtraneousOverrides,
     {
       extends: ["@remix-run/eslint-config/jest-testing-library"],
       files: vitestFiles,
