@@ -1,0 +1,16 @@
+name: 🧪 Test (PR)
+
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    if: github.repository == 'mcansh/remix-fastify'
+    uses: ./.github/workflows/test.yml
+    with:
+      os: '["ubuntu-latest", "macos-latest", "windows-latest"]'
+      node: '["latest"]'
