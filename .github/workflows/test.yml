@@ -42,7 +42,7 @@ jobs:
         run: npm run build
 
   test:
-    name: "🧪 Test: (OS: ${{ matrix.os }} Node: ${{ matrix.node }})"
+    name: "🧪 Test ${{ matrix.os }} | ${{ matrix.node }})"
     strategy:
       fail-fast: false
       matrix:
