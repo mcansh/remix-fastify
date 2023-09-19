@@ -4,3 +4,18 @@ updates:
     directory: /
     schedule:
       interval: daily
+
+  - package-ecosystem: pnpm
+    directory: /
+    schedule:
+      interval: weekly
+      time: "10:00"
+      timezone: "America/Detroit"
+    groups:
+      remix:
+        patterns:
+          - ^@remix-run/.*
+      fastify:
+        patterns:
+          - ^@fastify/.*
+          - fastify-plugin
