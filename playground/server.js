@@ -8,12 +8,14 @@ import {
 } from "@mcansh/remix-fastify";
 import { installGlobals, broadcastDevReady } from "@remix-run/node";
 import sourceMapSupport from "source-map-support";
+// early hints are optional, feel free to remove this along with lines 7, 33, 47-48, and 87-88
 import { fastifyEarlyHints } from "@fastify/early-hints";
 
 sourceMapSupport.install();
 installGlobals();
 
-let BUILD_PATH = "./build/index.mjs";
+let BUILD_PATH = "./build/index.js";
+let VERSION_PATH = "./build/version.txt";
 
 /** @typedef {import('@remix-run/node').ServerBuild} ServerBuild */
 
@@ -42,7 +44,7 @@ app.all("*", async (request, reply) => {
   if (process.env.NODE_ENV === "development") {
     let devHandler = await createDevRequestHandler(
       initialBuild,
-      getLoadContext,
+      getLoadContext
     );
     return devHandler(request, reply);
   }
@@ -63,12 +65,12 @@ let address = await app.listen({ port, host: "0.0.0.0" });
 console.log(`✅ app ready: ${address}`);
 
 if (process.env.NODE_ENV === "development") {
-  broadcastDevReady(initialBuild);
+  await broadcastDevReady(initialBuild);
 }
 
 /**
  * @param {ServerBuild} initialBuild
- * @param {import('@mcansh/remix-fastify').GetLoadContextFunction} getLoadContext
+ * @param {import('@mcansh/remix-fastify').GetLoadContextFunction} [getLoadContext]
  * @returns {import('@remix-run/express').RequestHandler}
  */
 async function createDevRequestHandler(initialBuild, getLoadContext) {
@@ -78,12 +80,12 @@ async function createDevRequestHandler(initialBuild, getLoadContext) {
     // 1. re-import the server build
     build = await reimportServer();
     // 2. tell Remix that this app server is now up-to-date and ready
-    broadcastDevReady(build);
+    await broadcastDevReady(build);
   }
 
   let chokidar = await import("chokidar");
   chokidar
-    .watch(BUILD_PATH, { ignoreInitial: true })
+    .watch(VERSION_PATH, { ignoreInitial: true })
     .on("add", handleServerUpdate)
     .on("change", handleServerUpdate);
 
@@ -101,10 +103,10 @@ async function createDevRequestHandler(initialBuild, getLoadContext) {
 
 /** @returns {Promise<ServerBuild>} */
 async function reimportServer() {
-  const stat = fs.statSync(BUILD_PATH);
+  let stat = fs.statSync(BUILD_PATH);
 
   // convert build path to URL for Windows compatibility with dynamic `import`
-  const BUILD_URL = url.pathToFileURL(BUILD_PATH).href;
+  let BUILD_URL = url.pathToFileURL(BUILD_PATH).href;
 
   // use a timestamp query parameter to bust the import cache
   return import(BUILD_URL + "?t=" + stat.mtimeMs);
