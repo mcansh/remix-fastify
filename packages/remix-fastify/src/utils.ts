@@ -48,7 +48,7 @@ export function getStaticFiles({
 
       return {
         isBuildAsset,
-        filePublicPath: filePublicPath.replace("public/", ""),
+        filePublicPath: normalized.replace("public/", ""),
         browserAssetUrl,
       };
     });
