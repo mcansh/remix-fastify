@@ -9,7 +9,6 @@ concurrency:
 
 jobs:
   test:
-    name: 🧪 Test
     if: github.repository == 'mcansh/remix-fastify'
     uses: ./.github/workflows/test.yml
     with:
