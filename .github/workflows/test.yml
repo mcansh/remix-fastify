@@ -1,14 +1,20 @@
 name: 🧪 Test
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        # this is limited to string | boolean | number (https://github.community/t/can-action-inputs-be-arrays/16457)
+        # but we want to pass an array (os: "[ubuntu-latest, macos-latest, windows-latest]"),
+        # so we'll need to manually stringify it for now
+        type: string
+      node:
+        required: true
+        # this is limited to string | boolean | number (https://github.community/t/can-action-inputs-be-arrays/16457)
+        # but we want to pass an array (node_version: "[18, 20]"),
+        # so we'll need to manually stringify it for now
+        type: string
 
 jobs:
   build:
@@ -21,7 +27,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
 
       - name: 🟧 Setup pnpm
         uses: pnpm/action-setup@v2
@@ -40,14 +46,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
-          - windows-latest
-        node:
-          - 18
-          - 20
-          - latest
+        os: ${{ fromJSON(inputs.os) }}
+        node: ${{ fromJSON(inputs.node) }}
     runs-on: ${{ matrix.os }}
     steps:
       - name: ⬇️ Checkout repo
