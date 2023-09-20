@@ -4,7 +4,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "pnpm run --recursive --parallel dev",
+    "dev": "pnpm run --filter remix-fastify --filter playground --recursive --parallel dev",
     "build": "pnpm run --recursive build",
     "test": "pnpm --filter ./packages/* test --if-present",
     "publish": "./scripts/publish.js",
