@@ -1,20 +1,17 @@
 import { defineConfig } from "tsup";
-import type { Options } from "tsup";
-
-import pkgJSON from "./package.json";
-let external = Object.keys(pkgJSON.dependencies || {});
 
 export default defineConfig(() => {
-  let options: Options = {
+  return {
     entry: ["src/index.ts"],
     sourcemap: true,
-    external,
     tsconfig: "./tsconfig.json",
     dts: true,
+    format: ["cjs", "esm"],
+    clean: true,
+    cjsInterop: true,
+    splitting: true,
+    platform: "node",
+    skipNodeModulesBundle: true,
+    treeshake: true,
   };
-
-  return [
-    { ...options, format: "cjs" },
-    { ...options, format: "esm" },
-  ];
 });
