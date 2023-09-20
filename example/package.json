@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@fastify/early-hints": "^1.0.1",
-    "@mcansh/remix-fastify": "3.0.0",
+    "@mcansh/remix-fastify": "3.0.1",
     "@remix-run/css-bundle": "^2.0.0",
     "@remix-run/node": "^2.0.0",
     "@remix-run/react": "^2.0.0",

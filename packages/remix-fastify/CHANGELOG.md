@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 3.0.1
+
+### Patch Changes
+
+- 1484ec4: Uses the normalized path for `filePublicPath`.
+
 ## 3.0.0
 
 ### Major Changes
