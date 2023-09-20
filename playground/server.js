@@ -6,12 +6,11 @@ import {
   staticFilePlugin,
   getEarlyHintLinks,
 } from "@mcansh/remix-fastify";
-import { installGlobals, broadcastDevReady } from "@remix-run/node";
+import { broadcastDevReady } from "@remix-run/node";
 import sourceMapSupport from "source-map-support";
 import { fastifyEarlyHints } from "@fastify/early-hints";
 
 sourceMapSupport.install();
-installGlobals();
 
 let BUILD_PATH = "./build/index.js";
 let VERSION_PATH = "./build/version.txt";
