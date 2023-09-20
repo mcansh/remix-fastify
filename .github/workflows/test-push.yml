@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - ./packages/*
+      - ./.github/*
+      - ./package.json
+      - ./pnpm-lock.yaml
   pull_request:
     branches:
       - changeset-release/*
