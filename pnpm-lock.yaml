@@ -94,8 +94,8 @@ importers:
         version: 0.5.21
     devDependencies:
       '@remix-run/dev':
-        specifier: ^2.0.0
-        version: 2.0.0(@remix-run/serve@2.0.0)(typescript@5.2.2)
+        specifier: ^2.0.1
+        version: 2.0.1(@remix-run/serve@2.0.0)(typescript@5.2.2)
       '@remix-run/eslint-config':
         specifier: ^2.0.0
         version: 2.0.0(eslint@8.49.0)(react@18.2.0)(typescript@5.2.2)
@@ -189,8 +189,8 @@ importers:
         version: 0.5.21
     devDependencies:
       '@remix-run/dev':
-        specifier: ^2.0.0
-        version: 2.0.0(@remix-run/serve@2.0.0)(typescript@5.2.2)
+        specifier: ^2.0.1
+        version: 2.0.1(@remix-run/serve@2.0.0)(typescript@5.2.2)
       '@remix-run/eslint-config':
         specifier: ^2.0.0
         version: 2.0.0(eslint@8.49.0)(react@18.2.0)(typescript@5.2.2)
@@ -1334,7 +1334,7 @@ packages:
   /@manypkg/find-root@1.1.0:
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
     dependencies:
-      '@babel/runtime': 7.22.5
+      '@babel/runtime': 7.22.6
       '@types/node': 12.20.55
       find-up: 4.1.0
       fs-extra: 8.1.0
@@ -1530,12 +1530,12 @@ packages:
     engines: {node: '>=18.0.0'}
     dev: false
 
-  /@remix-run/dev@2.0.0(@remix-run/serve@2.0.0)(typescript@5.2.2):
-    resolution: {integrity: sha512-cdUOuywlC6uHZPGhK+ASGBBKXUUtz94OFsAmRziu7lH7I3GZJ7llExlM+FtkQYEdD0u00/1FSnv2xjXAq/sHzw==}
+  /@remix-run/dev@2.0.1(@remix-run/serve@2.0.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-FxlbgCBXUzKxBSs2OfNoBUadcARr4S7S4JQ28t7MLcIsfJI/uHmGAMXClatsgeZuRvPK/Zx/W3B4uho1FTfQVA==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     peerDependencies:
-      '@remix-run/serve': ^2.0.0
+      '@remix-run/serve': ^2.0.1
       typescript: ^5.1.0
     peerDependenciesMeta:
       '@remix-run/serve':
@@ -1553,7 +1553,7 @@ packages:
       '@mdx-js/mdx': 2.3.0
       '@npmcli/package-json': 4.0.1
       '@remix-run/serve': 2.0.0(typescript@5.2.2)
-      '@remix-run/server-runtime': 2.0.0(typescript@5.2.2)
+      '@remix-run/server-runtime': 2.0.1(typescript@5.2.2)
       '@types/mdx': 2.0.7
       '@vanilla-extract/integration': 6.2.1
       arg: 5.0.2
@@ -1734,6 +1734,25 @@ packages:
       source-map: 0.7.4
       type-fest: 4.3.1
       typescript: 5.2.2
+
+  /@remix-run/server-runtime@2.0.1(typescript@5.2.2):
+    resolution: {integrity: sha512-xCW2aw9EILx7F3orEHN2fcpEkNzZTRU8VzP7gS9pmHP45qteFqsY5Qg2/dnF17royWmeeBNhnXaJOgb76W1KEA==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      typescript: ^5.1.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@remix-run/router': 1.9.0
+      '@types/cookie': 0.4.1
+      '@web3-storage/multipart-parser': 1.0.0
+      cookie: 0.4.2
+      set-cookie-parser: 2.6.0
+      source-map: 0.7.4
+      type-fest: 4.3.1
+      typescript: 5.2.2
+    dev: true
 
   /@remix-run/web-blob@3.1.0:
     resolution: {integrity: sha512-owGzFLbqPH9PlKb8KvpNJ0NO74HWE2euAn61eEiyCXX/oteoVzTVSN8mpLgDjaxBf2btj5/nUllSUgpyd6IH6g==}
@@ -4912,14 +4931,9 @@ packages:
       get-func-name: 2.0.0
     dev: false
 
-  /lru-cache@10.0.0:
-    resolution: {integrity: sha512-svTf/fzsKHffP42sujkO/Rjs37BCIsQVRCeNYIm9WN8rgT7ffoUnRtZCqU+6BqcSBdv8gwJeTz8knJpgACeQMw==}
-    engines: {node: 14 || >=16.14}
-
   /lru-cache@10.0.1:
     resolution: {integrity: sha512-IJ4uwUTi2qCccrioU6g9g/5rvvVl13bsdczUUcqbciD9iLr095yj8DQKdObriEvuNSx325N1rV1O0sJFszx75g==}
     engines: {node: 14 || >=16.14}
-    dev: false
 
   /lru-cache@4.1.5:
     resolution: {integrity: sha512-sWZlbEP2OsHNkXrMl5GYk/jKk70MBng6UU4YI/qGDYbgf6YbP4EvmqISbXCoJiRKs+1bSpFHVgQxvJ17F2li5g==}
@@ -5526,7 +5540,6 @@ packages:
   /minipass@7.0.3:
     resolution: {integrity: sha512-LhbbwCfz3vsb12j/WkWQPZfKTsgqIe1Nf/ti1pKjYESGLHIVjWU96G9/ljLH4F9mWNVhlQOm0VySdAWzf05dpg==}
     engines: {node: '>=16 || 14 >=14.17'}
-    dev: true
 
   /minizlib@2.1.2:
     resolution: {integrity: sha512-bAxsR8BVfj60DWXHE3u30oHzfl4G7khkSuPW+qvpd7jFRHm7dLxOjUk1EHACJ/hxLY8phGJ0YhYHZo7jil7Qdg==}
@@ -6051,8 +6064,8 @@ packages:
     resolution: {integrity: sha512-MkhCqzzBEpPvxxQ71Md0b1Kk51W01lrYvlMzSUaIzNsODdd7mqhiimSZlr+VegAz5Z6Vzt9Xg2ttE//XBhH3EQ==}
     engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
-      lru-cache: 10.0.0
-      minipass: 6.0.2
+      lru-cache: 10.0.1
+      minipass: 7.0.3
 
   /path-to-regexp@0.1.7:
     resolution: {integrity: sha512-5DFkuoqlv1uYQKxy8omFBeJPQcdoE07Kv2sferDCrAq1ohOU+MSDswDIbnx3YAM60qIOnYa53wBhXW0EbMonrQ==}
