@@ -72,8 +72,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
       '@remix-run/serve':
-        specifier: ^2.0.0
-        version: 2.0.0(typescript@5.2.2)
+        specifier: ^2.0.1
+        version: 2.0.1(typescript@5.2.2)
       chokidar:
         specifier: ^3.5.3
         version: 3.5.3
@@ -95,7 +95,7 @@ importers:
     devDependencies:
       '@remix-run/dev':
         specifier: ^2.0.0
-        version: 2.0.0(@remix-run/serve@2.0.0)(typescript@5.2.2)
+        version: 2.0.0(@remix-run/serve@2.0.1)(typescript@5.2.2)
       '@remix-run/eslint-config':
         specifier: ^2.0.0
         version: 2.0.0(eslint@8.49.0)(react@18.2.0)(typescript@5.2.2)
@@ -190,7 +190,7 @@ importers:
     devDependencies:
       '@remix-run/dev':
         specifier: ^2.0.0
-        version: 2.0.0(@remix-run/serve@2.0.0)(typescript@5.2.2)
+        version: 2.0.0(@remix-run/serve@2.0.1)(typescript@5.2.2)
       '@remix-run/eslint-config':
         specifier: ^2.0.0
         version: 2.0.0(eslint@8.49.0)(react@18.2.0)(typescript@5.2.2)
@@ -1530,7 +1530,7 @@ packages:
     engines: {node: '>=18.0.0'}
     dev: false
 
-  /@remix-run/dev@2.0.0(@remix-run/serve@2.0.0)(typescript@5.2.2):
+  /@remix-run/dev@2.0.0(@remix-run/serve@2.0.1)(typescript@5.2.2):
     resolution: {integrity: sha512-cdUOuywlC6uHZPGhK+ASGBBKXUUtz94OFsAmRziu7lH7I3GZJ7llExlM+FtkQYEdD0u00/1FSnv2xjXAq/sHzw==}
     engines: {node: '>=18.0.0'}
     hasBin: true
@@ -1552,7 +1552,7 @@ packages:
       '@babel/traverse': 7.22.8
       '@mdx-js/mdx': 2.3.0
       '@npmcli/package-json': 4.0.1
-      '@remix-run/serve': 2.0.0(typescript@5.2.2)
+      '@remix-run/serve': 2.0.1(typescript@5.2.2)
       '@remix-run/server-runtime': 2.0.0(typescript@5.2.2)
       '@types/mdx': 2.0.7
       '@vanilla-extract/integration': 6.2.1
@@ -1644,8 +1644,8 @@ packages:
       - jest
       - supports-color
 
-  /@remix-run/express@2.0.0(express@4.18.2)(typescript@5.2.2):
-    resolution: {integrity: sha512-wNu+ajtSzcjju+zsAA3uaKCuwwpYKLnE8RI5mgA0Cr/KMnkJxKO6QZN4q1GkB65GyWezemhi/xCFJecy1Q8UXg==}
+  /@remix-run/express@2.0.1(express@4.18.2)(typescript@5.2.2):
+    resolution: {integrity: sha512-YwqWF+Se6EoKL7uJhA/55BwP6kxIgDo//kHoh8miaMvVUKa1KMLru79kqU74d7PleYf9Qj4i2cXygz1mMl032w==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       express: ^4.17.1
@@ -1654,7 +1654,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@remix-run/node': 2.0.0(typescript@5.2.2)
+      '@remix-run/node': 2.0.1(typescript@5.2.2)
       express: 4.18.2
       typescript: 5.2.2
 
@@ -1669,6 +1669,25 @@ packages:
     dependencies:
       '@remix-run/server-runtime': 2.0.0(typescript@5.2.2)
       '@remix-run/web-fetch': 4.4.0
+      '@remix-run/web-file': 3.1.0
+      '@remix-run/web-stream': 1.1.0
+      '@web3-storage/multipart-parser': 1.0.0
+      cookie-signature: 1.2.1
+      source-map-support: 0.5.21
+      stream-slice: 0.1.2
+      typescript: 5.2.2
+
+  /@remix-run/node@2.0.1(typescript@5.2.2):
+    resolution: {integrity: sha512-pWsbmkNRb7azYomh1IGSKeW68hkwBBp6L2AWvfKSq2r2MJXHCzqgAJEc0uWkEUx6OtFbVNOg27g/cMCyKvrjIA==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      typescript: ^5.1.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@remix-run/server-runtime': 2.0.1(typescript@5.2.2)
+      '@remix-run/web-fetch': 4.4.1
       '@remix-run/web-file': 3.1.0
       '@remix-run/web-stream': 1.1.0
       '@web3-storage/multipart-parser': 1.0.0
@@ -1700,13 +1719,13 @@ packages:
     resolution: {integrity: sha512-bV63itrKBC0zdT27qYm6SDZHlkXwFL1xMBuhkn+X7l0+IIhNaH5wuuvZKp6eKhCD4KFhujhfhCT1YxXW6esUIA==}
     engines: {node: '>=14.0.0'}
 
-  /@remix-run/serve@2.0.0(typescript@5.2.2):
-    resolution: {integrity: sha512-/KGWq6wyXw0ad6osngS+7mW+C7jNKbKnkEaQ7NRBT8AO5pD5S/OUoVeOWQm/4QJYbBQ+wawF2QN4qmbK5l1MfA==}
+  /@remix-run/serve@2.0.1(typescript@5.2.2):
+    resolution: {integrity: sha512-3aljUFhzsIwgGN2SuMgrXQH5TqA8e52afrYAnHR5CpHXxVxkwyDB4BNKng7yLRIywsOi5MHOclu/5preKV8qVA==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dependencies:
-      '@remix-run/express': 2.0.0(express@4.18.2)(typescript@5.2.2)
-      '@remix-run/node': 2.0.0(typescript@5.2.2)
+      '@remix-run/express': 2.0.1(express@4.18.2)(typescript@5.2.2)
+      '@remix-run/node': 2.0.1(typescript@5.2.2)
       chokidar: 3.5.3
       compression: 1.7.4
       express: 4.18.2
@@ -1735,6 +1754,24 @@ packages:
       type-fest: 4.3.1
       typescript: 5.2.2
 
+  /@remix-run/server-runtime@2.0.1(typescript@5.2.2):
+    resolution: {integrity: sha512-xCW2aw9EILx7F3orEHN2fcpEkNzZTRU8VzP7gS9pmHP45qteFqsY5Qg2/dnF17royWmeeBNhnXaJOgb76W1KEA==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      typescript: ^5.1.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@remix-run/router': 1.9.0
+      '@types/cookie': 0.4.1
+      '@web3-storage/multipart-parser': 1.0.0
+      cookie: 0.4.2
+      set-cookie-parser: 2.6.0
+      source-map: 0.7.4
+      type-fest: 4.3.1
+      typescript: 5.2.2
+
   /@remix-run/web-blob@3.1.0:
     resolution: {integrity: sha512-owGzFLbqPH9PlKb8KvpNJ0NO74HWE2euAn61eEiyCXX/oteoVzTVSN8mpLgDjaxBf2btj5/nUllSUgpyd6IH6g==}
     dependencies:
@@ -1745,6 +1782,19 @@ packages:
     resolution: {integrity: sha512-j6vswnGteHd3N5Y2lb5sRKP+NxChVCd1goXRDAanTMFfgxsCV/1ItlJFY8G/F4AESkDydcZ6tz6gAsttkGDiMA==}
     engines: {node: ^10.17 || >=12.3}
     dependencies:
+      '@remix-run/web-file': 3.1.0
+      '@remix-run/web-form-data': 3.1.0
+      '@remix-run/web-stream': 1.1.0
+      '@web3-storage/multipart-parser': 1.0.0
+      abort-controller: 3.0.0
+      data-uri-to-buffer: 3.0.1
+      mrmime: 1.0.1
+
+  /@remix-run/web-fetch@4.4.1:
+    resolution: {integrity: sha512-xMceEGn2kvfeWS91nHSOhEQHPGgjFnmDVpWFZrbWPVdiTByMZIn421/tdSF6Kd1RsNsY+5Iwt3JFEKZHAcMQHw==}
+    engines: {node: ^10.17 || >=12.3}
+    dependencies:
+      '@remix-run/web-blob': 3.1.0
       '@remix-run/web-file': 3.1.0
       '@remix-run/web-form-data': 3.1.0
       '@remix-run/web-stream': 1.1.0
@@ -3125,7 +3175,7 @@ packages:
       is-regex: 1.1.4
       is-shared-array-buffer: 1.0.2
       is-string: 1.0.7
-      is-typed-array: 1.1.10
+      is-typed-array: 1.1.12
       is-weakref: 1.0.2
       object-inspect: 1.12.3
       object-keys: 1.1.1
@@ -3137,7 +3187,7 @@ packages:
       string.prototype.trimstart: 1.0.6
       typed-array-length: 1.0.4
       unbox-primitive: 1.0.2
-      which-typed-array: 1.1.9
+      which-typed-array: 1.1.11
 
   /es-abstract@1.22.1:
     resolution: {integrity: sha512-ioRRcXMO6OFyRpyzV3kE1IIBd4WG5/kltnzdxSCqoP8CMGs/Li+M1uF5o7lOkZVFjDs+NLesthnF66Pg/0q0Lw==}
@@ -4415,7 +4465,7 @@ packages:
     dependencies:
       call-bind: 1.0.2
       get-intrinsic: 1.2.1
-      is-typed-array: 1.1.10
+      is-typed-array: 1.1.12
 
   /is-arrayish@0.2.1:
     resolution: {integrity: sha512-zz06S8t0ozoDXMG+ube26zeCTNXcKIPJZJi8hBrF4idCLms4CG9QtK7qBl1boi5ODzFpjswb5JPmHCbMpjaYzg==}
@@ -4607,16 +4657,6 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       has-symbols: 1.0.3
-
-  /is-typed-array@1.1.10:
-    resolution: {integrity: sha512-PJqgEHiWZvMpaFZ3uTc8kHPM4+4ADTlDniuQL7cU/UDA0Ql7F70yGfHph3cLNe+c9toaigv+DFzTJKhc2CtO6A==}
-    engines: {node: '>= 0.4'}
-    dependencies:
-      available-typed-arrays: 1.0.5
-      call-bind: 1.0.2
-      for-each: 0.3.3
-      gopd: 1.0.1
-      has-tostringtag: 1.0.0
 
   /is-typed-array@1.1.12:
     resolution: {integrity: sha512-Z14TF2JNG8Lss5/HMqt0//T9JeHXttXy5pH/DBU4vi98ozO2btxzq9MwYDZYnKwU8nRsz/+GVFVRDq3DkVuSPg==}
@@ -7472,7 +7512,7 @@ packages:
     dependencies:
       call-bind: 1.0.2
       for-each: 0.3.3
-      is-typed-array: 1.1.10
+      is-typed-array: 1.1.12
 
   /typescript@5.2.2:
     resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
@@ -7882,17 +7922,6 @@ packages:
       for-each: 0.3.3
       gopd: 1.0.1
       has-tostringtag: 1.0.0
-
-  /which-typed-array@1.1.9:
-    resolution: {integrity: sha512-w9c4xkx6mPidwp7180ckYWfMmvxpjlZuIudNtDf4N/tTAUB8VJbX25qZoAsrtGuYNnGw3pa0AXgbGKRB8/EceA==}
-    engines: {node: '>= 0.4'}
-    dependencies:
-      available-typed-arrays: 1.0.5
-      call-bind: 1.0.2
-      for-each: 0.3.3
-      gopd: 1.0.1
-      has-tostringtag: 1.0.0
-      is-typed-array: 1.1.10
 
   /which@1.3.1:
     resolution: {integrity: sha512-HxJdYWq1MTIQbJ3nw0cqssHoTNU267KlrDuGZ1WYlxDStUtKUhOaJmh112/TZmHxxUfuJqPXSOm7tDyas0OSIQ==}
