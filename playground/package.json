@@ -7,8 +7,8 @@
   "type": "module",
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev --manual -c \"node --watch ./server.js\"",
-    "start": "node ./server.js",
+    "dev": "remix dev --manual -c \"node --watch --enable-source-maps ./server.js\"",
+    "start": "node --enable-source-maps ./server.js",
     "lint": "eslint --cache --ignore-path .gitignore --fix .",
     "format": "prettier --write --ignore-path .gitignore .",
     "typecheck": "tsc",
