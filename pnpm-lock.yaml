@@ -89,9 +89,6 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
-      source-map-support:
-        specifier: ^0.5.21
-        version: 0.5.21
     devDependencies:
       '@remix-run/dev':
         specifier: ^2.0.1
@@ -184,9 +181,6 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
-      source-map-support:
-        specifier: ^0.5.21
-        version: 0.5.21
     devDependencies:
       '@remix-run/dev':
         specifier: ^2.0.1
