@@ -41,7 +41,7 @@
     "@fastify/static": "^6.11.2",
     "@remix-run/router": "^1.9.0",
     "fastify-plugin": "^4.5.1",
-    "glob": "^10.3.7"
+    "glob": "^10.3.10"
   },
   "devDependencies": {
     "@fastify/early-hints": "^1.0.1",
