@@ -15,7 +15,7 @@ let staticFiles: FastifyPluginAsync<PluginOptions> = async (
   fastify,
   { rootDir = process.cwd(), assetsBuildDirectory, publicPath },
 ) => {
-  fastify.register(fastifyStatic, {
+  await fastify.register(fastifyStatic, {
     wildcard: false,
     root: "/public",
     serve: false,
@@ -23,20 +23,20 @@ let staticFiles: FastifyPluginAsync<PluginOptions> = async (
     decorateReply: false,
   });
 
-  fastify.register(fastifyStatic, {
+  await fastify.register(fastifyStatic, {
     wildcard: false,
     root: "/public",
     serve: false,
   });
 
-  let staticFiles = getStaticFiles({
-    assetsBuildDirectory,
-    publicPath,
-    rootDir,
-  });
-
-  for (let file of staticFiles) {
-    fastify.get(file.browserAssetUrl, (_request, reply) => {
+  fastify.addHook("onRequest", async (request, reply) => {
+    let staticFiles = await getStaticFiles({
+      assetsBuildDirectory,
+      publicPath,
+      rootDir,
+    });
+    for (let file of staticFiles) {
+      if (request.method !== "GET") continue;
       return reply.sendFile(
         file.filePublicPath,
         path.join(process.cwd(), "public"),
@@ -51,8 +51,8 @@ let staticFiles: FastifyPluginAsync<PluginOptions> = async (
           serveDotFiles: true,
         },
       );
-    });
-  }
+    }
+  });
 };
 
 function makePublicPath(publicPath: string): string {
