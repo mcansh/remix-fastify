@@ -1,5 +1,12 @@
 # @mcansh/remix-fastify
 
+## 3.0.2
+
+### Patch Changes
+
+- 9560ef1: fix: actually determind requested file
+- 66ba8e5: move glob inside onRequest hook in order for getStaticFiles to be called. doing this allows the removal of node --watch which i totally didn't realize was restarting the server as we import the build 😅
+
 ## 3.0.1
 
 ### Patch Changes
