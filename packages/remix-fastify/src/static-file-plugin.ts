@@ -4,6 +4,7 @@ import fastifyStatic from "@fastify/static";
 import path from "node:path";
 
 import { getStaticFiles } from "./utils";
+import { getUrl } from "./server";
 
 type PluginOptions = {
   assetsBuildDirectory: string;
@@ -35,22 +36,26 @@ let staticFiles: FastifyPluginAsync<PluginOptions> = async (
       publicPath,
       rootDir,
     });
+
     for (let file of staticFiles) {
       if (request.method !== "GET") continue;
-      return reply.sendFile(
-        file.filePublicPath,
-        path.join(process.cwd(), "public"),
-        {
-          cacheControl: true,
-          acceptRanges: true,
-          dotfiles: "allow",
-          etag: true,
-          immutable: file.isBuildAsset,
-          lastModified: true,
-          maxAge: file.isBuildAsset ? "1y" : "1h",
-          serveDotFiles: true,
-        },
-      );
+      let url = new URL(getUrl(request));
+      if (url.pathname === file.browserAssetUrl) {
+        return reply.sendFile(
+          file.filePublicPath,
+          path.join(process.cwd(), "public"),
+          {
+            cacheControl: true,
+            acceptRanges: true,
+            dotfiles: "allow",
+            etag: true,
+            immutable: file.isBuildAsset,
+            lastModified: true,
+            maxAge: file.isBuildAsset ? "1y" : "1h",
+            serveDotFiles: true,
+          },
+        );
+      }
     }
   });
 };
