@@ -68,13 +68,17 @@ export function createRemixHeaders(
   return headers;
 }
 
+export function getUrl(request: FastifyRequest): string {
+  let origin = `${request.protocol}://${request.hostname}`;
+  let url = `${origin}${request.url}`;
+  return url;
+}
+
 export function createRemixRequest(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Request {
-  let origin = `${request.protocol}://${request.hostname}`;
-  let url = `${origin}${request.url}`;
-
+  let url = getUrl(request);
   // Abort action/loaders once we can no longer write a response
   let controller = new AbortController();
   reply.raw.on("close", () => controller.abort());

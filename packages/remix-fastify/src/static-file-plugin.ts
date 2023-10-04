@@ -4,6 +4,7 @@ import fastifyStatic from "@fastify/static";
 import path from "node:path";
 
 import { getStaticFiles } from "./utils";
+import { getUrl } from "./server";
 
 type PluginOptions = {
   assetsBuildDirectory: string;
@@ -15,7 +16,7 @@ let staticFiles: FastifyPluginAsync<PluginOptions> = async (
   fastify,
   { rootDir = process.cwd(), assetsBuildDirectory, publicPath },
 ) => {
-  fastify.register(fastifyStatic, {
+  await fastify.register(fastifyStatic, {
     wildcard: false,
     root: "/public",
     serve: false,
@@ -23,36 +24,40 @@ let staticFiles: FastifyPluginAsync<PluginOptions> = async (
     decorateReply: false,
   });
 
-  fastify.register(fastifyStatic, {
+  await fastify.register(fastifyStatic, {
     wildcard: false,
     root: "/public",
     serve: false,
   });
 
-  let staticFiles = getStaticFiles({
-    assetsBuildDirectory,
-    publicPath,
-    rootDir,
-  });
-
-  for (let file of staticFiles) {
-    fastify.get(file.browserAssetUrl, (_request, reply) => {
-      return reply.sendFile(
-        file.filePublicPath,
-        path.join(process.cwd(), "public"),
-        {
-          cacheControl: true,
-          acceptRanges: true,
-          dotfiles: "allow",
-          etag: true,
-          immutable: file.isBuildAsset,
-          lastModified: true,
-          maxAge: file.isBuildAsset ? "1y" : "1h",
-          serveDotFiles: true,
-        },
-      );
+  fastify.addHook("onRequest", async (request, reply) => {
+    let staticFiles = await getStaticFiles({
+      assetsBuildDirectory,
+      publicPath,
+      rootDir,
     });
-  }
+
+    for (let file of staticFiles) {
+      if (request.method !== "GET") continue;
+      let url = new URL(getUrl(request));
+      if (url.pathname === file.browserAssetUrl) {
+        return reply.sendFile(
+          file.filePublicPath,
+          path.join(process.cwd(), "public"),
+          {
+            cacheControl: true,
+            acceptRanges: true,
+            dotfiles: "allow",
+            etag: true,
+            immutable: file.isBuildAsset,
+            lastModified: true,
+            maxAge: file.isBuildAsset ? "1y" : "1h",
+            serveDotFiles: true,
+          },
+        );
+      }
+    }
+  });
 };
 
 function makePublicPath(publicPath: string): string {

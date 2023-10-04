@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev --manual -c \"node --watch --enable-source-maps ./server.js\"",
+    "dev": "remix dev --manual -c \"node --enable-source-maps ./server.js\"",
     "start": "node --enable-source-maps ./server.js",
     "lint": "eslint --cache --ignore-path .gitignore --fix .",
     "format": "prettier --write --ignore-path .gitignore .",
@@ -28,8 +28,8 @@
   "devDependencies": {
     "@remix-run/dev": "^2.0.1",
     "@remix-run/eslint-config": "^2.0.1",
-    "@types/react": "^18.2.22",
-    "@types/react-dom": "^18.2.7",
+    "@types/react": "^18.2.24",
+    "@types/react-dom": "^18.2.8",
     "chokidar": "^3.5.3",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",

@@ -28,7 +28,7 @@ app.addContentTypeParser("*", noopContentParser);
 await app.register(fastifyEarlyHints, { warn: true });
 
 // match with remix.config
-app.register(staticFilePlugin, {
+await app.register(staticFilePlugin, {
   assetsBuildDirectory: "public/build",
   publicPath: "/modules/",
 });
