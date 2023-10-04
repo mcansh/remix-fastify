@@ -2,7 +2,7 @@ import type { EarlyHintItem } from "@fastify/early-hints";
 import type { ServerBuild } from "@remix-run/node";
 import { matchRoutes } from "@remix-run/router";
 import type { FastifyRequest } from "fastify";
-import { globSync } from "glob";
+import { glob } from "glob";
 
 export interface StaticFile {
   // whether or not the file is in the build directory
@@ -13,7 +13,7 @@ export interface StaticFile {
   browserAssetUrl: string;
 }
 
-export function getStaticFiles({
+export async function getStaticFiles({
   assetsBuildDirectory,
   publicPath,
   rootDir,
@@ -21,8 +21,8 @@ export function getStaticFiles({
   assetsBuildDirectory: string;
   publicPath: string;
   rootDir: string;
-}): Array<StaticFile> {
-  let staticFilePaths = globSync(`**/*`, {
+}): Promise<Array<StaticFile>> {
+  let staticFilePaths = await glob(`**/*`, {
     dot: true,
     nodir: true,
     cwd: rootDir,

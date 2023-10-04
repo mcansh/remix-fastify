@@ -81,13 +81,19 @@ export default function Index() {
 }
 
 function NameInput() {
-  let resolvedName = useAsyncValue() as string;
-  let defaultValue = resolvedName === "Anonymous" ? "" : resolvedName;
+  let resolvedName = useAsyncValue();
+  let defaultValue: string | undefined = undefined;
+  if (typeof resolvedName === "string") {
+    if (resolvedName !== "Anonymous") {
+      defaultValue = resolvedName;
+    }
+  }
+
   return (
     <input
       type="text"
       name="name"
-      title="Enter your name"
+      placeholder="Enter your name"
       defaultValue={defaultValue}
     />
   );

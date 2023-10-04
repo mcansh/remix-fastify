@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev --manual -c \"node --watch ./server.js\"",
+    "dev": "remix dev --manual -c \"node ./server.js\"",
     "start": "node ./server.js",
     "typecheck": "tsc"
   },
