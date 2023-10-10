@@ -30,7 +30,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "prepublishOnly": "npm run build && publint",
+    "prepublishOnly": "npm run build && cp ../../LICENSE LICENSE && publint",
     "typecheck": "tsc",
     "dev": "tsup --watch",
     "build": "tsup",
