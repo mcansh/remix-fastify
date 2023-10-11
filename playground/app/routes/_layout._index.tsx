@@ -51,13 +51,11 @@ export default function Index() {
     <div>
       <React.Suspense fallback={<h2>loading...</h2>}>
         <Await resolve={data.name} errorElement={<h2>failed...</h2>}>
-          {(resolvedName) => (
-            <h2>
-              Hello {resolvedName}, with context name {data.loadContextName}
-            </h2>
-          )}
+          {(resolvedName) => <h2>Hello {resolvedName}</h2>}
         </Await>
       </React.Suspense>
+
+      <h2>Context: {data.loadContextName}</h2>
 
       <Form
         method="post"
