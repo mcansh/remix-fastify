@@ -20,7 +20,7 @@
     "@mcansh/remix-fastify": "workspace:*",
     "@remix-run/node": "^2.0.1",
     "@remix-run/react": "^2.0.1",
-    "fastify": "^4.23.2",
+    "fastify": "^4.24.2",
     "isbot": "^3.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
