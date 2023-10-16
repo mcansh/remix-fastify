@@ -7,10 +7,8 @@ import {
   getEarlyHintLinks,
 } from "@mcansh/remix-fastify";
 import { broadcastDevReady, installGlobals } from "@remix-run/node";
-import sourceMapSupport from "source-map-support";
 import { fastifyEarlyHints } from "@fastify/early-hints";
 
-sourceMapSupport.install();
 installGlobals();
 
 let BUILD_PATH = "./build/index.js";
