@@ -18,4 +18,4 @@ updates:
       fastify:
         patterns:
           - ^@fastify/.*
-          - fastify-plugin
+          - fastify
