@@ -81,8 +81,8 @@ importers:
         specifier: ^3.5.3
         version: 3.5.3
       fastify:
-        specifier: ^4.24.2
-        version: 4.24.2
+        specifier: ^4.24.3
+        version: 4.24.3
       isbot:
         specifier: ^3.7.0
         version: 3.7.0
@@ -131,8 +131,8 @@ importers:
         specifier: npm:@types/web@^0.0.115
         version: /@types/web@0.0.115
       fastify:
-        specifier: ^4.24.2
-        version: 4.24.2
+        specifier: ^4.24.3
+        version: 4.24.3
       node-mocks-http:
         specifier: ^1.13.0
         version: 1.13.0
@@ -158,8 +158,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
       fastify:
-        specifier: ^4.24.2
-        version: 4.24.2
+        specifier: ^4.24.3
+        version: 4.24.3
       isbot:
         specifier: ^3.7.0
         version: 3.7.0
@@ -172,7 +172,7 @@ importers:
     devDependencies:
       '@remix-run/dev':
         specifier: ^2.0.1
-        version: 2.0.1(typescript@5.2.2)
+        version: 2.0.1(@remix-run/serve@2.0.1)(typescript@5.2.2)
       '@remix-run/eslint-config':
         specifier: ^2.0.1
         version: 2.0.1(eslint@8.51.0)(react@18.2.0)(typescript@5.2.2)
@@ -1807,84 +1807,6 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@remix-run/dev@2.0.1(typescript@5.2.2):
-    resolution: {integrity: sha512-FxlbgCBXUzKxBSs2OfNoBUadcARr4S7S4JQ28t7MLcIsfJI/uHmGAMXClatsgeZuRvPK/Zx/W3B4uho1FTfQVA==}
-    engines: {node: '>=18.0.0'}
-    hasBin: true
-    peerDependencies:
-      '@remix-run/serve': ^2.0.1
-      typescript: ^5.1.0
-    peerDependenciesMeta:
-      '@remix-run/serve':
-        optional: true
-      typescript:
-        optional: true
-    dependencies:
-      '@babel/core': 7.23.0
-      '@babel/generator': 7.23.0
-      '@babel/parser': 7.23.0
-      '@babel/plugin-syntax-decorators': 7.22.10(@babel/core@7.23.0)
-      '@babel/plugin-syntax-jsx': 7.22.5(@babel/core@7.23.0)
-      '@babel/preset-typescript': 7.23.0(@babel/core@7.23.0)
-      '@babel/traverse': 7.23.0
-      '@mdx-js/mdx': 2.3.0
-      '@npmcli/package-json': 4.0.1
-      '@remix-run/server-runtime': 2.0.1(typescript@5.2.2)
-      '@types/mdx': 2.0.7
-      '@vanilla-extract/integration': 6.2.2
-      arg: 5.0.2
-      cacache: 17.1.4
-      chalk: 4.1.2
-      chokidar: 3.5.3
-      dotenv: 16.3.1
-      esbuild: 0.17.6
-      esbuild-plugins-node-modules-polyfill: 1.6.1(esbuild@0.17.6)
-      execa: 5.1.1
-      exit-hook: 2.2.1
-      express: 4.18.2
-      fs-extra: 10.1.0
-      get-port: 5.1.1
-      gunzip-maybe: 1.4.2
-      jsesc: 3.0.2
-      json5: 2.2.3
-      lodash: 4.17.21
-      lodash.debounce: 4.0.8
-      minimatch: 9.0.3
-      node-fetch: 2.7.0
-      ora: 5.4.1
-      picocolors: 1.0.0
-      picomatch: 2.3.1
-      pidtree: 0.6.0
-      postcss: 8.4.30
-      postcss-discard-duplicates: 5.1.0(postcss@8.4.30)
-      postcss-load-config: 4.0.1(postcss@8.4.30)
-      postcss-modules: 6.0.0(postcss@8.4.30)
-      prettier: 2.8.8
-      pretty-ms: 7.0.1
-      react-refresh: 0.14.0
-      remark-frontmatter: 4.0.1
-      remark-mdx-frontmatter: 1.1.1
-      semver: 7.5.4
-      tar-fs: 2.1.1
-      tsconfig-paths: 4.2.0
-      typescript: 5.2.2
-      ws: 7.5.9
-    transitivePeerDependencies:
-      - '@types/node'
-      - bluebird
-      - bufferutil
-      - encoding
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-      - ts-node
-      - utf-8-validate
-    dev: true
-
   /@remix-run/eslint-config@2.0.1(eslint@8.51.0)(react@18.2.0)(typescript@5.2.2):
     resolution: {integrity: sha512-XIKnID45O60Vtegsib2qJOVYBCq2VRn+3qaEAX1NtgcQDI1xD7o3k1k3MCdQqaGD9/XmcbJumkmuAIX3Ti6/mA==}
     engines: {node: '>=18.0.0'}
@@ -2349,7 +2271,7 @@ packages:
       lodash: 4.17.21
       mlly: 1.4.2
       outdent: 0.8.0
-      vite: 4.4.9
+      vite: 4.4.9(@types/node@20.8.6)
       vite-node: 0.28.5
     transitivePeerDependencies:
       - '@types/node'
@@ -4174,8 +4096,8 @@ packages:
   /fastify-plugin@4.5.1:
     resolution: {integrity: sha512-stRHYGeuqpEZTL1Ef0Ovr2ltazUT9g844X5z/zEBFLG8RYlpDiOCIG+ATvYEp+/zmc7sN29mcIMp8gvYplYPIQ==}
 
-  /fastify@4.24.2:
-    resolution: {integrity: sha512-V/7fdhFas7HoAyjD8ha8wPCeiRLUzPgwwM5dSSUx/eBUv7GvG61YzjggqOchMOsa7Sw32MNN4uCCoFrl+9ccJA==}
+  /fastify@4.24.3:
+    resolution: {integrity: sha512-6HHJ+R2x2LS3y1PqxnwEIjOTZxFl+8h4kSC/TuDPXtA+v2JnV9yEtOsNSKK1RMD7sIR2y1ZsA4BEFaid/cK5pg==}
     dependencies:
       '@fastify/ajv-compiler': 3.5.0
       '@fastify/error': 3.4.0
@@ -8000,7 +7922,7 @@ packages:
       picocolors: 1.0.0
       source-map: 0.6.1
       source-map-support: 0.5.21
-      vite: 4.4.9
+      vite: 4.4.9(@types/node@20.8.6)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -8033,41 +7955,6 @@ packages:
       - supports-color
       - terser
     dev: false
-
-  /vite@4.4.9:
-    resolution: {integrity: sha512-2mbUn2LlUmNASWwSCNSJ/EG2HuSRTnVNaydp6vMCm5VIqJsjMfbIWtbH2kDuwUVW5mMUKKZvGPX/rqeqVvv1XA==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': '>= 14'
-      less: '*'
-      lightningcss: ^1.21.0
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      esbuild: 0.18.20
-      postcss: 8.4.30
-      rollup: 3.29.3
-    optionalDependencies:
-      fsevents: 2.3.3
-    dev: true
 
   /vite@4.4.9(@types/node@20.8.6):
     resolution: {integrity: sha512-2mbUn2LlUmNASWwSCNSJ/EG2HuSRTnVNaydp6vMCm5VIqJsjMfbIWtbH2kDuwUVW5mMUKKZvGPX/rqeqVvv1XA==}
@@ -8103,7 +7990,6 @@ packages:
       rollup: 3.29.3
     optionalDependencies:
       fsevents: 2.3.3
-    dev: false
 
   /vitest@0.34.6:
     resolution: {integrity: sha512-+5CALsOvbNKnS+ZHMXtuUC7nL8/7F1F2DnHGjSsszX8zCjWSSviphCb/NuS9Nzf4Q03KyyDRBAXhF/8lffME4Q==}
