@@ -1,16 +1,15 @@
-import url from "node:url";
 import fs from "node:fs";
+import url from "node:url";
+import path from "node:path";
 import fastify from "fastify";
-import {
-  createRequestHandler,
-  staticFilePlugin,
-  getEarlyHintLinks,
-} from "@mcansh/remix-fastify";
+import { createRequestHandler, getEarlyHintLinks } from "@mcansh/remix-fastify";
 import { broadcastDevReady, installGlobals } from "@remix-run/node";
 import { fastifyEarlyHints } from "@fastify/early-hints";
+import { fastifyStatic } from "@fastify/static";
 
 installGlobals();
 
+let __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 let BUILD_PATH = "./build/index.js";
 let VERSION_PATH = "./build/version.txt";
 
@@ -41,10 +40,30 @@ app.addContentTypeParser("*", noopContentParser);
 
 await app.register(fastifyEarlyHints, { warn: true });
 
-// match with remix.config
-await app.register(staticFilePlugin, {
-  assetsBuildDirectory: "public/build",
-  publicPath: "/build/",
+await app.register(fastifyStatic, {
+  root: path.join(__dirname, "public"),
+  prefix: "/",
+  wildcard: false,
+  cacheControl: true,
+  dotfiles: "allow",
+  etag: true,
+  maxAge: "1h",
+  serveDotFiles: true,
+  lastModified: true,
+});
+
+await app.register(fastifyStatic, {
+  root: path.join(__dirname, "public", "build"),
+  prefix: "/build",
+  wildcard: true,
+  decorateReply: false,
+  cacheControl: true,
+  dotfiles: "allow",
+  etag: true,
+  maxAge: "1y",
+  immutable: true,
+  serveDotFiles: true,
+  lastModified: true,
 });
 
 app.all("*", async (request, reply) => {

@@ -9,7 +9,7 @@ Use [Remix](https://remix.run) with [Fastify](http://fastify.io)
 ## Manual Installation
 
 ```sh
-npm i @mcansh/remix-fastify fastify @fastify/early-hints source-map-support
-yarn add @mcansh/remix-fastify fastify @fastify/early-hints source-map-support
-pnpm i @mcansh/remix-fastify fastify @fastify/early-hints source-map-support
+npm i @mcansh/remix-fastify fastify @fastify/early-hints @fastify/static
+yarn add @mcansh/remix-fastify fastify @fastify/early-hints @fastify/static
+pnpm i @mcansh/remix-fastify fastify @fastify/early-hints @fastify/static
 ```

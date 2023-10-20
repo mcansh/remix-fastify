@@ -2,57 +2,6 @@ import type { EarlyHintItem } from "@fastify/early-hints";
 import type { ServerBuild } from "@remix-run/node";
 import { matchRoutes } from "@remix-run/router";
 import type { FastifyRequest } from "fastify";
-import { glob } from "glob";
-
-export interface StaticFile {
-  // whether or not the file is in the build directory
-  isBuildAsset: boolean;
-  // relative file path to file on disk from the public directory
-  filePublicPath: string;
-  // url in the browser
-  browserAssetUrl: string;
-}
-
-export async function getStaticFiles({
-  assetsBuildDirectory,
-  publicPath,
-  rootDir,
-}: {
-  assetsBuildDirectory: string;
-  publicPath: string;
-  rootDir: string;
-}): Promise<Array<StaticFile>> {
-  let staticFilePaths = await glob(`**/*`, {
-    dot: true,
-    nodir: true,
-    cwd: rootDir,
-    ignore: ["**/node_modules/**"],
-  });
-
-  return staticFilePaths
-    .filter((filepath) => filepath.startsWith("public"))
-    .map((filePublicPath) => {
-      let normalized = filePublicPath.replace(/\\/g, "/");
-      let isBuildAsset = normalized.startsWith(assetsBuildDirectory);
-
-      let browserAssetUrl = "/";
-
-      if (isBuildAsset) {
-        browserAssetUrl += normalized.replace(
-          assetsBuildDirectory,
-          publicPath.split("/").filter(Boolean).join("/"),
-        );
-      } else {
-        browserAssetUrl += normalized.replace("public/", "");
-      }
-
-      return {
-        isBuildAsset,
-        filePublicPath: normalized.replace("public/", ""),
-        browserAssetUrl,
-      };
-    });
-}
 
 export function getEarlyHintLinks(
   request: FastifyRequest,
