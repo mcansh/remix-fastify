@@ -9,9 +9,16 @@ import { sleep } from "~/sleep";
 export async function loader({ request, context }: DataFunctionArgs) {
   let cookie = request.headers.get("Cookie");
   let session = await sessionStorage.getSession(cookie);
+
+  let loadContextName = context.loadContextName;
+
+  if (typeof loadContextName !== "string") {
+    throw new Error("loadContextName must be a string");
+  }
+
   return defer({
     name: sleep<string>(1_000, session.get("name") || "Anonymous"),
-    loadContextName: context.loadContextName,
+    loadContextName,
   });
 }
 
