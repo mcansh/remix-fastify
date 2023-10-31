@@ -38,12 +38,12 @@
     "validate": "run-p typecheck test"
   },
   "dependencies": {
-    "@remix-run/router": "^1.10.0"
+    "@remix-run/router": "^1.11.0"
   },
   "devDependencies": {
     "@fastify/early-hints": "^1.0.1",
-    "@remix-run/node": "^2.1.0",
-    "@types/node": "^20.8.8",
+    "@remix-run/node": "^2.2.0",
+    "@types/node": "^20.8.10",
     "@typescript/lib-dom": "npm:@types/web@^0.0.119",
     "fastify": "^4.24.3",
     "node-mocks-http": "^1.13.0",
