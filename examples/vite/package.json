@@ -1,0 +1,37 @@
+{
+  "name": "vite",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "scripts": {
+    "build": "remix build",
+    "dev": "remix dev --manual -c \"node --watch-path ./server.js --enable-source-maps ./server.js\"",
+    "start": "cross-env NODE_ENV=production node --enable-source-maps ./server.js",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@fastify/middie": "^8.3.0",
+    "@fastify/static": "^6.12.0",
+    "@mcansh/remix-fastify": "3.0.2",
+    "@remix-run/node": "^2.2.0",
+    "@remix-run/react": "^2.2.0",
+    "cross-env": "^7.0.3",
+    "fastify": "^4.24.3",
+    "isbot": "^3.7.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^2.2.0",
+    "@remix-run/eslint-config": "^2.2.0",
+    "@types/react": "^18.2.33",
+    "@types/react-dom": "^18.2.14",
+    "eslint": "^8.52.0",
+    "typescript": "^5.2.2",
+    "vite": "^4.5.0",
+    "vite-tsconfig-paths": "^4.2.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
