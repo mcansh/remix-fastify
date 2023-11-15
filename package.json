@@ -10,7 +10,7 @@
     "publish": "./scripts/publish.js",
     "publint": "publint ./packages/**",
     "lint": "eslint --cache --ignore-path .gitignore --fix .",
-    "format": "prettier --write --ignore-path .gitignore .",
+    "format": "prettier --write --cache --cache-location .prettiercache --ignore-path .gitignore .",
     "validate": "run-p lint format publint typecheck",
     "typecheck": "pnpm run --recursive typecheck",
     "changeset": "changeset",

@@ -7,3 +7,4 @@ yalc.lock
 /examples/**/build
 /examples/**/public/build
 .eslintcache
+.prettiercache
