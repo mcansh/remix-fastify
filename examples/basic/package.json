@@ -28,7 +28,7 @@
     "@remix-run/eslint-config": "^2.2.0",
     "@types/react": "^18.2.33",
     "@types/react-dom": "^18.2.14",
-    "eslint": "^8.52.0",
+    "eslint": "^8.53.0",
     "typescript": "^5.2.2"
   },
   "engines": {
