@@ -21,19 +21,19 @@
     "@remix-run/node": "^2.2.0",
     "@remix-run/react": "^2.2.0",
     "fastify": "^4.24.3",
-    "isbot": "^3.7.0",
+    "isbot": "^3.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.2.0",
     "@remix-run/eslint-config": "^2.2.0",
-    "@types/react": "^18.2.33",
-    "@types/react-dom": "^18.2.14",
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
     "chokidar": "^3.5.3",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
-    "eslint": "^8.52.0",
+    "eslint": "^8.53.0",
     "npm-run-all": "^4.1.5",
     "typescript": "^5.2.2"
   },
