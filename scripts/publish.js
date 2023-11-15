@@ -35,8 +35,8 @@ async function run() {
     ? prereleaseTag.includes("nightly")
       ? "nightly"
       : prereleaseTag.includes("experimental")
-      ? "experimental"
-      : prereleaseTag
+        ? "experimental"
+        : prereleaseTag
     : "latest";
 
   for (let name of packages) {
