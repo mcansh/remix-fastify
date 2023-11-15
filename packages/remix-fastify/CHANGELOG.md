@@ -1,5 +1,16 @@
 # @mcansh/remix-fastify
 
+## 3.1.0
+
+### Minor Changes
+
+- f6793b4: remove `staticFilePlugin` wrapper around `@fastify/static` as the example is now configured properly to find new files without colliding with remix routes
+
+### Patch Changes
+
+- 8f3093e: update author info, add keywords and funding keys to package.json
+- 25f00c3: bump dependencies to latest
+
 ## 3.0.2
 
 ### Patch Changes
