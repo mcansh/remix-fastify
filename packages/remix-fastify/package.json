@@ -5,6 +5,17 @@
   "repository": "mcansh/remix-fastify",
   "license": "MIT",
   "author": "Logan McAnsh <logan@remix.run> (https://remix.run)",
+  keywords": [
+		"remix",
+		"remix-run",
+		"fastify"
+	],
+  funding": [
+		{
+			"type": "github",
+			"url": "https://github.com/sponsors/mcansh"
+		}
+  ],
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
