@@ -12,7 +12,7 @@ There are currently three examples you can get jump started with:
   ```
 - The *unstable* vite remix plugin
   ```sh
-  npx create-remix@latest --template https://github.com/mcansh/remix-fastify/tree/main/examples/vite
+  npx create-remix@latest --template https://github.com/mcansh/remix-fastify/tree/main/examples/unstable-vite
   ```
 - The kitchen sink with loaders, actions, and nested routes
   ```sh
