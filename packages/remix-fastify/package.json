@@ -5,6 +5,9 @@
   "repository": "mcansh/remix-fastify",
   "license": "MIT",
   "author": "Logan McAnsh <logan@mcan.sh> (https://mcan.sh)",
+  "bugs": {
+    "url": "https://github.com/mcansh/remix-fastify/issues"
+  },
   "keywords": [
     "remix",
     "remix-run",
