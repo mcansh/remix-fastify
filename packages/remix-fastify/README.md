@@ -10,7 +10,7 @@ There are currently three examples you can get jump started with:
   ```sh
   npx create-remix@latest --template https://github.com/mcansh/remix-fastify/tree/main/examples/basic
   ```
-- The *unstable* vite remix plugin
+- The _unstable_ vite remix plugin
   ```sh
   npx create-remix@latest --template https://github.com/mcansh/remix-fastify/tree/main/examples/unstable-vite
   ```
