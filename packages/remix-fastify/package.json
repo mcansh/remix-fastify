@@ -11,10 +11,10 @@
 		"fastify"
 	],
   "funding": [
-		{
-			"type": "github",
-			"url": "https://github.com/sponsors/mcansh"
-		}
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/mcansh"
+    }
   ],
   "type": "module",
   "exports": {
