@@ -1,5 +1,5 @@
 {
-  "name": "vite",
+  "name": "unstable-vite-template",
   "private": true,
   "sideEffects": false,
   "type": "module",
