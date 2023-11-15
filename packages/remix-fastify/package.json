@@ -6,10 +6,10 @@
   "license": "MIT",
   "author": "Logan McAnsh <logan@mcan.sh> (https://mcan.sh)",
   "keywords": [
-		"remix",
-		"remix-run",
-		"fastify"
-	],
+    "remix",
+    "remix-run",
+    "fastify"
+  ],
   "funding": [
     {
       "type": "github",
