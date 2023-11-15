@@ -1,5 +1,5 @@
 {
-  "name": "vite",
+  "name": "unstable-vite-template",
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -12,7 +12,7 @@
   "dependencies": {
     "@fastify/middie": "^8.3.0",
     "@fastify/static": "^6.12.0",
-    "@mcansh/remix-fastify": "3.0.2",
+    "@mcansh/remix-fastify": "3.1.0",
     "@remix-run/node": "^2.2.0",
     "@remix-run/react": "^2.2.0",
     "cross-env": "^7.0.3",
