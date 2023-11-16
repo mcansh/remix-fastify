@@ -63,14 +63,37 @@ await app.register(fastifyStatic, {
 });
 
 // handle SSR requests
-app.all(
-  "*",
-  createRequestHandler({
-    build: vite
+app.all("*", async (request, reply) => {
+  try {
+    let build = vite
       ? () => unstable_loadViteServerBuild(vite)
-      : await import("./build/index.js"),
-  }),
-);
+      : await import("./build/index.js");
+    let criticalCss;
+
+    if (vite) {
+      let [{ getStylesForUrl }, { readConfig }] = await Promise.all([
+        import("@remix-run/dev/dist/vite/styles.js"),
+        import("@remix-run/dev/dist/config.js"),
+      ]);
+
+      let remixConfig = await readConfig();
+      let resolvedBuild = vite ? await build() : build;
+      criticalCss = await getStylesForUrl(
+        vite,
+        remixConfig,
+        {},
+        resolvedBuild,
+        request.url,
+      );
+    }
+
+    let handler = createRequestHandler({ build, criticalCss });
+    return handler(request, reply);
+  } catch (error) {
+    console.error(error);
+    return reply.status(500).send(error.message);
+  }
+});
 
 let port = process.env.PORT ? Number(process.env.PORT) || 3000 : 3000;
 
