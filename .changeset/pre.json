@@ -4,5 +4,7 @@
   "initialVersions": {
     "@mcansh/remix-fastify": "3.1.0"
   },
-  "changesets": []
+  "changesets": [
+    "long-teachers-march"
+  ]
 }

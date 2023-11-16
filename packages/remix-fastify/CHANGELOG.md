@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 3.2.0-pre.0
+
+### Minor Changes
+
+- a5ee9f1: add support for inlining criticalCss when using the vite plugin
+
 ## 3.1.0
 
 ### Minor Changes
