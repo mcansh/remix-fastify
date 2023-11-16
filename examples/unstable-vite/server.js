@@ -10,8 +10,6 @@ import {
   unstable_createViteServer,
   unstable_loadViteServerBuild,
 } from "@remix-run/dev";
-import { getStylesForUrl } from "@remix-run/dev/dist/vite/styles.js";
-import { readConfig } from "@remix-run/dev/dist/config.js";
 
 installGlobals();
 
@@ -73,6 +71,11 @@ app.all("*", async (request, reply) => {
     let criticalCss;
 
     if (vite) {
+      let [{ getStylesForUrl }, { readConfig }] = await Promise.all([
+        import("@remix-run/dev/dist/vite/styles.js"),
+        import("@remix-run/dev/dist/config.js"),
+      ]);
+
       let remixConfig = await readConfig();
       let resolvedBuild = vite ? await build() : build;
       criticalCss = await getStylesForUrl(
