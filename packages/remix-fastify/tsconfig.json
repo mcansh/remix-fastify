@@ -4,11 +4,10 @@
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "target": "ES2022",
-    "module": "ES2022",
-    "verbatimModuleSyntax": true,
+    "module": "NodeNext",
     "noUncheckedIndexedAccess": true,
 
-    "moduleResolution": "Bundler",
+    "moduleResolution": "NodeNext",
     "moduleDetection": "force",
     "strict": true,
     "outDir": "./dist",
@@ -16,8 +15,8 @@
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "isolatedModules": true,
-    "rootDir": ".",
+    "rootDir": "./src",
     "declaration": true,
-    "emitDeclarationOnly": true
+    "declarationMap": true
   }
 }

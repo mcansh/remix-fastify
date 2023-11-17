@@ -20,23 +20,6 @@
     }
   ],
   "type": "module",
-  "exports": {
-    "./package.json": "./package.json",
-    ".": {
-      "types": {
-        "require": "./dist/index.d.cts",
-        "import": "./dist/index.d.ts",
-        "default": "./dist/index.d.cts"
-      },
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js",
-      "default": "./dist/index.cjs"
-    }
-  },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "source": "./src/index.ts",
-  "types": "./dist/index.d.cts",
   "files": [
     "dist",
     "package.json",
@@ -46,8 +29,8 @@
   "scripts": {
     "prepublishOnly": "npm run build && cp ../../LICENSE LICENSE && publint",
     "typecheck": "tsc",
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "dev": "tshy --watch",
+    "build": "tshy",
     "test": "vitest",
     "validate": "run-p typecheck test"
   },
@@ -79,5 +62,26 @@
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "tshy": {
+    "exports": {
+      "./package.json": "./package.json",
+      ".": "./src/index.ts"
+    }
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/index.d.ts",
+        "default": "./dist/commonjs/index.js"
+      }
+    }
+  },
+  "main": "./dist/commonjs/index.js",
+  "types": "./dist/commonjs/index.d.ts"
 }
