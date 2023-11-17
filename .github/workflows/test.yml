@@ -48,3 +48,10 @@ jobs:
 
       - name: 🧪 Run Tests
         run: pnpm run validate
+
+      - name: Fail if changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "There are changes in the working tree. Please run 'npm run validate' and commit the changes."
+            exit 1
+          fi
