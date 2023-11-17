@@ -67,4 +67,4 @@ jobs:
               args: [--frozen-lockfile, --strict-peer-dependencies]
 
       - name: 🧪 Run Tests
-        run: pnpm run test
+        run: pnpm run validate

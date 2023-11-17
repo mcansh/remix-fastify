@@ -11,7 +11,7 @@
     "publint": "publint ./packages/**",
     "lint": "eslint --cache --ignore-path .gitignore --fix .",
     "format": "prettier --write --cache --cache-location .prettiercache --ignore-path .gitignore .",
-    "validate": "run-p lint format publint typecheck",
+    "validate": "run-p lint format publint typecheck test",
     "typecheck": "pnpm run --recursive typecheck",
     "changeset": "changeset",
     "changeset:version": "changeset version && node ./scripts/remove-prerelease-changelogs.js && pnpm install --lockfile-only",

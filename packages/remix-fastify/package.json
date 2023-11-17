@@ -31,7 +31,7 @@
     "typecheck": "tsc",
     "dev": "tshy --watch",
     "build": "tshy",
-    "test": "vitest",
+    "test": "vitest run",
     "validate": "run-p typecheck test"
   },
   "dependencies": {
