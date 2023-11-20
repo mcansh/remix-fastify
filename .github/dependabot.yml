@@ -12,10 +12,10 @@ updates:
       time: "10:00"
       timezone: "America/Detroit"
     groups:
-      remix:
+      "@remix-run":
         patterns:
-          - ^@remix-run/.*
+          - "@remix-run/*"
       fastify:
         patterns:
-          - ^@fastify/.*
+          - "@fastify/*"
           - fastify
