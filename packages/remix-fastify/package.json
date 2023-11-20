@@ -61,7 +61,7 @@
     "@typescript/lib-dom": "npm:@types/web@^0.0.119",
     "fastify": "^4.24.3",
     "node-mocks-http": "^1.13.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.2"
   },
   "peerDependencies": {
     "@fastify/early-hints": "^1.0.1",
