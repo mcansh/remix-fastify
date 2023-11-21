@@ -17,32 +17,8 @@ on:
         type: string
 
 jobs:
-  build:
-    name: ⚙️ Build
-    runs-on: ubuntu-latest
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: ".nvmrc"
-
-      - name: 🟧 Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-          run_install: |
-            - recursive: true
-              args: [--frozen-lockfile, --strict-peer-dependencies]
-              cwd: ./
-
-      - name: 🏗 Build
-        run: npm run build
-
   test:
-    name: "${{ matrix.os }} | ${{ matrix.node }}"
+    name: "🧪 Test ${{ matrix.os }} | ${{ matrix.node }}"
     strategy:
       fail-fast: false
       matrix:
@@ -65,6 +41,17 @@ jobs:
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
+              cwd: ./
+
+      - name: 🏗 Build
+        run: npm run build
 
       - name: 🧪 Run Tests
-        run: pnpm run test
+        run: pnpm run validate
+
+      - name: Fail if changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "There are changes in the working tree. Please run 'npm run validate' and commit the changes."
+            exit 1
+          fi

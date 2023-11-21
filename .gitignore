@@ -8,3 +8,5 @@ yalc.lock
 /examples/**/public/build
 .eslintcache
 .prettiercache
+.tshy
+.tshy-build

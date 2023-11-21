@@ -1,3 +1,3 @@
-export type { GetLoadContextFunction, RequestHandler } from "./server";
-export { createRequestHandler } from "./server";
-export { getEarlyHintLinks } from "./utils";
+export type { GetLoadContextFunction, RequestHandler } from "./server.js";
+export { createRequestHandler } from "./server.js";
+export { getEarlyHintLinks } from "./utils.js";
