@@ -1,6 +1,6 @@
 # @mcansh/remix-fastify
 
-## 3.2.0-pre.0
+## 3.2.0
 
 ### Minor Changes
 
