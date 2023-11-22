@@ -1,12 +1,13 @@
 {
-  "include": ["remix.config.js", "env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["env.d.ts", "**/*.ts", "**/*.tsx"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "isolatedModules": true,
     "esModuleInterop": true,
-    "module": "ES2022",
+    "module": "ESNext",
     "jsx": "react-jsx",
     "moduleResolution": "Bundler",
+    "moduleDetection": "force",
     "resolveJsonModule": true,
     "target": "ES2022",
     "skipLibCheck": true,

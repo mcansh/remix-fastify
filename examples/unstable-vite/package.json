@@ -1,5 +1,5 @@
 {
-  "name": "unstable-vite-template",
+  "name": "vite-remix",
   "private": true,
   "sideEffects": false,
   "type": "module",
