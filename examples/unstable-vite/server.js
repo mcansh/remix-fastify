@@ -1,4 +1,3 @@
-import fs from "node:fs";
 import url from "node:url";
 import path from "node:path";
 import fastify from "fastify";
@@ -36,8 +35,8 @@ if (vite) {
   await app.use(vite.middlewares);
 } else {
   await app.register(fastifyStatic, {
-    root: path.join(__dirname, "public", "build"),
-    prefix: "/build",
+    root: path.join(__dirname, "build", "client", "assets"),
+    prefix: "/assets",
     wildcard: true,
     decorateReply: false,
     cacheControl: true,
@@ -51,7 +50,7 @@ if (vite) {
 }
 
 await app.register(fastifyStatic, {
-  root: path.join(__dirname, "public"),
+  root: path.join(__dirname, "build", "client"),
   prefix: "/",
   wildcard: false,
   cacheControl: true,
@@ -67,7 +66,7 @@ app.all("*", async (request, reply) => {
   try {
     let build = vite
       ? () => unstable_loadViteServerBuild(vite)
-      : await import("./build/index.js");
+      : await import("./build/server/index.js");
     let criticalCss;
 
     if (vite) {
@@ -91,7 +90,7 @@ app.all("*", async (request, reply) => {
     return handler(request, reply);
   } catch (error) {
     console.error(error);
-    return reply.status(500).send(error.message);
+    return reply.status(500).send(error);
   }
 });
 
