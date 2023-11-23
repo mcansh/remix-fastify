@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 3.2.1-pre.0
+
+### Patch Changes
+
+- add5583: remove `criticalCss` option from createRequestHandler as it's now handled by the vite plugin in an agnostic way
+
 ## 3.2.0
 
 ### Minor Changes
