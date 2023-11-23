@@ -31,12 +31,10 @@ export function createRequestHandler({
   build,
   getLoadContext,
   mode = process.env.NODE_ENV,
-  criticalCss,
 }: {
   build: ServerBuild;
   getLoadContext?: GetLoadContextFunction;
   mode?: string;
-  criticalCss?: string;
 }): RequestHandler {
   let handleRequest = createRemixRequestHandler(build, mode);
 
@@ -44,11 +42,7 @@ export function createRequestHandler({
     let remixRequest = createRemixRequest(request, reply);
     let loadContext = await getLoadContext?.(request, reply);
 
-    let response = await handleRequest(
-      remixRequest,
-      loadContext,
-      criticalCss ? { __criticalCss: criticalCss } : undefined,
-    );
+    let response = await handleRequest(remixRequest, loadContext);
 
     return sendRemixResponse(reply, response);
   };
