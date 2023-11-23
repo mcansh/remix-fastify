@@ -52,7 +52,7 @@
     "validate": "run-p typecheck test"
   },
   "dependencies": {
-    "@remix-run/router": "^1.13.1"
+    "@remix-run/router": "^1.13.0"
   },
   "devDependencies": {
     "@fastify/early-hints": "^1.0.1",
