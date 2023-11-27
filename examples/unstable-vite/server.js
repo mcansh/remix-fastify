@@ -1,21 +1,20 @@
-import url from "node:url";
 import path from "node:path";
-import fastify from "fastify";
-import { createRequestHandler } from "@mcansh/remix-fastify";
-import { installGlobals } from "@remix-run/node";
+import url from "node:url";
+
 import { fastifyStatic } from "@fastify/static";
-import middie from "@fastify/middie";
-import {
-  unstable_createViteServer,
-  unstable_loadViteServerBuild,
-} from "@remix-run/dev";
+import { createRequestHandler } from "@mcansh/remix-fastify";
+import { unstable_viteServerBuildModuleId as viteServerBuildModuleId } from "@remix-run/dev";
+import { installGlobals } from "@remix-run/node";
+import { fastify } from "fastify";
 
 installGlobals();
 
 let vite =
   process.env.NODE_ENV === "production"
     ? undefined
-    : await unstable_createViteServer();
+    : await import("vite").then((v) =>
+        v.createServer({ server: { middlewareMode: true } }),
+      );
 
 let app = fastify();
 
@@ -30,6 +29,7 @@ let __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 // handle asset requests
 if (vite) {
+  let middie = await import("@fastify/middie");
   await app.register(middie);
   await app.use(vite.middlewares);
 } else {
@@ -65,7 +65,7 @@ app.all("*", async (request, reply) => {
   try {
     let handler = createRequestHandler({
       build: vite
-        ? () => unstable_loadViteServerBuild(vite)
+        ? () => vite?.ssrLoadModule(viteServerBuildModuleId)
         : await import("./build/server/index.js"),
     });
     return handler(request, reply);
@@ -75,7 +75,7 @@ app.all("*", async (request, reply) => {
   }
 });
 
-let port = process.env.PORT ? Number(process.env.PORT) || 3000 : 3000;
+let port = Number(process.env.PORT) || 3000;
 
 let address = await app.listen({ port, host: "0.0.0.0" });
 console.log(`✅ app ready: ${address}`);
