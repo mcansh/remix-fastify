@@ -30,7 +30,7 @@ let __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 // handle asset requests
 if (vite) {
   let middie = await import("@fastify/middie");
-  await app.register(middie);
+  await app.register(middie.default);
   await app.use(vite.middlewares);
 } else {
   await app.register(fastifyStatic, {
