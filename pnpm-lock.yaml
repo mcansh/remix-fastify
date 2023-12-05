@@ -108,8 +108,8 @@ importers:
         specifier: ^18.2.37
         version: 18.2.37
       '@types/react-dom':
-        specifier: ^18.2.15
-        version: 18.2.15
+        specifier: ^18.2.17
+        version: 18.2.17
       eslint:
         specifier: ^8.54.0
         version: 8.54.0
@@ -157,8 +157,8 @@ importers:
         specifier: ^18.2.37
         version: 18.2.37
       '@types/react-dom':
-        specifier: ^18.2.15
-        version: 18.2.15
+        specifier: ^18.2.17
+        version: 18.2.17
       chokidar:
         specifier: ^3.5.3
         version: 3.5.3
@@ -221,8 +221,8 @@ importers:
         specifier: ^18.2.37
         version: 18.2.37
       '@types/react-dom':
-        specifier: ^18.2.15
-        version: 18.2.15
+        specifier: ^18.2.17
+        version: 18.2.17
       eslint:
         specifier: ^8.54.0
         version: 8.54.0
@@ -2310,8 +2310,8 @@ packages:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
     dev: true
 
-  /@types/react-dom@18.2.15:
-    resolution: {integrity: sha512-HWMdW+7r7MR5+PZqJF6YFNSCtjz1T0dsvo/f1BV6HkV+6erD/nA7wd9NM00KVG83zf2nJ7uATPO9ttdIPvi3gg==}
+  /@types/react-dom@18.2.17:
+    resolution: {integrity: sha512-rvrT/M7Df5eykWFxn6MYt5Pem/Dbyc1N8Y0S9Mrkw2WFCRiqUgw9P7ul2NpwsXCSM1DVdENzdG9J5SreqfAIWg==}
     dependencies:
       '@types/react': 18.2.37
     dev: true
