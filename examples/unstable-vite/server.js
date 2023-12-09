@@ -12,8 +12,8 @@ installGlobals();
 let vite =
   process.env.NODE_ENV === "production"
     ? undefined
-    : await import("vite").then((v) =>
-        v.createServer({ server: { middlewareMode: true } }),
+    : await import("vite").then((m) =>
+        m.createServer({ server: { middlewareMode: true } }),
       );
 
 let app = fastify();
@@ -29,8 +29,8 @@ let __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 // handle asset requests
 if (vite) {
-  let middie = await import("@fastify/middie");
-  await app.register(middie.default);
+  let middie = await import("@fastify/middie").then((m) => m.default);
+  await app.register(middie);
   await app.use(vite.middlewares);
 } else {
   await app.register(fastifyStatic, {
