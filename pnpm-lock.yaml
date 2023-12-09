@@ -1760,7 +1760,6 @@ packages:
   /@remix-run/dev@0.0.0-nightly-c0d1b20-20231209(typescript@5.3.3)(vite@5.0.8):
     resolution: {integrity: sha512-HTNCKBAKQRWFHWnvnmKH3fSrGgz0tjFjoLggbPT4eNmcTxb82yTqdfDeAja2VE1TtHtjmvbykmQXW0LvEbWzRw==}
     engines: {node: '>=18.0.0'}
-    hasBin: true
     peerDependencies:
       '@remix-run/serve': ^0.0.0-nightly-c0d1b20-20231209
       typescript: ^5.1.0
