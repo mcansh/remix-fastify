@@ -21,7 +21,7 @@
     "@changesets/cli": "^2.26.2",
     "@manypkg/get-packages": "^2.2.0",
     "@npmcli/package-json": "^5.0.0",
-    "@remix-run/eslint-config": "0.0.0-nightly-c0d1b20-20231209",
+    "@remix-run/eslint-config": "0.0.0-nightly-9a845b6-20231212",
     "eslint": "^8.54.0",
     "eslint-plugin-prefer-let": "^3.0.1",
     "glob": "^10.3.10",
