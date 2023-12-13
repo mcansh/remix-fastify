@@ -5,6 +5,7 @@ import { fastifyStatic } from "@fastify/static";
 import { createRequestHandler } from "@mcansh/remix-fastify";
 import { installGlobals } from "@remix-run/node";
 import { fastify } from "fastify";
+import { unstable_viteServerBuildModuleId } from "@remix-run/dev";
 
 installGlobals();
 
@@ -64,7 +65,7 @@ app.all("*", async (request, reply) => {
   try {
     let handler = createRequestHandler({
       build: vite
-        ? () => vite?.ssrLoadModule("virtual:remix/server-build")
+        ? () => vite?.ssrLoadModule(unstable_viteServerBuildModuleId)
         : await import("./build/server/index.js"),
     });
     return handler(request, reply);
