@@ -1,26 +1,22 @@
-import fs from "node:fs";
-import url from "node:url";
 import path from "node:path";
-import fastify from "fastify";
+import url from "node:url";
+
+import { fastifyStatic } from "@fastify/static";
 import { createRequestHandler } from "@mcansh/remix-fastify";
 import { installGlobals } from "@remix-run/node";
-import { fastifyStatic } from "@fastify/static";
-import middie from "@fastify/middie";
-import {
-  unstable_createViteServer,
-  unstable_loadViteServerBuild,
-} from "@remix-run/dev";
+import { fastify } from "fastify";
+import { unstable_viteServerBuildModuleId } from "@remix-run/dev";
 
 installGlobals();
 
 let vite =
   process.env.NODE_ENV === "production"
     ? undefined
-    : await unstable_createViteServer();
+    : await import("vite").then((m) =>
+        m.createServer({ server: { middlewareMode: true } }),
+      );
 
 let app = fastify();
-
-await app.register(middie);
 
 let noopContentParser = (_request, payload, done) => {
   done(null, payload);
@@ -33,11 +29,13 @@ let __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 // handle asset requests
 if (vite) {
+  let middie = await import("@fastify/middie").then((m) => m.default);
+  await app.register(middie);
   await app.use(vite.middlewares);
 } else {
   await app.register(fastifyStatic, {
-    root: path.join(__dirname, "public", "build"),
-    prefix: "/build",
+    root: path.join(__dirname, "build", "client", "assets"),
+    prefix: "/assets",
     wildcard: true,
     decorateReply: false,
     cacheControl: true,
@@ -51,7 +49,7 @@ if (vite) {
 }
 
 await app.register(fastifyStatic, {
-  root: path.join(__dirname, "public"),
+  root: path.join(__dirname, "build", "client"),
   prefix: "/",
   wildcard: false,
   cacheControl: true,
@@ -65,37 +63,19 @@ await app.register(fastifyStatic, {
 // handle SSR requests
 app.all("*", async (request, reply) => {
   try {
-    let build = vite
-      ? () => unstable_loadViteServerBuild(vite)
-      : await import("./build/index.js");
-    let criticalCss;
-
-    if (vite) {
-      let [{ getStylesForUrl }, { readConfig }] = await Promise.all([
-        import("@remix-run/dev/dist/vite/styles.js"),
-        import("@remix-run/dev/dist/config.js"),
-      ]);
-
-      let remixConfig = await readConfig();
-      let resolvedBuild = vite ? await build() : build;
-      criticalCss = await getStylesForUrl(
-        vite,
-        remixConfig,
-        {},
-        resolvedBuild,
-        request.url,
-      );
-    }
-
-    let handler = createRequestHandler({ build, criticalCss });
+    let handler = createRequestHandler({
+      build: vite
+        ? () => vite?.ssrLoadModule(unstable_viteServerBuildModuleId)
+        : await import("./build/server/index.js"),
+    });
     return handler(request, reply);
   } catch (error) {
     console.error(error);
-    return reply.status(500).send(error.message);
+    return reply.status(500).send(error);
   }
 });
 
-let port = process.env.PORT ? Number(process.env.PORT) || 3000 : 3000;
+let port = Number(process.env.PORT) || 3000;
 
 let address = await app.listen({ port, host: "0.0.0.0" });
 console.log(`✅ app ready: ${address}`);
