@@ -86,8 +86,8 @@ importers:
         specifier: ^3.5.3
         version: 3.5.3
       fastify:
-        specifier: ^4.25.0
-        version: 4.25.0
+        specifier: ^4.25.1
+        version: 4.25.1
       isbot:
         specifier: ^3.7.1
         version: 3.7.1
@@ -135,8 +135,8 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)
       fastify:
-        specifier: ^4.25.0
-        version: 4.25.0
+        specifier: ^4.25.1
+        version: 4.25.1
       isbot:
         specifier: ^3.7.1
         version: 3.7.1
@@ -199,8 +199,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       fastify:
-        specifier: ^4.25.0
-        version: 4.25.0
+        specifier: ^4.25.1
+        version: 4.25.1
       isbot:
         specifier: ^3.7.1
         version: 3.7.1
@@ -255,8 +255,8 @@ importers:
         specifier: npm:@types/web@^0.0.127
         version: /@types/web@0.0.127
       fastify:
-        specifier: ^4.25.0
-        version: 4.25.0
+        specifier: ^4.25.1
+        version: 4.25.1
       node-mocks-http:
         specifier: ^1.14.0
         version: 1.14.0
@@ -4283,8 +4283,8 @@ packages:
   /fastify-plugin@4.5.1:
     resolution: {integrity: sha512-stRHYGeuqpEZTL1Ef0Ovr2ltazUT9g844X5z/zEBFLG8RYlpDiOCIG+ATvYEp+/zmc7sN29mcIMp8gvYplYPIQ==}
 
-  /fastify@4.25.0:
-    resolution: {integrity: sha512-2XANZZDadl/PccnVbmrIC8BmUtb16MO5Hyfnqv1cZIslvf7GYTVwlPuVxLKL23NNxWRc5BikY8HyhWj+NJvokA==}
+  /fastify@4.25.1:
+    resolution: {integrity: sha512-D8d0rv61TwqoAS7lom2tvIlgVMlx88lLsiwXyWNjA7CU/LC/mx/Gp2WAlC0S/ABq19U+y/aRvYFG5xLUu2aMrg==}
     dependencies:
       '@fastify/ajv-compiler': 3.5.0
       '@fastify/error': 3.4.1
@@ -7242,6 +7242,7 @@ packages:
 
   /semver@5.7.2:
     resolution: {integrity: sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==}
+    hasBin: true
 
   /semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
