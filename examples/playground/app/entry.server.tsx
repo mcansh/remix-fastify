@@ -1,4 +1,5 @@
 import { PassThrough } from "node:stream";
+
 import type { AppLoadContext, EntryContext } from "@remix-run/node";
 import { createReadableStreamFromReadable } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
@@ -37,7 +38,7 @@ function handleBotRequest(
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false;
-    let { pipe, abort } = renderToPipeableStream(
+    const { pipe, abort } = renderToPipeableStream(
       <RemixServer
         context={remixContext}
         url={request.url}
@@ -46,8 +47,8 @@ function handleBotRequest(
       {
         onAllReady() {
           shellRendered = true;
-          let body = new PassThrough();
-          let stream = createReadableStreamFromReadable(body);
+          const body = new PassThrough();
+          const stream = createReadableStreamFromReadable(body);
 
           responseHeaders.set("Content-Type", "text/html");
 
@@ -87,7 +88,7 @@ function handleBrowserRequest(
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false;
-    let { pipe, abort } = renderToPipeableStream(
+    const { pipe, abort } = renderToPipeableStream(
       <RemixServer
         context={remixContext}
         url={request.url}
@@ -96,8 +97,8 @@ function handleBrowserRequest(
       {
         onShellReady() {
           shellRendered = true;
-          let body = new PassThrough();
-          let stream = createReadableStreamFromReadable(body);
+          const body = new PassThrough();
+          const stream = createReadableStreamFromReadable(body);
 
           responseHeaders.set("Content-Type", "text/html");
 
