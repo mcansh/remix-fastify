@@ -19,7 +19,7 @@
     "@remix-run/serve": "^2.4.1",
     "chokidar": "^3.5.3",
     "fastify": "^4.25.2",
-    "isbot": "^3.7.1",
+    "isbot": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
