@@ -89,8 +89,8 @@ importers:
         specifier: ^4.25.2
         version: 4.25.2
       isbot:
-        specifier: ^4.1.0
-        version: 4.1.0
+        specifier: ^4.3.0
+        version: 4.3.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -138,8 +138,8 @@ importers:
         specifier: ^4.25.2
         version: 4.25.2
       isbot:
-        specifier: ^4.1.0
-        version: 4.1.0
+        specifier: ^4.3.0
+        version: 4.3.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -202,8 +202,8 @@ importers:
         specifier: ^4.25.2
         version: 4.25.2
       isbot:
-        specifier: ^4.1.0
-        version: 4.1.0
+        specifier: ^4.3.0
+        version: 4.3.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -5063,8 +5063,8 @@ packages:
   /isarray@2.0.5:
     resolution: {integrity: sha512-xHjhDr3cNBK0BzdUJSPXZntQUx/mwMS5Rw4A7lPJ90XGAO6ISP/ePDNuo0vhqOZU+UD5JoodwCAAoZQd3FeAKw==}
 
-  /isbot@4.1.0:
-    resolution: {integrity: sha512-Kz7zk1wc0oC0FYLYtqea1RKdEX4XGlqacPhoaq9HSEQamEXQNJ/MzVzBKAQXDCCHO0h/eo4CdZs9t3Jfbup5Aw==}
+  /isbot@4.3.0:
+    resolution: {integrity: sha512-cohu4X66cXP120xwF+UubL+BQzOQLN1O0DOPOmkci6elgZ7o6XIn8B3FARk59RL0aX3cGTq8Ta7MVOWpay3rbw==}
     engines: {node: '>=18'}
     dev: false
 
