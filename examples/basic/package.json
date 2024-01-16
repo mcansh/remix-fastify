@@ -16,7 +16,6 @@
     "@remix-run/css-bundle": "^2.4.1",
     "@remix-run/node": "^2.4.1",
     "@remix-run/react": "^2.4.1",
-    "@remix-run/serve": "^2.4.1",
     "fastify": "^4.25.2",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
