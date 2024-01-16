@@ -82,9 +82,6 @@ importers:
       '@remix-run/serve':
         specifier: ^2.4.1
         version: 2.4.1(typescript@5.3.3)
-      chokidar:
-        specifier: ^3.5.3
-        version: 3.5.3
       fastify:
         specifier: ^4.25.2
         version: 4.25.2
@@ -110,6 +107,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.18
         version: 18.2.18
+      chokidar:
+        specifier: ^3.5.3
+        version: 3.5.3
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
