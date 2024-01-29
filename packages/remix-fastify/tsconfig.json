@@ -18,6 +18,6 @@
     "isolatedModules": true,
     "rootDir": ".",
     "declaration": true,
-    "emitDeclarationOnly": true
-  }
+    "emitDeclarationOnly": true,
+  },
 }
