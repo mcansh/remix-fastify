@@ -1,11 +1,29 @@
+import type * as http from "node:http";
+import type * as http2 from "node:http2";
+import type * as https from "node:https";
 import { PassThrough } from "node:stream";
-import type { FastifyRequest, FastifyReply } from "fastify";
+import type {
+  FastifyRequest,
+  FastifyReply,
+  RawRequestDefaultExpression,
+  RawReplyDefaultExpression,
+  RouteGenericInterface,
+} from "fastify";
 import type { AppLoadContext, ServerBuild } from "@remix-run/node";
 import {
   createRequestHandler as createRemixRequestHandler,
   createReadableStreamFromReadable,
   writeReadableStreamToWritable,
 } from "@remix-run/node";
+
+type HttpServer =
+  | http.Server
+  | https.Server
+  | http2.Http2Server
+  | http2.Http2SecureServer;
+
+export type HttpRequest = RawRequestDefaultExpression<HttpServer>;
+export type HttpResponse = RawReplyDefaultExpression<HttpServer>;
 
 /**
  * A function that returns the value to use as `context` in route `loader` and
@@ -14,28 +32,28 @@ import {
  * You can think of this as an escape hatch that allows you to pass
  * environment/platform-specific values through to your loader/action.
  */
-export type GetLoadContextFunction = (
-  request: FastifyRequest,
-  reply: FastifyReply,
+export type GetLoadContextFunction<Server extends HttpServer> = (
+  request: FastifyRequest<RouteGenericInterface, Server>,
+  reply: FastifyReply<Server>,
 ) => Promise<AppLoadContext> | AppLoadContext;
 
-export type RequestHandler = (
-  request: FastifyRequest,
-  reply: FastifyReply,
+export type RequestHandler<Server extends HttpServer> = (
+  request: FastifyRequest<RouteGenericInterface, Server>,
+  reply: FastifyReply<Server>,
 ) => Promise<void>;
 
 /**
  * Returns a request handler for Fastify that serves the response using Remix.
  */
-export function createRequestHandler({
+export function createRequestHandler<Server extends HttpServer>({
   build,
   getLoadContext,
   mode = process.env.NODE_ENV,
 }: {
   build: ServerBuild;
-  getLoadContext?: GetLoadContextFunction;
+  getLoadContext?: GetLoadContextFunction<Server>;
   mode?: string;
-}): RequestHandler {
+}): RequestHandler<Server> {
   let handleRequest = createRemixRequestHandler(build, mode);
 
   return async (request, reply) => {
@@ -68,15 +86,17 @@ export function createRemixHeaders(
   return headers;
 }
 
-export function getUrl(request: FastifyRequest): string {
+export function getUrl<Server extends HttpServer>(
+  request: FastifyRequest<RouteGenericInterface, Server>,
+): string {
   let origin = `${request.protocol}://${request.hostname}`;
   let url = `${origin}${request.url}`;
   return url;
 }
 
-export function createRemixRequest(
-  request: FastifyRequest,
-  reply: FastifyReply,
+export function createRemixRequest<Server extends HttpServer>(
+  request: FastifyRequest<RouteGenericInterface, Server>,
+  reply: FastifyReply<Server>,
 ): Request {
   let url = getUrl(request);
   // Abort action/loaders once we can no longer write a response
@@ -97,8 +117,8 @@ export function createRemixRequest(
   return new Request(url, init);
 }
 
-export async function sendRemixResponse(
-  reply: FastifyReply,
+export async function sendRemixResponse<Server extends HttpServer>(
+  reply: FastifyReply<Server>,
   nodeResponse: Response,
 ): Promise<void> {
   reply.status(nodeResponse.status);
