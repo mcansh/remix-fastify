@@ -24,8 +24,6 @@ let noopContentParser = (_request, payload, done) => {
 app.addContentTypeParser("application/json", noopContentParser);
 app.addContentTypeParser("*", noopContentParser);
 
-let __dirname = url.fileURLToPath(new URL(".", import.meta.url));
-
 // handle asset requests
 if (vite) {
   let middie = await import("@fastify/middie").then((m) => m.default);
@@ -33,7 +31,7 @@ if (vite) {
   await app.use(vite.middlewares);
 } else {
   await app.register(fastifyStatic, {
-    root: path.join(__dirname, "build", "client", "assets"),
+    root: path.join(import.meta.dirname, "build", "client", "assets"),
     prefix: "/assets",
     wildcard: true,
     decorateReply: false,
@@ -48,7 +46,7 @@ if (vite) {
 }
 
 await app.register(fastifyStatic, {
-  root: path.join(__dirname, "build", "client"),
+  root: path.join(import.meta.dirname, "build", "client"),
   prefix: "/",
   wildcard: false,
   cacheControl: true,
