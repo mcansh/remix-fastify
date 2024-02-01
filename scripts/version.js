@@ -7,9 +7,7 @@ import Confirm from "prompt-confirm";
 
 let packages = ["remix-fastify"];
 
-let __dirname = import.meta.dirname;
-
-let rootDir = path.join(__dirname, "..");
+let rootDir = path.join(import.meta.dirname, "..");
 
 run(process.argv.slice(2)).then(
   () => {
