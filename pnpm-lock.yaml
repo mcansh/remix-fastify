@@ -25,6 +25,9 @@ importers:
       '@remix-run/eslint-config':
         specifier: 2.5.1
         version: 2.5.1(eslint@8.56.0)(react@18.2.0)(typescript@5.3.3)
+      '@types/npmcli__package-json':
+        specifier: ^4.0.3
+        version: 4.0.3
       chalk:
         specifier: ^5.3.0
         version: 5.3.0
@@ -2297,6 +2300,10 @@ packages:
 
   /@types/normalize-package-data@2.4.4:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
+    dev: false
+
+  /@types/npmcli__package-json@4.0.3:
+    resolution: {integrity: sha512-FafZwr1SnJEHlyPJeT5IRvsEjhvm3+dCNdy1OsAJZVrIKT0jNi3sFLbKRqVrHnnXEVI1rNljFGVEcuNG4PMuJw==}
     dev: false
 
   /@types/prop-types@15.7.11:
