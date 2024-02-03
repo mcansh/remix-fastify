@@ -15,7 +15,7 @@
     "validate": "run-p lint format publint typecheck",
     "typecheck": "pnpm run --recursive typecheck",
     "changeset": "changeset",
-    "changeset:version": "changeset version && node ./scripts/remove-prerelease-changelogs.js && pnpm install --lockfile-only",
+    "changeset:version": "changeset version && node ./scripts/remove-prerelease-changelogs.js && pnpm install --lockfile-only && node ./scripts/post-changeset.js",
     "changeset:release": "pnpm run build && changeset publish"
   },
   "dependencies": {
@@ -23,6 +23,7 @@
     "@manypkg/get-packages": "^2.2.0",
     "@npmcli/package-json": "^5.0.0",
     "@remix-run/eslint-config": "2.5.1",
+    "@types/npmcli__package-json": "^4.0.3",
     "chalk": "^5.3.0",
     "eslint": "^8.56.0",
     "eslint-plugin-prefer-let": "^3.0.1",
