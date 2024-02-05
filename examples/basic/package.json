@@ -24,7 +24,7 @@
   "devDependencies": {
     "@remix-run/dev": "*",
     "@remix-run/eslint-config": "*",
-    "@types/react": "^18.2.48",
+    "@types/react": "^18.2.53",
     "@types/react-dom": "^18.2.18",
     "eslint": "^8.56.0",
     "chokidar": "^3.5.3",
