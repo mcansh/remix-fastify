@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@fastify/early-hints": "^1.0.1",
-    "@fastify/static": "^6.12.0",
+    "@fastify/static": "^7.0.0",
     "@mcansh/remix-fastify": "workspace:*",
     "@remix-run/node": "*",
     "@remix-run/react": "*",
@@ -28,7 +28,7 @@
   "devDependencies": {
     "@remix-run/dev": "*",
     "@remix-run/eslint-config": "*",
-    "@types/react": "^18.2.48",
+    "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.18",
     "chokidar": "^3.5.3",
     "cross-env": "^7.0.3",
