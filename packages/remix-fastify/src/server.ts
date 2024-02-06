@@ -99,6 +99,7 @@ export function createRemixRequest<Server extends HttpServer>(
   reply: FastifyReply<Server>,
 ): Request {
   let url = getUrl(request);
+
   // Abort action/loaders once we can no longer write a response
   let controller = new AbortController();
   reply.raw.on("close", () => controller.abort());
