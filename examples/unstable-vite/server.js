@@ -17,12 +17,15 @@ let vite =
 
 let app = fastify();
 
-let noopContentParser = (_request, payload, done) => {
-  done(null, payload);
-};
-
-app.addContentTypeParser("application/json", noopContentParser);
-app.addContentTypeParser("*", noopContentParser);
+// by default fastify parses application/json and text/plain payloads, we want remix to parse all content types
+// if you have routes outside of Remix that need to parse JSON, you can parse the json in the route handler
+// see the following gist for an example https://gist.github.com/mcansh/80b4cefa4075e157326273de52e50ae1
+app.addContentTypeParser(
+  ["application/json", "text/plain", "*"],
+  (_request, payload, done) => {
+    done(null, payload);
+  },
+);
 
 // handle asset requests
 if (vite) {
