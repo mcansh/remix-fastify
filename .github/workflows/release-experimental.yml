@@ -30,6 +30,9 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+permissions:
+  id-token: write
+
 env:
   CI: true
 
