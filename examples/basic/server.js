@@ -9,6 +9,7 @@ import { fastifyStatic } from "@fastify/static";
 
 installGlobals();
 
+let __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 let BUILD_PATH = "./build/index.js";
 let VERSION_PATH = "./build/version.txt";
 
@@ -40,7 +41,7 @@ app.addContentTypeParser("*", noopContentParser);
 await app.register(fastifyEarlyHints, { warn: true });
 
 await app.register(fastifyStatic, {
-  root: path.join(import.meta.dirname, "public"),
+  root: path.join(__dirname, "public"),
   prefix: "/",
   wildcard: false,
   cacheControl: true,
@@ -52,7 +53,7 @@ await app.register(fastifyStatic, {
 });
 
 await app.register(fastifyStatic, {
-  root: path.join(import.meta.dirname, "public", "build"),
+  root: path.join(__dirname, "public", "build"),
   prefix: "/build",
   wildcard: true,
   decorateReply: false,
