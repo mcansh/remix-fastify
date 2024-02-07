@@ -37,7 +37,7 @@ jobs:
   release:
     name: 🧑‍🔬 Experimental Release
     if: |
-      github.repository == 'remix-run/remix' &&
+      github.repository == 'mcansh/remix-fastify' &&
       contains(github.ref, 'experimental')
     runs-on: ubuntu-latest
     steps:
