@@ -12,20 +12,10 @@ let vite =
   process.env.NODE_ENV === "production"
     ? undefined
     : await import("vite").then((m) =>
-        m.createServer({ server: { middlewareMode: true } })
+        m.createServer({ server: { middlewareMode: true } }),
       );
 
 let app = fastify();
-
-// by default fastify parses application/json and text/plain payloads, we want remix to parse all content types
-// if you have routes outside of Remix that need to parse JSON, you can parse the json in the route handler
-// see the following gist for an example https://gist.github.com/mcansh/80b4cefa4075e157326273de52e50ae1
-app.addContentTypeParser(
-  ["application/json", "text/plain", "*"],
-  (_request, payload, done) => {
-    done(null, payload);
-  },
-);
 
 let __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
@@ -62,19 +52,27 @@ await app.register(fastifyStatic, {
   lastModified: true,
 });
 
-// handle SSR requests
-app.all("*", async (request, reply) => {
-  try {
-    let handler = createRequestHandler({
-      build: vite
-        ? () => vite?.ssrLoadModule("virtual:remix/server-build")
-        : await import("./build/server/index.js"),
-    });
-    return handler(request, reply);
-  } catch (error) {
-    console.error(error);
-    return reply.status(500).send(error);
-  }
+app.register(async function (childServer) {
+  childServer.removeAllContentTypeParsers();
+  // allow all content types
+  childServer.addContentTypeParser("*", (_request, payload, done) => {
+    done(null, payload);
+  });
+
+  // handle SSR requests
+  childServer.all("*", async (request, reply) => {
+    try {
+      let handler = createRequestHandler({
+        build: vite
+          ? () => vite?.ssrLoadModule("virtual:remix/server-build")
+          : await import("./build/server/index.js"),
+      });
+      return handler(request, reply);
+    } catch (error) {
+      console.error(error);
+      return reply.status(500).send(error);
+    }
+  });
 });
 
 let port = Number(process.env.PORT) || 3000;
