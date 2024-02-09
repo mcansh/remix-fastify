@@ -53,6 +53,7 @@ export async function action({ request }: DataFunctionArgs) {
 
 export default function Index() {
   let data = useLoaderData<typeof loader>();
+  const [echo, setEcho] = React.useState<string | null>(null);
 
   return (
     <div>
@@ -76,11 +77,46 @@ export default function Index() {
             </Await>
           </React.Suspense>
         </label>
-        <button type="submit">Submit</button>
-        <button name="reset" type="submit">
+        <button name="intent" value="submit" type="submit">
+          Submit
+        </button>
+        <button name="intent" value="reset" type="submit">
           Reset
         </button>
       </Form>
+
+      <form
+        method="post"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: 4,
+          marginTop: 16,
+          flexDirection: "column",
+        }}
+        action="/api/echo"
+        onSubmit={async (event) => {
+          event.preventDefault();
+          let formData = new FormData(event.currentTarget);
+          let response = await fetch(event.currentTarget.action, {
+            method: event.currentTarget.method,
+            body: JSON.stringify(Object.fromEntries(formData.entries())),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          let json = await response.json();
+          setEcho(json);
+        }}
+      >
+        <div>
+          <input type="text" name="text" />
+          <button name="intent" type="submit" value="echo">
+            Echo
+          </button>
+        </div>
+        {echo ? <pre>{JSON.stringify(echo)}</pre> : null}
+      </form>
     </div>
   );
 }
