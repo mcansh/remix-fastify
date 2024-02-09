@@ -31,16 +31,6 @@ if (process.env.NODE_ENV === "development") {
 
 let app = fastify();
 
-// by default fastify parses application/json and text/plain payloads, we want remix to parse all content types
-// if you have routes outside of Remix that need to parse JSON, you can parse the json in the route handler
-// see the following gist for an example https://gist.github.com/mcansh/80b4cefa4075e157326273de52e50ae1
-app.addContentTypeParser(
-  ["application/json", "text/plain", "*"],
-  (_request, payload, done) => {
-    done(null, payload);
-  },
-);
-
 await app.register(fastifyEarlyHints, { warn: true });
 
 await app.register(fastifyStatic, {
@@ -69,13 +59,31 @@ await app.register(fastifyStatic, {
   lastModified: true,
 });
 
-app.all("*", async (request, reply) => {
-  if (process.env.NODE_ENV === "production") {
-    let links = getEarlyHintLinks(request, initialBuild);
-    await reply.writeEarlyHintsLinks(links);
-  }
+app.post("/api/echo", async (request, reply) => {
+  reply.send(request.body);
+});
 
-  return handler(request, reply);
+app.register(async function (childServer) {
+  childServer.removeAllContentTypeParsers();
+
+  // allow all content types
+  childServer.addContentTypeParser("*", (_request, payload, done) => {
+    done(null, payload);
+  });
+
+  // handle SSR requests
+  childServer.all("*", async (request, reply) => {
+    if (process.env.NODE_ENV === "production") {
+      let links = getEarlyHintLinks(request, initialBuild);
+      await reply.writeEarlyHintsLinks(links);
+    }
+    try {
+      return handler(request, reply);
+    } catch (error) {
+      console.error(error);
+      return reply.status(500).send(error);
+    }
+  });
 });
 
 let port = process.env.PORT ? Number(process.env.PORT) || 3000 : 3000;
