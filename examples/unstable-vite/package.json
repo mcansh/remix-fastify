@@ -11,12 +11,12 @@
   },
   "dependencies": {
     "@fastify/middie": "^8.3.0",
-    "@fastify/static": "^7.0.0",
+    "@fastify/static": "^7.0.1",
     "@mcansh/remix-fastify": "3.2.2",
     "@remix-run/node": "*",
     "@remix-run/react": "*",
     "cross-env": "^7.0.3",
-    "fastify": "^4.26.0",
+    "fastify": "^4.26.1",
     "isbot": "^4.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

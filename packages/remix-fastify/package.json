@@ -59,7 +59,7 @@
     "@remix-run/node": "2.6.0",
     "@types/node": "^20.11.16",
     "@typescript/lib-dom": "npm:@types/web@^0.0.138",
-    "fastify": "^4.26.0",
+    "fastify": "^4.26.1",
     "node-mocks-http": "^1.14.1",
     "typescript": "^5.3.3"
   },
