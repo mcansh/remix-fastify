@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import cp from "node:child_process";
 import { glob } from "glob";
 import PackageJson from "@npmcli/package-json";
 
