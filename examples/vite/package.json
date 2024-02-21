@@ -7,6 +7,7 @@
     "build": "vite build && vite build --ssr",
     "dev": "cross-env NODE_ENV=development node --watch-path ./server.js --enable-source-maps ./server.js",
     "lint": "eslint --ignore-path .gitignore --no-error-on-unmatched-pattern --cache --cache-location node_modules/.cache/eslint --fix .",
+    "format": "prettier --ignore-path .gitignore --ignore-unknown --cache --cache-location node_modules/.cache/prettiercache --write .",
     "start": "cross-env NODE_ENV=production node --enable-source-maps ./server.js",
     "typecheck": "tsc"
   },
@@ -28,6 +29,7 @@
     "@types/react": "^18.2.57",
     "@types/react-dom": "^18.2.19",
     "eslint": "^8.56.0",
+    "prettier": "^3.2.5",
     "typescript": "^5.3.3",
     "vite": "^5.1.3",
     "vite-tsconfig-paths": "^4.3.1"
