@@ -6,28 +6,31 @@
   "scripts": {
     "build": "remix build",
     "dev": "remix dev --manual -c \"node --watch-path ./server.js --enable-source-maps ./server.js\"",
+    "lint": "eslint --ignore-path .gitignore --no-error-on-unmatched-pattern --cache --cache-location node_modules/.cache/eslint --fix .",
+    "format": "prettier --ignore-path .gitignore --ignore-unknown --cache --cache-location node_modules/.cache/prettiercache --write .",
     "start": "node --enable-source-maps ./server.js",
     "typecheck": "tsc"
   },
   "dependencies": {
     "@fastify/early-hints": "^1.0.1",
-    "@fastify/static": "^7.0.0",
+    "@fastify/static": "^7.0.1",
     "@mcansh/remix-fastify": "3.2.2",
     "@remix-run/css-bundle": "*",
     "@remix-run/node": "*",
     "@remix-run/react": "*",
-    "fastify": "^4.26.0",
-    "isbot": "^4.4.0",
+    "fastify": "^4.26.1",
+    "isbot": "^5.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@remix-run/dev": "*",
     "@remix-run/eslint-config": "*",
-    "@types/react": "^18.2.55",
-    "@types/react-dom": "^18.2.18",
+    "@types/react": "^18.2.57",
+    "@types/react-dom": "^18.2.19",
+    "chokidar": "^3.6.0",
     "eslint": "^8.56.0",
-    "chokidar": "^3.5.3",
+    "prettier": "^3.2.5",
     "typescript": "^5.3.3"
   },
   "engines": {
