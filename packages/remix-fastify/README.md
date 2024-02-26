@@ -10,7 +10,7 @@ These are the currently available templates that you can get jump started with:
   ```sh
   npx create-remix@latest --template https://github.com/mcansh/remix-fastify/tree/main/examples/basic
   ```
-- The _unstable_ vite remix plugin
+- Using the Remix Vite plugin
   ```sh
   npx create-remix@latest --template https://github.com/mcansh/remix-fastify/tree/main/examples/vite
   ```
