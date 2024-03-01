@@ -65,7 +65,7 @@ app.register(async function (childServer) {
       let handler = createRequestHandler({
         build: vite
           ? () => vite?.ssrLoadModule("virtual:remix/server-build")
-          : await import("./build/server/index.js"),
+          : () => import("./build/server/index.js"),
       });
       return handler(request, reply);
     } catch (error) {
