@@ -2,7 +2,6 @@ import type { LinksFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
@@ -10,7 +9,7 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 
-import stylesUrl from "./styles/global.css";
+import stylesUrl from "./styles/global.css?url";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
@@ -34,22 +33,10 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <div
-          style={{
-            background: "red",
-            border: "2px solid black",
-            color: "white",
-            padding: "1rem",
-            width: "max-content",
-            margin: "0 auto",
-          }}
-        >
-          {data.message}
-        </div>
+        <div className="root-message">{data.message}</div>
         <Outlet />
         <Scripts />
         <ScrollRestoration />
-        <LiveReload />
       </body>
     </html>
   );

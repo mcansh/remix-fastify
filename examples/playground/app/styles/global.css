@@ -18,3 +18,15 @@ body {
     "Helvetica Neue",
     sans-serif;
 }
+
+.root-message {
+  background-color: red;
+  border: 2px solid black;
+  color: white;
+  padding: 1rem;
+  width: max-content;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
