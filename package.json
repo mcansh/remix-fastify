@@ -25,7 +25,7 @@
     "@remix-run/eslint-config": "2.7.0",
     "@types/npmcli__package-json": "^4.0.4",
     "chalk": "^5.3.0",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "eslint-plugin-prefer-let": "^3.0.1",
     "glob": "^10.3.10",
     "jsonfile": "^6.1.0",
