@@ -38,19 +38,19 @@ if (vite) {
     serveDotFiles: true,
     lastModified: true,
   });
-}
 
-await app.register(fastifyStatic, {
-  root: path.join(__dirname, "build", "client"),
-  prefix: "/",
-  wildcard: false,
-  cacheControl: true,
-  dotfiles: "allow",
-  etag: true,
-  maxAge: "1h",
-  serveDotFiles: true,
-  lastModified: true,
-});
+  await app.register(fastifyStatic, {
+    root: path.join(__dirname, "build", "client"),
+    prefix: "/",
+    wildcard: false,
+    cacheControl: true,
+    dotfiles: "allow",
+    etag: true,
+    maxAge: "1h",
+    serveDotFiles: true,
+    lastModified: true,
+  });
+}
 
 app.register(async function (childServer) {
   childServer.removeAllContentTypeParsers();
