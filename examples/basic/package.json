@@ -27,7 +27,7 @@
     "@remix-run/dev": "*",
     "@remix-run/eslint-config": "*",
     "@types/react": "^18.2.61",
-    "@types/react-dom": "^18.2.19",
+    "@types/react-dom": "^18.2.21",
     "chokidar": "^3.6.0",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
