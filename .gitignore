@@ -9,4 +9,4 @@ yalc.lock
 
 *.tgz
 # added during build
-./packages/*/LICENSE
+/packages/*/LICENSE
