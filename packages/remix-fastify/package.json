@@ -44,7 +44,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "prepublishOnly": "npm run build && cp ../../LICENSE LICENSE && publint",
+    "prepublishOnly": "npm run build && cp ../../LICENSE LICENSE && publint && attw $(npm pack)",
     "typecheck": "tsc",
     "dev": "tsup --watch",
     "build": "tsup",

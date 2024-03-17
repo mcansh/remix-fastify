@@ -10,6 +10,7 @@
     "test": "pnpm --filter ./packages/* test --if-present",
     "publish": "./scripts/publish.js",
     "publint": "publint ./packages/**",
+    "attw": "attw ./packages/** --pack",
     "lint": "eslint --ignore-path .gitignore --no-error-on-unmatched-pattern --cache --cache-location node_modules/.cache/eslint --fix .",
     "format": "prettier --ignore-path .gitignore --ignore-unknown --cache --cache-location node_modules/.cache/prettiercache --write .",
     "validate": "run-p lint format publint typecheck",
@@ -19,6 +20,7 @@
     "changeset:release": "pnpm run build && changeset publish"
   },
   "dependencies": {
+    "@arethetypeswrong/cli": "^0.15.1",
     "@changesets/cli": "^2.27.1",
     "@manypkg/get-packages": "^2.2.0",
     "@npmcli/package-json": "^5.0.0",
@@ -45,5 +47,6 @@
     "patchedDependencies": {
       "@changesets/assemble-release-plan@6.0.0": "patches/@changesets__assemble-release-plan@6.0.0.patch"
     }
-  }
+  },
+  "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2"
 }
