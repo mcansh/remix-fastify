@@ -41,6 +41,9 @@ jobs:
       - name: 🏗 Build
         run: npm run build
 
+      - name: 📦 Package
+        run: npm run attw
+
   test:
     name: "${{ matrix.os }} | ${{ matrix.node }}"
     strategy:
