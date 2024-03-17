@@ -6,3 +6,7 @@ yalc.lock
 
 /examples/**/build
 /examples/**/public/build
+
+*.tgz
+# added during build
+./packages/*/LICENSE
