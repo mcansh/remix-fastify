@@ -57,7 +57,7 @@
   "devDependencies": {
     "@fastify/early-hints": "^1.0.1",
     "@remix-run/node": "2.8.1",
-    "@types/node": "^20.11.28",
+    "@types/node": "^20.12.5",
     "@typescript/lib-dom": "npm:@types/web@^0.0.142",
     "fastify": "^4.26.2",
     "node-mocks-http": "^1.14.1",
