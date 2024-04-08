@@ -29,7 +29,7 @@
     "@fastify/middie": "^8.3.0",
     "@remix-run/dev": "*",
     "@remix-run/eslint-config": "*",
-    "@types/react": "^18.2.66",
+    "@types/react": "^18.2.74",
     "@types/react-dom": "^18.2.22",
     "chokidar": "^3.6.0",
     "cross-env": "^7.0.3",
