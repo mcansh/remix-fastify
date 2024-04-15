@@ -3,12 +3,12 @@ import { json } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 
 export async function action({ request }: DataFunctionArgs) {
-  let data = await request.json();
+  const data = await request.json();
   return json(data);
 }
 
-export default function () {
-  let fetcher = useFetcher<typeof action>();
+export default function Component() {
+  const fetcher = useFetcher<typeof action>();
 
   return (
     <>

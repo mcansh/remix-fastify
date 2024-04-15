@@ -11,7 +11,7 @@ import {
 
 import stylesUrl from "./styles/global.css?url";
 
-export let links: LinksFunction = () => {
+export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
 };
 
@@ -20,7 +20,7 @@ export function loader() {
 }
 
 export default function App() {
-  let data = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
   return (
     <html lang="en">
       <head>

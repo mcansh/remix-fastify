@@ -7,10 +7,10 @@ import { sessionStorage } from "~/session.server";
 import { sleep } from "~/sleep";
 
 export async function loader({ request, context }: DataFunctionArgs) {
-  let cookie = request.headers.get("Cookie");
-  let session = await sessionStorage.getSession(cookie);
+  const cookie = request.headers.get("Cookie");
+  const session = await sessionStorage.getSession(cookie);
 
-  let loadContextName = context.loadContextName;
+  const loadContextName = context.loadContextName;
 
   if (typeof loadContextName !== "string") {
     throw new Error("loadContextName must be a string");
@@ -23,11 +23,11 @@ export async function loader({ request, context }: DataFunctionArgs) {
 }
 
 export async function action({ request }: DataFunctionArgs) {
-  let cookie = request.headers.get("Cookie");
-  let session = await sessionStorage.getSession(cookie);
-  let formData = await request.formData();
+  const cookie = request.headers.get("Cookie");
+  const session = await sessionStorage.getSession(cookie);
+  const formData = await request.formData();
 
-  let name = formData.get("name");
+  const name = formData.get("name");
 
   if (formData.has("reset")) {
     session.unset("name");
@@ -52,7 +52,7 @@ export async function action({ request }: DataFunctionArgs) {
 }
 
 export default function Index() {
-  let data = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
   const [echo, setEcho] = React.useState<string | null>(null);
 
   return (
@@ -69,7 +69,7 @@ export default function Index() {
         method="post"
         style={{ display: "flex", justifyContent: "center", gap: 4 }}
       >
-        <label>
+        <label htmlFor="name">
           <span>Name: </span>
           <React.Suspense fallback={<FallbackNameInput />}>
             <Await resolve={data.name}>
@@ -97,15 +97,15 @@ export default function Index() {
         action="/api/echo"
         onSubmit={async (event) => {
           event.preventDefault();
-          let formData = new FormData(event.currentTarget);
-          let response = await fetch(event.currentTarget.action, {
+          const formData = new FormData(event.currentTarget);
+          const response = await fetch(event.currentTarget.action, {
             method: event.currentTarget.method,
             body: JSON.stringify(Object.fromEntries(formData.entries())),
             headers: {
               "Content-Type": "application/json",
             },
           });
-          let json = await response.json();
+          const json = await response.json();
           setEcho(json);
         }}
       >
@@ -122,7 +122,7 @@ export default function Index() {
 }
 
 function NameInput() {
-  let resolvedName = useAsyncValue();
+  const resolvedName = useAsyncValue();
   let defaultValue: string | undefined = undefined;
   if (typeof resolvedName === "string") {
     if (resolvedName !== "Anonymous") {
@@ -134,6 +134,7 @@ function NameInput() {
     <input
       type="text"
       name="name"
+      id="name"
       placeholder="Enter your name"
       defaultValue={defaultValue}
     />

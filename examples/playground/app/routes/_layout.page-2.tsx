@@ -12,13 +12,13 @@ export function loader() {
 }
 
 export default function Page2() {
-  let data = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
 
   return (
     <div>
       <h2>Page 2</h2>
       <h3>{data.message}</h3>
-      <p>Here's some content for page 2.</p>
+      <p>Here&apos;s some content for page 2.</p>
 
       <div style={{ marginTop: 10 }}>
         <React.Suspense fallback={<div>Loading...</div>}>
