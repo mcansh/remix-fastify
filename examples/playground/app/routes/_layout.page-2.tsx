@@ -2,6 +2,8 @@ import * as React from "react";
 import { defer } from "@remix-run/node";
 import { Await, useLoaderData } from "@remix-run/react";
 
+// silence the warning due to root eslint config and example eslint config conflicts
+// eslint-disable-next-line import/no-unresolved
 import { sleep } from "~/sleep";
 
 export function loader() {

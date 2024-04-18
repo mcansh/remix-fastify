@@ -7,7 +7,7 @@ if (!sessionSecret) {
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
-    name: "RJ_session",
+    name: "__session",
     secrets: [sessionSecret],
     sameSite: "lax",
     path: "/",
@@ -15,3 +15,7 @@ export const sessionStorage = createCookieSessionStorage({
     httpOnly: true,
   },
 });
+
+export function getSession(request: Request) {
+  return sessionStorage.getSession(request.headers.get("Cookie"));
+}

@@ -1,14 +1,16 @@
 import * as React from "react";
-import type { DataFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { defer, redirect } from "@remix-run/node";
 import { Await, Form, useAsyncValue, useLoaderData } from "@remix-run/react";
 
-import { sessionStorage } from "~/session.server";
+// silence the warning due to root eslint config and example eslint config conflicts
+// eslint-disable-next-line import/no-unresolved
+import { sessionStorage, getSession } from "~/session.server";
+// eslint-disable-next-line import/no-unresolved
 import { sleep } from "~/sleep";
 
-export async function loader({ request, context }: DataFunctionArgs) {
-  const cookie = request.headers.get("Cookie");
-  const session = await sessionStorage.getSession(cookie);
+export async function loader({ request, context }: LoaderFunctionArgs) {
+  const session = await getSession(request);
 
   const loadContextName = context.loadContextName;
 
@@ -22,9 +24,8 @@ export async function loader({ request, context }: DataFunctionArgs) {
   });
 }
 
-export async function action({ request }: DataFunctionArgs) {
-  const cookie = request.headers.get("Cookie");
-  const session = await sessionStorage.getSession(cookie);
+export async function action({ request }: ActionFunctionArgs) {
+  const session = await getSession(request);
   const formData = await request.formData();
 
   const name = formData.get("name");
@@ -32,9 +33,7 @@ export async function action({ request }: DataFunctionArgs) {
   if (formData.has("reset")) {
     session.unset("name");
     return redirect("/", {
-      headers: {
-        "Set-Cookie": await sessionStorage.commitSession(session),
-      },
+      headers: { "Set-Cookie": await sessionStorage.commitSession(session) },
     });
   }
 
