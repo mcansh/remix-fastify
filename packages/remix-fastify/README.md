@@ -18,7 +18,7 @@ These are the currently available templates that you can get jump started with:
 ## Manual Installation
 
 ```sh
-npm i @mcansh/remix-fastify fastify @fastify/early-hints @fastify/static
-yarn add @mcansh/remix-fastify fastify @fastify/early-hints @fastify/static
-pnpm i @mcansh/remix-fastify fastify @fastify/early-hints @fastify/static
+npm i @mcansh/remix-fastify fastify @fastify/static
+yarn add @mcansh/remix-fastify fastify @fastify/static
+pnpm i @mcansh/remix-fastify fastify @fastify/static
 ```

@@ -2,9 +2,8 @@ import fs from "node:fs";
 import url from "node:url";
 import path from "node:path";
 import fastify from "fastify";
-import { createRequestHandler, getEarlyHintLinks } from "@mcansh/remix-fastify";
+import { createRequestHandler } from "@mcansh/remix-fastify";
 import { broadcastDevReady, installGlobals } from "@remix-run/node";
-import { fastifyEarlyHints } from "@fastify/early-hints";
 import { fastifyStatic } from "@fastify/static";
 
 installGlobals();
@@ -30,8 +29,6 @@ if (process.env.NODE_ENV === "development") {
 }
 
 let app = fastify();
-
-await app.register(fastifyEarlyHints, { warn: true });
 
 await app.register(fastifyStatic, {
   root: path.join(__dirname, "public"),
@@ -69,11 +66,6 @@ app.register(async function (childServer) {
 
   // handle SSR requests
   childServer.all("*", async (request, reply) => {
-    if (process.env.NODE_ENV === "production") {
-      let links = getEarlyHintLinks(request, initialBuild);
-      await reply.writeEarlyHintsLinks(links);
-    }
-
     try {
       return handler(request, reply);
     } catch (error) {
@@ -114,9 +106,6 @@ async function createDevRequestHandler(initialBuild, getLoadContext) {
     .on("change", handleServerUpdate);
 
   return async (request, reply) => {
-    let links = getEarlyHintLinks(request, build);
-    await reply.writeEarlyHintsLinks(links);
-
     return createRequestHandler({
       build: await build,
       getLoadContext,
