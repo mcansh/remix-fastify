@@ -52,12 +52,12 @@
     "validate": "run-p typecheck test"
   },
   "dependencies": {
+    "@fastify/middie": "^8.3.0",
     "@fastify/static": "^7.0.1",
     "@remix-run/router": "^1.15.3",
     "fastify-plugin": "^4.5.1"
   },
   "devDependencies": {
-    "@fastify/middie": "^8.3.0",
     "@remix-run/node": "2.8.1",
     "@types/node": "^20.11.28",
     "@typescript/lib-dom": "npm:@types/web@^0.0.142",
@@ -67,15 +67,11 @@
     "vite": "^5.1.6"
   },
   "peerDependencies": {
-    "@fastify/middie": "^8.0.0",
     "@remix-run/node": "^2.0.0",
     "fastify": "^3.29.0 || ^4.0.0",
     "vite": "^5.0.0"
   },
   "peerDependenciesMeta": {
-    "@fastify/middie": {
-      "optional": true
-    },
     "vite": {
       "optional": true
     }
