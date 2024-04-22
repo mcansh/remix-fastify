@@ -9,6 +9,9 @@ services:
         - ./packages/*
     buildCommand: corepack enable && pnpm i && pnpm run build
     startCommand: cd examples/playground && pnpm run start
+    envVars:
+      - key: SESSION_SECRET
+        generateValue: true
 
   - type: web
     plan: free
