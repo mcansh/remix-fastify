@@ -84,7 +84,6 @@ export let remixFastify = fp<RemixFastifyOptions>(
 
       // normalize the base path to include a leading slash and no trailing slash
       let basepath = basename.replace(/\/$/, "");
-      console.log({ basepath });
 
       // handle SSR requests
       childServer.all(`${basepath}/*`, async (request, reply) => {
