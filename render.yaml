@@ -6,7 +6,7 @@ services:
       paths:
         - ./examples/playground
         - ./packages/*
-    buildCommand: pnpm i && pnpm run build
+    buildCommand: corepack enable && pnpm i && pnpm run build
     startCommand: cd examples/playground && pnpm run start
 
   - type: web
@@ -16,7 +16,7 @@ services:
       paths:
         - ./examples/basic
         - ./packages/*
-    buildCommand: pnpm i && pnpm run build
+    buildCommand: corepack enable && pnpm i && pnpm run build
     startCommand: cd examples/basic && pnpm run start
 
   - type: web
@@ -26,5 +26,5 @@ services:
       paths:
         - ./examples/vite
         - ./packages/*
-    buildCommand: pnpm i && pnpm run build
+    buildCommand: corepack enable && pnpm i && pnpm run build
     startCommand: cd examples/vite && pnpm run start
