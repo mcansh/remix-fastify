@@ -6,13 +6,15 @@ Use [Remix](https://remix.run) with [Fastify](http://fastify.io)
 
 These are the currently available templates that you can get jump started with:
 
-- The basic example using `remix dev`
-  ```sh
-  npx create-remix@latest --template https://github.com/mcansh/remix-fastify/tree/main/examples/basic
-  ```
-- Using the Remix Vite plugin
+- Using the Remix Vite plugin (recommended)
+
   ```sh
   npx create-remix@latest --template https://github.com/mcansh/remix-fastify/tree/main/examples/vite
+  ```
+
+- The basic example using the old Remix compiler
+  ```sh
+  npx create-remix@latest --template https://github.com/mcansh/remix-fastify/tree/main/examples/basic
   ```
 
 ## Manual Installation
