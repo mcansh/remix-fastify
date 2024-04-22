@@ -1,0 +1,30 @@
+services:
+  - type: web
+    runtime: node
+    name: remix-fastify-playground
+    buildFilter:
+      paths:
+        - ./examples/playground
+        - ./packages/*
+    buildCommand: pnpm i && pnpm run build
+    startCommand: cd examples/playground && pnpm run start
+
+  - type: web
+    runtime: node
+    name: remix-fastify-basic
+    buildFilter:
+      paths:
+        - ./examples/basic
+        - ./packages/*
+    buildCommand: pnpm i && pnpm run build
+    startCommand: cd examples/basic && pnpm run start
+
+  - type: web
+    runtime: node
+    name: remix-fastify-vite
+    buildFilter:
+      paths:
+        - ./examples/vite
+        - ./packages/*
+    buildCommand: pnpm i && pnpm run build
+    startCommand: cd examples/vite && pnpm run start
