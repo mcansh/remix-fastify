@@ -6,7 +6,7 @@ services:
     buildFilter:
       paths:
         - ./examples/playground
-        - ./packages/*
+        - ./packages/**/*
     buildCommand: corepack enable && pnpm i && pnpm run build
     startCommand: cd examples/playground && pnpm run start
     envVars:
@@ -20,7 +20,7 @@ services:
     buildFilter:
       paths:
         - ./examples/basic
-        - ./packages/*
+        - ./packages/**/*
     buildCommand: corepack enable && pnpm i && pnpm run build
     startCommand: cd examples/basic && pnpm run start
 
@@ -31,6 +31,6 @@ services:
     buildFilter:
       paths:
         - ./examples/vite
-        - ./packages/*
+        - ./packages/**/*
     buildCommand: corepack enable && pnpm i && pnpm run build
     startCommand: cd examples/vite && pnpm run start
