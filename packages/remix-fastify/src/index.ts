@@ -1,3 +1,4 @@
 export type { GetLoadContextFunction, RequestHandler } from "./server";
 export { createRequestHandler } from "./server";
-export { getEarlyHintLinks } from "./utils";
+export { remixFastify } from "./plugin";
+export type { RemixFastifyOptions } from "./plugin";

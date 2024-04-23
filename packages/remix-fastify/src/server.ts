@@ -16,7 +16,7 @@ import {
   writeReadableStreamToWritable,
 } from "@remix-run/node";
 
-type HttpServer =
+export type HttpServer =
   | http.Server
   | https.Server
   | http2.Http2Server
@@ -50,7 +50,7 @@ export function createRequestHandler<Server extends HttpServer>({
   getLoadContext,
   mode = process.env.NODE_ENV,
 }: {
-  build: ServerBuild;
+  build: ServerBuild | (() => Promise<ServerBuild>);
   getLoadContext?: GetLoadContextFunction<Server>;
   mode?: string;
 }): RequestHandler<Server> {

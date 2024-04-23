@@ -27,28 +27,31 @@ export async function action({ request }: DataFunctionArgs) {
   let session = await sessionStorage.getSession(cookie);
   let formData = await request.formData();
 
-  let name = formData.get("name");
+  let intent = formData.get("intent");
 
-  if (formData.has("reset")) {
-    session.unset("name");
-    return redirect("/", {
-      headers: {
-        "Set-Cookie": await sessionStorage.commitSession(session),
-      },
-    });
+  switch (intent) {
+    case "submit": {
+      let name = formData.get("name");
+      if (!name) throw new Response("Name is required", { status: 400 });
+      session.set("name", name);
+      return redirect("/", {
+        headers: {
+          "Set-Cookie": await sessionStorage.commitSession(session),
+        },
+      });
+    }
+    case "reset": {
+      session.unset("name");
+      return redirect("/", {
+        headers: {
+          "Set-Cookie": await sessionStorage.commitSession(session),
+        },
+      });
+    }
+    default: {
+      throw new Response("Invalid intent", { status: 400 });
+    }
   }
-
-  if (!name) {
-    throw new Response("Name is required", { status: 400 });
-  }
-
-  session.set("name", name);
-
-  return redirect("/", {
-    headers: {
-      "Set-Cookie": await sessionStorage.commitSession(session),
-    },
-  });
 }
 
 export default function Index() {
