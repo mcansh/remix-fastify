@@ -1,11 +1,11 @@
 services:
   - type: web
+    name: remix-fastify
     plan: free
     runtime: node
-    name: remix-fastify
+    rootDir: examples/playground
     buildFilter:
       paths:
-        - ./examples/playground
         - ./packages/**/*
     buildCommand: corepack enable && pnpm i && pnpm run build
     startCommand: cd examples/playground && pnpm run start
@@ -14,23 +14,23 @@ services:
         generateValue: true
 
   - type: web
+    name: remix-fastify-basic
     plan: free
     runtime: node
-    name: remix-fastify-basic
+    rootDir: examples/basic
     buildFilter:
       paths:
-        - ./examples/basic
         - ./packages/**/*
     buildCommand: corepack enable && pnpm i && pnpm run build
     startCommand: cd examples/basic && pnpm run start
 
   - type: web
+    name: remix-fastify-vite
     plan: free
     runtime: node
-    name: remix-fastify-vite
+    rootDir: examples/vite
     buildFilter:
       paths:
-        - ./examples/vite
         - ./packages/**/*
     buildCommand: corepack enable && pnpm i && pnpm run build
     startCommand: cd examples/vite && pnpm run start
