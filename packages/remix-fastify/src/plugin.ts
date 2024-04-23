@@ -76,6 +76,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
     }
 
     fastify.register(async function (childServer) {
+      // remove the default content type parsers
       childServer.removeAllContentTypeParsers();
       // allow all content types
       childServer.addContentTypeParser("*", (_request, payload, done) => {
@@ -108,7 +109,8 @@ export let remixFastify = fp<RemixFastifyOptions>(
     });
   },
   {
-    name: "remix-fastify",
+    // replaced with the package name during build
+    name: process.env.__PACKAGE_NAME__,
     fastify: "4.x",
   },
 );
