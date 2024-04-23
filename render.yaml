@@ -8,7 +8,7 @@ services:
       paths:
         - ./packages/**/*
     buildCommand: corepack enable && pnpm i && pnpm run build
-    startCommand: cd examples/playground && pnpm run start
+    startCommand: pnpm run start
     envVars:
       - key: SESSION_SECRET
         generateValue: true
@@ -22,7 +22,7 @@ services:
       paths:
         - ./packages/**/*
     buildCommand: corepack enable && pnpm i && pnpm run build
-    startCommand: cd examples/basic && pnpm run start
+    startCommand: pnpm run start
 
   - type: web
     name: remix-fastify-vite
@@ -33,4 +33,4 @@ services:
       paths:
         - ./packages/**/*
     buildCommand: corepack enable && pnpm i && pnpm run build
-    startCommand: cd examples/vite && pnpm run start
+    startCommand: pnpm run start
