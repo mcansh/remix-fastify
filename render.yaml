@@ -3,12 +3,12 @@ services:
     name: remix-fastify
     plan: free
     runtime: node
-    rootDir: examples/playground
     buildFilter:
       paths:
+        - ./examples/playground
         - ./packages/**/*
     buildCommand: corepack enable && pnpm i && pnpm run build
-    startCommand: pnpm run start
+    startCommand: cd examples/playground && pnpm run start
     envVars:
       - key: SESSION_SECRET
         generateValue: true
@@ -17,20 +17,20 @@ services:
     name: remix-fastify-basic
     plan: free
     runtime: node
-    rootDir: examples/basic
     buildFilter:
       paths:
+        - ./examples/basic
         - ./packages/**/*
     buildCommand: corepack enable && pnpm i && pnpm run build
-    startCommand: pnpm run start
+    startCommand: cd examples/basic && pnpm run start
 
   - type: web
     name: remix-fastify-vite
     plan: free
     runtime: node
-    rootDir: examples/vite
     buildFilter:
       paths:
+        - ./examples/vite
         - ./packages/**/*
     buildCommand: corepack enable && pnpm i && pnpm run build
-    startCommand: pnpm run start
+    startCommand: cd examples/vite && pnpm run start
