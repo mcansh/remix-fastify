@@ -6,6 +6,10 @@ installGlobals();
 
 let app = fastify();
 
+app.post("/api/echo", async (request, reply) => {
+  reply.send(request.body);
+});
+
 await app.register(remixFastify, {
   getLoadContext(request, reply) {
     return { loadContextName: "Logan" };
