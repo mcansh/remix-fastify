@@ -39,7 +39,6 @@ export let remixFastify = fp<RemixFastifyOptions>(
       getLoadContext,
       mode = process.env.NODE_ENV,
     },
-    done,
   ) => {
     let cwd = process.env.REMIX_ROOT ?? process.cwd();
 
@@ -124,8 +123,6 @@ export let remixFastify = fp<RemixFastifyOptions>(
           return reply.status(500).send(error);
         }
       });
-
-      done();
     });
   },
   {
