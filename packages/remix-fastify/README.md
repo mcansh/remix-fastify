@@ -16,11 +16,3 @@ These are the currently available templates that you can get jump started with:
   ```sh
   npx create-remix@latest --template https://github.com/mcansh/remix-fastify/tree/main/examples/basic
   ```
-
-## Manual Installation
-
-```sh
-npm i @mcansh/remix-fastify fastify @fastify/static
-yarn add @mcansh/remix-fastify fastify @fastify/static
-pnpm i @mcansh/remix-fastify fastify @fastify/static
-```
