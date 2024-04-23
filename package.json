@@ -20,28 +20,28 @@
     "changeset:release": "pnpm run build && changeset publish"
   },
   "dependencies": {
-    "@arethetypeswrong/cli": "^0.15.1",
+    "@arethetypeswrong/cli": "^0.15.3",
     "@changesets/cli": "^2.27.1",
     "@manypkg/get-packages": "^2.2.1",
-    "@npmcli/package-json": "^5.0.0",
-    "@remix-run/eslint-config": "2.8.1",
+    "@npmcli/package-json": "^5.1.0",
+    "@remix-run/eslint-config": "2.9.0",
     "@types/npmcli__package-json": "^4.0.4",
     "chalk": "^5.3.0",
     "eslint": "^8.57.0",
     "eslint-plugin-prefer-let": "^3.0.1",
-    "glob": "^10.3.10",
+    "glob": "^10.3.12",
     "jsonfile": "^6.1.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.2.5",
-    "prettier-plugin-tailwindcss": "^0.5.12",
+    "prettier-plugin-tailwindcss": "^0.5.14",
     "prompt-confirm": "^2.0.4",
     "publint": "^0.2.7",
     "react": "^18.2.0",
     "semver": "^7.6.0",
     "tsup": "^8.0.2",
-    "type-fest": "^4.12.0",
-    "typescript": "^5.4.2",
-    "vitest": "^1.4.0"
+    "type-fest": "^4.16.0",
+    "typescript": "^5.4.5",
+    "vitest": "^1.5.0"
   },
   "pnpm": {
     "patchedDependencies": {
