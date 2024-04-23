@@ -6,7 +6,11 @@ installGlobals();
 
 let app = fastify();
 
-await app.register(remixFastify);
+await app.register(remixFastify, {
+  getLoadContext(request, reply) {
+    return { loadContextName: "Logan" };
+  },
+});
 
 let port = Number(process.env.PORT) || 3000;
 

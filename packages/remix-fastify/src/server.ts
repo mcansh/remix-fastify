@@ -16,7 +16,7 @@ import {
   writeReadableStreamToWritable,
 } from "@remix-run/node";
 
-type HttpServer =
+export type HttpServer =
   | http.Server
   | https.Server
   | http2.Http2Server

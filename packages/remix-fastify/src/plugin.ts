@@ -4,6 +4,7 @@ import type { ViteDevServer } from "vite";
 import fastifyStatic from "@fastify/static";
 
 import { createRequestHandler } from "./server";
+import type { HttpServer, GetLoadContextFunction } from "./server";
 
 export type RemixFastifyOptions = {
   /**
@@ -18,15 +19,33 @@ export type RemixFastifyOptions = {
    * @default "build"
    */
   buildDirectory?: string;
+  /**
+   * A function that returns the value to use as `context` in route `loader` and
+   * `action` functions.
+   *
+   * You can think of this as an escape hatch that allows you to pass
+   * environment/platform-specific values through to your loader/action.
+   */
+  getLoadContext?: GetLoadContextFunction<HttpServer>;
+  mode?: string;
 };
 
 export let remixFastify = fp<RemixFastifyOptions>(
-  async (fastify, { basename = "/", buildDirectory = "build" }, done) => {
+  async (
+    fastify,
+    {
+      basename = "/",
+      buildDirectory = "build",
+      getLoadContext,
+      mode = process.env.NODE_ENV,
+    },
+    done,
+  ) => {
     let cwd = process.env.REMIX_ROOT ?? process.cwd();
 
     let vite: ViteDevServer | undefined;
 
-    if (process.env.NODE_ENV !== "production") {
+    if (mode !== "production") {
       vite = await import("vite").then((mod) => {
         return mod.createServer({ server: { middlewareMode: true } });
       });
@@ -89,6 +108,8 @@ export let remixFastify = fp<RemixFastifyOptions>(
       childServer.all(basepath, async (request, reply) => {
         try {
           let handler = createRequestHandler({
+            mode,
+            getLoadContext,
             build: vite
               ? () => {
                   if (!vite) throw new Error("we lost vite!");
