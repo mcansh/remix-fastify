@@ -2,7 +2,7 @@ services:
   - type: web
     plan: free
     runtime: node
-    name: remix-fastify-playground
+    name: remix-fastify
     buildFilter:
       paths:
         - ./examples/playground
