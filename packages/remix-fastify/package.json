@@ -53,18 +53,18 @@
   },
   "dependencies": {
     "@fastify/middie": "^8.3.0",
-    "@fastify/static": "^7.0.1",
-    "@remix-run/router": "^1.15.3",
+    "@fastify/static": "^7.0.3",
+    "@remix-run/router": "^1.16.0",
     "fastify-plugin": "^4.5.1"
   },
   "devDependencies": {
-    "@remix-run/node": "2.8.1",
-    "@types/node": "^20.11.28",
-    "@typescript/lib-dom": "npm:@types/web@^0.0.142",
+    "@remix-run/node": "^2.9.0",
+    "@types/node": "^20.12.7",
+    "@typescript/lib-dom": "npm:@types/web@^0.0.143",
     "fastify": "^4.26.2",
     "node-mocks-http": "^1.14.1",
-    "typescript": "^5.4.2",
-    "vite": "^5.1.6"
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10"
   },
   "peerDependencies": {
     "@remix-run/node": "^2.0.0",
