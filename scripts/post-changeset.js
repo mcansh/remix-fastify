@@ -8,7 +8,7 @@ let __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 let rootDir = path.resolve(__dirname, "..");
 
 // 1. remove CHANGELOG.md from './examples/*'
-let changelogs = glob.sync("./examples/*/CHANGELOG.md", {
+let changelogs = await glob("./examples/*/CHANGELOG.md", {
   absolute: true,
   cwd: rootDir,
 });
@@ -20,7 +20,7 @@ for (let file of changelogs) {
 }
 
 // 2. remove `version: null` from './examples/*/package.json'
-let packageJsons = glob.sync("./examples/*/package.json", {
+let packageJsons = await glob("./examples/*/package.json", {
   absolute: true,
   cwd: rootDir,
 });
