@@ -22,6 +22,16 @@
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
+    "./plugin": {
+      "types": {
+        "require": "./dist/plugin.d.cts",
+        "import": "./dist/plugin.d.ts",
+        "default": "./dist/plugin.d.cts"
+      },
+      "require": "./dist/plugin.cjs",
+      "import": "./dist/plugin.js",
+      "default": "./dist/plugin.cjs"
+    },
     ".": {
       "types": {
         "require": "./dist/index.d.cts",
@@ -52,12 +62,12 @@
     "validate": "run-p typecheck test"
   },
   "dependencies": {
-    "@fastify/middie": "^8.3.0",
-    "@fastify/static": "^7.0.3",
     "@remix-run/router": "^1.16.0",
     "fastify-plugin": "^4.5.1"
   },
   "devDependencies": {
+    "@fastify/middie": "^8.3.0",
+    "@fastify/static": "^7.0.3",
     "@remix-run/node": "^2.9.0",
     "@types/node": "^20.12.7",
     "@typescript/lib-dom": "npm:@types/web@^0.0.143",
@@ -67,11 +77,19 @@
     "vite": "^5.2.10"
   },
   "peerDependencies": {
+    "@fastify/middie": "^8.0.0",
+    "@fastify/static": "^7.0.0",
     "@remix-run/node": "^2.0.0",
     "fastify": "^3.29.0 || ^4.0.0",
     "vite": "^5.0.0"
   },
   "peerDependenciesMeta": {
+    "@fastify/middie": {
+      "optional": true
+    },
+    "@fastify/static": {
+      "optional": true
+    },
     "vite": {
       "optional": true
     }

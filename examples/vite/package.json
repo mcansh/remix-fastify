@@ -12,7 +12,6 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@fastify/middie": "^8.3.0",
     "@fastify/static": "^7.0.3",
     "@mcansh/remix-fastify": "3.3.0",
     "@remix-run/node": "*",
@@ -24,6 +23,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@fastify/middie": "^8.3.0",
     "@remix-run/dev": "*",
     "@remix-run/eslint-config": "*",
     "@types/react": "^18.2.79",
