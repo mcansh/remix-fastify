@@ -50,8 +50,6 @@ export let remixFastify = fp<RemixFastifyOptions>(
       });
     }
 
-    console.log({ mode, vite });
-
     let resolvedBuildDirectory = path.resolve(cwd, buildDirectory);
 
     let SERVER_BUILD = path.join(resolvedBuildDirectory, "server", "index.js");
