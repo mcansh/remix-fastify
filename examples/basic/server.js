@@ -33,6 +33,43 @@ let app = fastify();
 let PUBLIC_DIR = path.join(__dirname, "public");
 let BUILD_DIR = path.join(PUBLIC_DIR, "build");
 
+let ASSET_CACHE_CONTROL = "public, max-age=31536000, immutable";
+let DEFAULT_CACHE_CONTROL = "public, max-age=3600";
+
+function setHeaders(res, filepath) {
+  let isAsset = filepath.startsWith(BUILD_DIR);
+  res.setHeader(
+    "cache-control",
+    isAsset ? ASSET_CACHE_CONTROL : DEFAULT_CACHE_CONTROL,
+  );
+}
+
+if (process.env.NODE_ENV === "production") {
+  await app.register(fastifyStatic, {
+    root: PUBLIC_DIR,
+    prefix: "/",
+    wildcard: false,
+    cacheControl: true,
+    dotfiles: "allow",
+    etag: true,
+    serveDotFiles: true,
+    lastModified: true,
+    setHeaders,
+  });
+} else
+  await app.register(fastifyStatic, {
+    root: BUILD_DIR,
+    prefix: "/build",
+    wildcard: true,
+    decorateReply: false,
+    cacheControl: true,
+    dotfiles: "allow",
+    etag: true,
+    serveDotFiles: true,
+    lastModified: true,
+    setHeaders,
+  });
+
 await app.register(fastifyStatic, {
   root: PUBLIC_DIR,
   prefix: "/",
@@ -42,13 +79,7 @@ await app.register(fastifyStatic, {
   etag: true,
   serveDotFiles: true,
   lastModified: true,
-  setHeaders(res, filepath) {
-    let isAsset = filepath.startsWith(BUILD_DIR);
-    res.setHeader(
-      "cache-control",
-      isAsset ? "public, max-age=31536000, immutable" : "public, max-age=3600",
-    );
-  },
+  setHeaders,
 });
 
 app.register(async function (childServer) {
