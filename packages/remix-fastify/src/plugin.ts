@@ -2,6 +2,7 @@ import path from "node:path";
 import fp from "fastify-plugin";
 import type { ViteDevServer } from "vite";
 import fastifyStatic from "@fastify/static";
+import { cacheHeader } from "pretty-cache-header";
 
 import { createRequestHandler } from "./server";
 import type { HttpServer, GetLoadContextFunction } from "./server";
@@ -28,6 +29,20 @@ export type RemixFastifyOptions = {
    */
   getLoadContext?: GetLoadContextFunction<HttpServer>;
   mode?: string;
+  /**
+   * The cache control options to use for build assets in production.
+   * uses `pretty-cache-header` under the hood.
+   * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
+   * @default { public: true, maxAge: '1 year', immutable: true }
+   */
+  assetCacheControl?: Parameters<typeof cacheHeader>[0];
+  /**
+   * The cache control options to use for other assets in production.
+   * uses `pretty-cache-header` under the hood.
+   * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
+   * @default { public: true, maxAge: '1 hour' }
+   */
+  defaultCacheControl?: Parameters<typeof cacheHeader>[0];
 };
 
 export let remixFastify = fp<RemixFastifyOptions>(
@@ -38,6 +53,8 @@ export let remixFastify = fp<RemixFastifyOptions>(
       buildDirectory = "build",
       getLoadContext,
       mode = process.env.NODE_ENV,
+      assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
+      defaultCacheControl = { public: true, maxAge: "1 hour" },
     },
   ) => {
     let cwd = process.env.REMIX_ROOT ?? process.cwd();
@@ -52,11 +69,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
 
     let resolvedBuildDirectory = path.resolve(cwd, buildDirectory);
 
-    let serverBuildPath = path.join(
-      resolvedBuildDirectory,
-      "server",
-      "index.js",
-    );
+    let SERVER_BUILD = path.join(resolvedBuildDirectory, "server", "index.js");
 
     // handle asset requests
     if (vite) {
@@ -64,36 +77,30 @@ export let remixFastify = fp<RemixFastifyOptions>(
       await fastify.register(middie);
       fastify.use(vite.middlewares);
     } else {
-      await Promise.all([
-        fastify.register(fastifyStatic, {
-          root: path.join(resolvedBuildDirectory, "client", "assets"),
-          prefix: "/assets",
-          wildcard: true,
-          cacheControl: true,
-          dotfiles: "allow",
-          etag: true,
-          maxAge: "1y",
-          immutable: true,
-          serveDotFiles: true,
-          lastModified: true,
-        }),
-
-        fastify.register(fastifyStatic, {
-          root: path.join(resolvedBuildDirectory, "client"),
-          prefix: "/",
-          wildcard: false,
-          cacheControl: true,
-          dotfiles: "allow",
-          etag: true,
-          maxAge: "1h",
-          serveDotFiles: true,
-          lastModified: true,
-          decorateReply: false,
-        }),
-      ]);
+      let BUILD_DIR = path.join(resolvedBuildDirectory, "client");
+      let ASSET_DIR = path.join(BUILD_DIR, "assets");
+      await fastify.register(fastifyStatic, {
+        root: BUILD_DIR,
+        prefix: "/",
+        wildcard: false,
+        cacheControl: true,
+        dotfiles: "allow",
+        etag: true,
+        serveDotFiles: true,
+        lastModified: true,
+        setHeaders(res, filepath) {
+          let isAsset = filepath.startsWith(ASSET_DIR);
+          res.setHeader(
+            "cache-control",
+            isAsset
+              ? cacheHeader(assetCacheControl)
+              : cacheHeader(defaultCacheControl),
+          );
+        },
+      });
     }
 
-    fastify.register(async function (childServer) {
+    fastify.register(async function createRemixRequestHandler(childServer) {
       // remove the default content type parsers
       childServer.removeAllContentTypeParsers();
       // allow all content types
@@ -114,7 +121,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
                   if (!vite) throw new Error("we lost vite!");
                   return vite.ssrLoadModule("virtual:remix/server-build");
                 }
-              : () => import(serverBuildPath),
+              : () => import(SERVER_BUILD),
           });
 
           return handler(request, reply);
