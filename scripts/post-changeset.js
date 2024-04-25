@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import fsp from "node:fs/promises";
 import path from "node:path";
 import url from "node:url";
 import { glob } from "glob";
@@ -14,9 +14,9 @@ let changelogs = glob.sync("./examples/*/CHANGELOG.md", {
 });
 
 for (let file of changelogs) {
-  fs.rmSync(file);
+  await fsp.rm(file);
   let dir = path.dirname(file);
-  console.log(`🚫 Removing changelog from ${dir}`);
+  console.log(`🚫 Removed changelog from ${dir}`);
 }
 
 // 2. remove `version: null` from './examples/*/package.json'
