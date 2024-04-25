@@ -14,7 +14,7 @@
   "dependencies": {
     "@fastify/middie": "^8.3.0",
     "@fastify/static": "^7.0.3",
-    "@mcansh/remix-fastify": "3.3.0",
+    "@mcansh/remix-fastify": "workspace:*",
     "@remix-run/node": "*",
     "@remix-run/react": "*",
     "cross-env": "^7.0.3",
