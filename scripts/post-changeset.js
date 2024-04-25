@@ -8,14 +8,22 @@ let __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 let rootDir = path.resolve(__dirname, "..");
 
 // 1. remove CHANGELOG.md from './examples/*'
-let changelogs = glob.sync("./examples/*/CHANGELOG.md", { cwd: rootDir });
+let changelogs = glob.sync("./examples/*/CHANGELOG.md", {
+  absolute: true,
+  cwd: rootDir,
+});
 
 for (let file of changelogs) {
-  fs.rmSync(path.resolve(rootDir, file));
+  fs.rmSync(file);
+  let dir = path.dirname(file);
+  console.log(`🚫 Removing changelog from ${dir}`);
 }
 
 // 2. remove `version: null` from './examples/*/package.json'
-let packageJsons = glob.sync("./examples/*/package.json", { cwd: rootDir });
+let packageJsons = glob.sync("./examples/*/package.json", {
+  absolute: true,
+  cwd: rootDir,
+});
 
 for (let file of packageJsons) {
   let pkg = await PackageJson.load(path.dirname(file));
