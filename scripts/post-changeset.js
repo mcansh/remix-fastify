@@ -1,9 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
+import url from "node:url";
 import { glob } from "glob";
 import PackageJson from "@npmcli/package-json";
 
-let rootDir = path.resolve(import.meta.dirname, "..");
+let __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+let rootDir = path.resolve(__dirname, "..");
 
 // 1. remove CHANGELOG.md from './examples/*'
 let changelogs = glob.sync("./examples/*/CHANGELOG.md", { cwd: rootDir });
