@@ -31,6 +31,7 @@ if (process.env.NODE_ENV === "development") {
 let app = fastify();
 
 let PUBLIC_DIR = path.join(__dirname, "public");
+let BUILD_DIR = path.join(PUBLIC_DIR, "build");
 
 await app.register(fastifyStatic, {
   root: PUBLIC_DIR,
@@ -42,8 +43,7 @@ await app.register(fastifyStatic, {
   serveDotFiles: true,
   lastModified: true,
   setHeaders(res, filepath) {
-    let file = path.relative(PUBLIC_DIR, filepath);
-    let isAsset = file.startsWith("build/");
+    let isAsset = filepath.startsWith(BUILD_DIR);
     res.setHeader(
       "cache-control",
       isAsset ? "public, max-age=31536000, immutable" : "public, max-age=3600",

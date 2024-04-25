@@ -60,9 +60,10 @@ export let remixFastify = fp<RemixFastifyOptions>(
       await fastify.register(middie);
       fastify.use(vite.middlewares);
     } else {
-      let ASSET_DIR = path.join(resolvedBuildDirectory, "client");
+      let BUILD_DIR = path.join(resolvedBuildDirectory, "client");
+      let ASSET_DIR = path.join(BUILD_DIR, "assets");
       await fastify.register(fastifyStatic, {
-        root: ASSET_DIR,
+        root: BUILD_DIR,
         prefix: "/",
         wildcard: false,
         cacheControl: true,
@@ -71,8 +72,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
         serveDotFiles: true,
         lastModified: true,
         setHeaders(res, filepath) {
-          let file = path.relative(ASSET_DIR, filepath);
-          let isAsset = file.startsWith("assets/");
+          let isAsset = filepath.startsWith(ASSET_DIR);
           res.setHeader(
             "cache-control",
             isAsset
