@@ -2,6 +2,7 @@ import path from "node:path";
 import fp from "fastify-plugin";
 import type { ViteDevServer } from "vite";
 import fastifyStatic from "@fastify/static";
+import { cacheHeader } from "pretty-cache-header";
 
 import { createRequestHandler } from "./server";
 import type { HttpServer, GetLoadContextFunction } from "./server";
@@ -28,6 +29,20 @@ export type RemixFastifyOptions = {
    */
   getLoadContext?: GetLoadContextFunction<HttpServer>;
   mode?: string;
+  /**
+   * The cache control options to use for build assets in production.
+   * uses `pretty-cache-header` under the hood.
+   * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
+   * @default { public: true, maxAge: '1 year', immutable: true }
+   */
+  assetCacheControl?: Parameters<typeof cacheHeader>[0];
+  /**
+   * The cache control options to use for other assets in production.
+   * uses `pretty-cache-header` under the hood.
+   * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
+   * @default { public: true, maxAge: '1 hour' }
+   */
+  defaultCacheControl?: Parameters<typeof cacheHeader>[0];
 };
 
 export let remixFastify = fp<RemixFastifyOptions>(
@@ -38,6 +53,8 @@ export let remixFastify = fp<RemixFastifyOptions>(
       buildDirectory = "build",
       getLoadContext,
       mode = process.env.NODE_ENV,
+      assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
+      defaultCacheControl = { public: true, maxAge: "1 hour" },
     },
   ) => {
     let cwd = process.env.REMIX_ROOT ?? process.cwd();
@@ -76,8 +93,8 @@ export let remixFastify = fp<RemixFastifyOptions>(
           res.setHeader(
             "cache-control",
             isAsset
-              ? "public, max-age=31536000, immutable"
-              : "public, max-age=3600",
+              ? cacheHeader(assetCacheControl)
+              : cacheHeader(defaultCacheControl),
           );
         },
       });
