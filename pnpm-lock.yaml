@@ -97,6 +97,9 @@ importers:
       '@remix-run/react':
         specifier: '*'
         version: 2.9.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.4.5)
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       fastify:
         specifier: ^4.26.2
         version: 4.26.2
