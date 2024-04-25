@@ -1,5 +1,20 @@
 # @mcansh/remix-fastify
 
+## 3.3.1
+
+### Patch Changes
+
+- a7fcb6d: allows you to customize the cache control for both the files in the build directory as well as your public directory if you need to. using `pretty-cache-header` under the hood so things like `1y` or `30 days` will work
+
+  ```js
+  await app.register(remixFastify, {
+    assetCacheControl: {},
+    defaultCacheControl: {},
+  });
+  ```
+
+- a7fcb6d: fix cache control so that build assets are immutable and cached for 1 year instead of everything being cached for 1 hour
+
 ## 3.3.0
 
 ### Minor Changes
