@@ -30,30 +30,25 @@ if (process.env.NODE_ENV === "development") {
 
 let app = fastify();
 
+let PUBLIC_DIR = path.join(__dirname, "public");
+
 await app.register(fastifyStatic, {
-  root: path.join(__dirname, "public"),
+  root: PUBLIC_DIR,
   prefix: "/",
   wildcard: false,
   cacheControl: true,
   dotfiles: "allow",
   etag: true,
-  maxAge: "1h",
   serveDotFiles: true,
   lastModified: true,
-});
-
-await app.register(fastifyStatic, {
-  root: path.join(__dirname, "public", "build"),
-  prefix: "/build",
-  wildcard: true,
-  decorateReply: false,
-  cacheControl: true,
-  dotfiles: "allow",
-  etag: true,
-  maxAge: "1y",
-  immutable: true,
-  serveDotFiles: true,
-  lastModified: true,
+  setHeaders(res, filepath) {
+    let file = path.relative(PUBLIC_DIR, filepath);
+    let isAsset = file.startsWith("build/");
+    res.setHeader(
+      "cache-control",
+      isAsset ? "public, max-age=31536000, immutable" : "public, max-age=3600",
+    );
+  },
 });
 
 app.register(async function (childServer) {

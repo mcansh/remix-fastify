@@ -50,13 +50,11 @@ export let remixFastify = fp<RemixFastifyOptions>(
       });
     }
 
+    console.log({ mode, vite });
+
     let resolvedBuildDirectory = path.resolve(cwd, buildDirectory);
 
-    let serverBuildPath = path.join(
-      resolvedBuildDirectory,
-      "server",
-      "index.js",
-    );
+    let SERVER_BUILD = path.join(resolvedBuildDirectory, "server", "index.js");
 
     // handle asset requests
     if (vite) {
@@ -64,36 +62,30 @@ export let remixFastify = fp<RemixFastifyOptions>(
       await fastify.register(middie);
       fastify.use(vite.middlewares);
     } else {
-      await Promise.all([
-        fastify.register(fastifyStatic, {
-          root: path.join(resolvedBuildDirectory, "client", "assets"),
-          prefix: "/assets",
-          wildcard: true,
-          cacheControl: true,
-          dotfiles: "allow",
-          etag: true,
-          maxAge: "1y",
-          immutable: true,
-          serveDotFiles: true,
-          lastModified: true,
-        }),
-
-        fastify.register(fastifyStatic, {
-          root: path.join(resolvedBuildDirectory, "client"),
-          prefix: "/",
-          wildcard: false,
-          cacheControl: true,
-          dotfiles: "allow",
-          etag: true,
-          maxAge: "1h",
-          serveDotFiles: true,
-          lastModified: true,
-          decorateReply: false,
-        }),
-      ]);
+      let ASSET_DIR = path.join(resolvedBuildDirectory, "client");
+      await fastify.register(fastifyStatic, {
+        root: ASSET_DIR,
+        prefix: "/",
+        wildcard: false,
+        cacheControl: true,
+        dotfiles: "allow",
+        etag: true,
+        serveDotFiles: true,
+        lastModified: true,
+        setHeaders(res, filepath) {
+          let file = path.relative(ASSET_DIR, filepath);
+          let isAsset = file.startsWith("assets/");
+          res.setHeader(
+            "cache-control",
+            isAsset
+              ? "public, max-age=31536000, immutable"
+              : "public, max-age=3600",
+          );
+        },
+      });
     }
 
-    fastify.register(async function (childServer) {
+    fastify.register(async function createRemixRequestHandler(childServer) {
       // remove the default content type parsers
       childServer.removeAllContentTypeParsers();
       // allow all content types
@@ -114,7 +106,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
                   if (!vite) throw new Error("we lost vite!");
                   return vite.ssrLoadModule("virtual:remix/server-build");
                 }
-              : () => import(serverBuildPath),
+              : () => import(SERVER_BUILD),
           });
 
           return handler(request, reply);
