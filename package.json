@@ -17,7 +17,7 @@
     "typecheck": "pnpm run --recursive typecheck",
     "changeset": "changeset",
     "changeset:version": "changeset version && node ./scripts/remove-prerelease-changelogs.js && node ./scripts/post-changeset.js",
-    "changeset:release": "pnpm run build && changeset publish"
+    "changeset:release": "pnpm run build && pnpm publish -r"
   },
   "dependencies": {
     "@arethetypeswrong/cli": "^0.15.3",
