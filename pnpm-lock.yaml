@@ -86,8 +86,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       '@mcansh/remix-fastify':
-        specifier: 3.3.0
-        version: 3.3.0(@remix-run/node@2.9.0(typescript@5.4.5))(fastify@4.26.2)(vite@5.2.10(@types/node@20.12.7))
+        specifier: 3.3.1
+        version: 3.3.1(@remix-run/node@2.9.0(typescript@5.4.5))(fastify@4.26.2)(vite@5.2.10(@types/node@20.12.7))
       '@remix-run/css-bundle':
         specifier: '*'
         version: 2.9.0
@@ -104,8 +104,8 @@ importers:
         specifier: ^4.26.2
         version: 4.26.2
       isbot:
-        specifier: ^5.1.4
-        version: 5.1.4
+        specifier: ^5.1.6
+        version: 5.1.6
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -156,8 +156,8 @@ importers:
         specifier: ^4.26.2
         version: 4.26.2
       isbot:
-        specifier: ^5.1.4
-        version: 5.1.4
+        specifier: ^5.1.6
+        version: 5.1.6
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -217,8 +217,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       '@mcansh/remix-fastify':
-        specifier: 3.3.0
-        version: 3.3.0(@remix-run/node@2.9.0(typescript@5.4.5))(fastify@4.26.2)(vite@5.2.10(@types/node@20.12.7))
+        specifier: 3.3.1
+        version: 3.3.1(@remix-run/node@2.9.0(typescript@5.4.5))(fastify@4.26.2)(vite@5.2.10(@types/node@20.12.7))
       '@remix-run/node':
         specifier: '*'
         version: 2.9.0(typescript@5.4.5)
@@ -232,8 +232,8 @@ importers:
         specifier: ^4.26.2
         version: 4.26.2
       isbot:
-        specifier: ^5.1.4
-        version: 5.1.4
+        specifier: ^5.1.6
+        version: 5.1.6
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -1099,8 +1099,8 @@ packages:
     resolution: {integrity: sha512-SkAyKAByB9l93Slyg8AUHGuM2kjvWioUTCckT/03J09jYnfEzMO/wSXmEhnKGYs6qx9De8TH4yJCl0Y9lRgnyQ==}
     engines: {node: '>=14.18.0'}
 
-  '@mcansh/remix-fastify@3.3.0':
-    resolution: {integrity: sha512-BQbvjJZnJNe8mKOraRfDVD49yzbcXRjb8N7QH9rqjA9lEsOSHeyAKjQvB2XxjIkC9+Xh9lbtS59YFdU6nSSTMQ==}
+  '@mcansh/remix-fastify@3.3.1':
+    resolution: {integrity: sha512-pStGCBCImBFEraDD7r50ac4Gm+iIit9a1t1HJLLoD9J25mv1nJJomjsED5vpbt5UhxAjqqja+2yMXVVEUhjC6A==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@remix-run/node': ^2.0.0
@@ -3212,8 +3212,8 @@ packages:
   isarray@2.0.5:
     resolution: {integrity: sha512-xHjhDr3cNBK0BzdUJSPXZntQUx/mwMS5Rw4A7lPJ90XGAO6ISP/ePDNuo0vhqOZU+UD5JoodwCAAoZQd3FeAKw==}
 
-  isbot@5.1.4:
-    resolution: {integrity: sha512-KuqD/TAG/qtgCDnO8Ab1v5rGRK3jl9hb+2KfJt+roIPE7R4Hiq99VinR0qrLGFptdUNIkClYjuXEpVTGkD9V/A==}
+  isbot@5.1.6:
+    resolution: {integrity: sha512-Phksj1A0dBP/M/5xeOx0zWemKlZRQvrbNzI19/HWso0uodiOcR8YYCXN60IdzwbKsGj5LnxPkMy6FuBtgckMNw==}
     engines: {node: '>=18'}
 
   isexe@2.0.0:
@@ -6194,7 +6194,7 @@ snapshots:
       jju: 1.4.0
       read-yaml-file: 1.1.0
 
-  '@mcansh/remix-fastify@3.3.0(@remix-run/node@2.9.0(typescript@5.4.5))(fastify@4.26.2)(vite@5.2.10(@types/node@20.12.7))':
+  '@mcansh/remix-fastify@3.3.1(@remix-run/node@2.9.0(typescript@5.4.5))(fastify@4.26.2)(vite@5.2.10(@types/node@20.12.7))':
     dependencies:
       '@fastify/middie': 8.3.0
       '@fastify/static': 7.0.3
@@ -6202,6 +6202,7 @@ snapshots:
       '@remix-run/router': 1.16.0
       fastify: 4.26.2
       fastify-plugin: 4.5.1
+      pretty-cache-header: 1.0.0
     optionalDependencies:
       vite: 5.2.10(@types/node@20.12.7)
 
@@ -8867,7 +8868,7 @@ snapshots:
 
   isarray@2.0.5: {}
 
-  isbot@5.1.4: {}
+  isbot@5.1.6: {}
 
   isexe@2.0.0: {}
 
