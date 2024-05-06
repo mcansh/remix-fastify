@@ -86,8 +86,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       '@mcansh/remix-fastify':
-        specifier: 3.3.0
-        version: 3.3.0(@remix-run/node@2.9.0(typescript@5.4.5))(fastify@4.26.2)(vite@5.2.10(@types/node@20.12.7))
+        specifier: 3.3.1
+        version: 3.3.1(@remix-run/node@2.9.0(typescript@5.4.5))(fastify@4.26.2)(vite@5.2.11(@types/node@20.12.7))
       '@remix-run/css-bundle':
         specifier: '*'
         version: 2.9.0
@@ -115,7 +115,7 @@ importers:
     devDependencies:
       '@remix-run/dev':
         specifier: '*'
-        version: 2.9.0(@remix-run/react@2.9.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.4.5))(@types/node@20.12.7)(typescript@5.4.5)(vite@5.2.10(@types/node@20.12.7))
+        version: 2.9.0(@remix-run/react@2.9.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.4.5))(@types/node@20.12.7)(typescript@5.4.5)(vite@5.2.11(@types/node@20.12.7))
       '@remix-run/eslint-config':
         specifier: '*'
         version: 2.9.0(eslint@8.57.0)(react@18.2.0)(typescript@5.4.5)
@@ -170,7 +170,7 @@ importers:
         version: 8.3.0
       '@remix-run/dev':
         specifier: '*'
-        version: 2.9.0(@remix-run/react@2.9.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.4.5))(@types/node@20.12.7)(typescript@5.4.5)(vite@5.2.10(@types/node@20.12.7))
+        version: 2.9.0(@remix-run/react@2.9.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.4.5))(@types/node@20.12.7)(typescript@5.4.5)(vite@5.2.11(@types/node@20.12.7))
       '@remix-run/eslint-config':
         specifier: '*'
         version: 2.9.0(eslint@8.57.0)(react@18.2.0)(typescript@5.4.5)
@@ -202,11 +202,11 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.2.10
-        version: 5.2.10(@types/node@20.12.7)
+        specifier: ^5.2.11
+        version: 5.2.11(@types/node@20.12.7)
       vite-tsconfig-paths:
         specifier: ^4.3.2
-        version: 4.3.2(typescript@5.4.5)(vite@5.2.10(@types/node@20.12.7))
+        version: 4.3.2(typescript@5.4.5)(vite@5.2.11(@types/node@20.12.7))
 
   examples/vite:
     dependencies:
@@ -217,8 +217,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       '@mcansh/remix-fastify':
-        specifier: 3.3.0
-        version: 3.3.0(@remix-run/node@2.9.0(typescript@5.4.5))(fastify@4.26.2)(vite@5.2.10(@types/node@20.12.7))
+        specifier: 3.3.1
+        version: 3.3.1(@remix-run/node@2.9.0(typescript@5.4.5))(fastify@4.26.2)(vite@5.2.11(@types/node@20.12.7))
       '@remix-run/node':
         specifier: '*'
         version: 2.9.0(typescript@5.4.5)
@@ -243,7 +243,7 @@ importers:
     devDependencies:
       '@remix-run/dev':
         specifier: '*'
-        version: 2.9.0(@remix-run/react@2.9.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.4.5))(@types/node@20.12.7)(typescript@5.4.5)(vite@5.2.10(@types/node@20.12.7))
+        version: 2.9.0(@remix-run/react@2.9.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.4.5))(@types/node@20.12.7)(typescript@5.4.5)(vite@5.2.11(@types/node@20.12.7))
       '@remix-run/eslint-config':
         specifier: '*'
         version: 2.9.0(eslint@8.57.0)(react@18.2.0)(typescript@5.4.5)
@@ -263,11 +263,11 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.2.10
-        version: 5.2.10(@types/node@20.12.7)
+        specifier: ^5.2.11
+        version: 5.2.11(@types/node@20.12.7)
       vite-tsconfig-paths:
         specifier: ^4.3.2
-        version: 4.3.2(typescript@5.4.5)(vite@5.2.10(@types/node@20.12.7))
+        version: 4.3.2(typescript@5.4.5)(vite@5.2.11(@types/node@20.12.7))
 
   packages/remix-fastify:
     dependencies:
@@ -306,8 +306,8 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.2.10
-        version: 5.2.10(@types/node@20.12.7)
+        specifier: ^5.2.11
+        version: 5.2.11(@types/node@20.12.7)
 
 packages:
 
@@ -1099,8 +1099,8 @@ packages:
     resolution: {integrity: sha512-SkAyKAByB9l93Slyg8AUHGuM2kjvWioUTCckT/03J09jYnfEzMO/wSXmEhnKGYs6qx9De8TH4yJCl0Y9lRgnyQ==}
     engines: {node: '>=14.18.0'}
 
-  '@mcansh/remix-fastify@3.3.0':
-    resolution: {integrity: sha512-BQbvjJZnJNe8mKOraRfDVD49yzbcXRjb8N7QH9rqjA9lEsOSHeyAKjQvB2XxjIkC9+Xh9lbtS59YFdU6nSSTMQ==}
+  '@mcansh/remix-fastify@3.3.1':
+    resolution: {integrity: sha512-pStGCBCImBFEraDD7r50ac4Gm+iIit9a1t1HJLLoD9J25mv1nJJomjsED5vpbt5UhxAjqqja+2yMXVVEUhjC6A==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@remix-run/node': ^2.0.0
@@ -5210,8 +5210,8 @@ packages:
       vite:
         optional: true
 
-  vite@5.2.10:
-    resolution: {integrity: sha512-PAzgUZbP7msvQvqdSD+ErD5qGnSFiGOoWmV5yAKUEI0kdhjbH6nMWVyZQC/hSc4aXwc0oJ9aEdIiF9Oje0JFCw==}
+  vite@5.2.11:
+    resolution: {integrity: sha512-HndV31LWW05i1BLPMUCE1B9E9GFbOu1MbenhS58FuK6owSO5qHm7GiCotrNY1YE5rMeQSFBGmT5ZaLEjFizgiQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -6194,7 +6194,7 @@ snapshots:
       jju: 1.4.0
       read-yaml-file: 1.1.0
 
-  '@mcansh/remix-fastify@3.3.0(@remix-run/node@2.9.0(typescript@5.4.5))(fastify@4.26.2)(vite@5.2.10(@types/node@20.12.7))':
+  '@mcansh/remix-fastify@3.3.1(@remix-run/node@2.9.0(typescript@5.4.5))(fastify@4.26.2)(vite@5.2.11(@types/node@20.12.7))':
     dependencies:
       '@fastify/middie': 8.3.0
       '@fastify/static': 7.0.3
@@ -6202,8 +6202,9 @@ snapshots:
       '@remix-run/router': 1.16.0
       fastify: 4.26.2
       fastify-plugin: 4.5.1
+      pretty-cache-header: 1.0.0
     optionalDependencies:
-      vite: 5.2.10(@types/node@20.12.7)
+      vite: 5.2.11(@types/node@20.12.7)
 
   '@mdx-js/mdx@2.3.0':
     dependencies:
@@ -6310,7 +6311,7 @@ snapshots:
 
   '@remix-run/css-bundle@2.9.0': {}
 
-  '@remix-run/dev@2.9.0(@remix-run/react@2.9.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.4.5))(@types/node@20.12.7)(typescript@5.4.5)(vite@5.2.10(@types/node@20.12.7))':
+  '@remix-run/dev@2.9.0(@remix-run/react@2.9.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.4.5))(@types/node@20.12.7)(typescript@5.4.5)(vite@5.2.11(@types/node@20.12.7))':
     dependencies:
       '@babel/core': 7.24.0
       '@babel/generator': 7.23.6
@@ -6368,7 +6369,7 @@ snapshots:
       ws: 7.5.9
     optionalDependencies:
       typescript: 5.4.5
-      vite: 5.2.10(@types/node@20.12.7)
+      vite: 5.2.11(@types/node@20.12.7)
     transitivePeerDependencies:
       - '@types/node'
       - bluebird
@@ -6758,7 +6759,7 @@ snapshots:
       lodash: 4.17.21
       mlly: 1.6.1
       outdent: 0.8.0
-      vite: 5.2.10(@types/node@20.12.7)
+      vite: 5.2.11(@types/node@20.12.7)
       vite-node: 1.5.0(@types/node@20.12.7)
     transitivePeerDependencies:
       - '@types/node'
@@ -11140,7 +11141,7 @@ snapshots:
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.0
-      vite: 5.2.10(@types/node@20.12.7)
+      vite: 5.2.11(@types/node@20.12.7)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -11151,18 +11152,18 @@ snapshots:
       - supports-color
       - terser
 
-  vite-tsconfig-paths@4.3.2(typescript@5.4.5)(vite@5.2.10(@types/node@20.12.7)):
+  vite-tsconfig-paths@4.3.2(typescript@5.4.5)(vite@5.2.11(@types/node@20.12.7)):
     dependencies:
       debug: 4.3.4
       globrex: 0.1.2
       tsconfck: 3.0.3(typescript@5.4.5)
     optionalDependencies:
-      vite: 5.2.10(@types/node@20.12.7)
+      vite: 5.2.11(@types/node@20.12.7)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite@5.2.10(@types/node@20.12.7):
+  vite@5.2.11(@types/node@20.12.7):
     dependencies:
       esbuild: 0.20.2
       postcss: 8.4.38
@@ -11190,7 +11191,7 @@ snapshots:
       strip-literal: 2.0.0
       tinybench: 2.6.0
       tinypool: 0.8.4
-      vite: 5.2.10(@types/node@20.12.7)
+      vite: 5.2.11(@types/node@20.12.7)
       vite-node: 1.5.0(@types/node@20.12.7)
       why-is-node-running: 2.2.2
     optionalDependencies:
