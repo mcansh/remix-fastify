@@ -7,6 +7,8 @@ import { cacheHeader } from "pretty-cache-header";
 import { createRequestHandler } from "./server";
 import type { HttpServer, GetLoadContextFunction } from "./server";
 
+import { pathToFileURL } from 'url';
+
 export type RemixFastifyOptions = {
   /**
    * The base path for the Remix app.
@@ -120,8 +122,11 @@ export let remixFastify = fp<RemixFastifyOptions>(
               ? () => {
                   if (!vite) throw new Error("we lost vite!");
                   return vite.ssrLoadModule("virtual:remix/server-build");
-                }
-              : () => import(SERVER_BUILD),
+              }
+              : () => {
+                const serverBuildUrl = pathToFileURL(SERVER_BUILD).href;
+                return import(serverBuildUrl);
+              },
           });
 
           return handler(request, reply);
