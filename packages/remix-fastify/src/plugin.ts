@@ -57,9 +57,9 @@ export let remixFastify = fp<RemixFastifyOptions>(
       buildDirectory = "build",
       getLoadContext,
       mode = process.env.NODE_ENV,
+      viteOptions,
       assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
       defaultCacheControl = { public: true, maxAge: "1 hour" },
-      viteOptions,
     },
   ) => {
     let cwd = process.env.REMIX_ROOT ?? process.cwd();
