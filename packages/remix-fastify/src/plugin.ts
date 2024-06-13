@@ -1,4 +1,5 @@
 import path from "node:path";
+import url from 'node:url';
 import fp from "fastify-plugin";
 import type { ViteDevServer } from "vite";
 import fastifyStatic from "@fastify/static";
@@ -6,8 +7,6 @@ import { cacheHeader } from "pretty-cache-header";
 
 import { createRequestHandler } from "./server";
 import type { HttpServer, GetLoadContextFunction } from "./server";
-
-import url from 'node:url';
 
 export type RemixFastifyOptions = {
   /**
