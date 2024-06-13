@@ -7,7 +7,7 @@ import { cacheHeader } from "pretty-cache-header";
 import { createRequestHandler } from "./server";
 import type { HttpServer, GetLoadContextFunction } from "./server";
 
-import { pathToFileURL } from 'url';
+import url from 'node:url';
 
 export type RemixFastifyOptions = {
   /**
