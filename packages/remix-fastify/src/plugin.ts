@@ -124,7 +124,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
                   return vite.ssrLoadModule("virtual:remix/server-build");
               }
               : () => {
-                const serverBuildUrl = pathToFileURL(SERVER_BUILD).href;
+                const serverBuildUrl = url.pathToFileURL(SERVER_BUILD).href;
                 return import(serverBuildUrl);
               },
           });
