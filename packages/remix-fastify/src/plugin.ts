@@ -1,4 +1,5 @@
 import path from "node:path";
+import url from 'node:url';
 import fp from "fastify-plugin";
 import type { ViteDevServer } from "vite";
 import fastifyStatic from "@fastify/static";
@@ -70,6 +71,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
     let resolvedBuildDirectory = path.resolve(cwd, buildDirectory);
 
     let SERVER_BUILD = path.join(resolvedBuildDirectory, "server", "index.js");
+    let SERVER_BUILD_URL = url.pathToFileURL(SERVER_BUILD).href;
 
     // handle asset requests
     if (vite) {
@@ -120,8 +122,8 @@ export let remixFastify = fp<RemixFastifyOptions>(
               ? () => {
                   if (!vite) throw new Error("we lost vite!");
                   return vite.ssrLoadModule("virtual:remix/server-build");
-                }
-              : () => import(SERVER_BUILD),
+              }
+              : () => import(SERVER_BUILD_URL),
           });
 
           return handler(request, reply);
