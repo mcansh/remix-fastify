@@ -12,7 +12,7 @@
     "publint": "publint ./packages/**",
     "attw": "attw ./packages/** --pack",
     "lint": "eslint --ignore-path .gitignore --no-error-on-unmatched-pattern --cache --cache-location node_modules/.cache/eslint --fix .",
-    "format": "prettier --ignore-path .gitignore --ignore-unknown --cache --cache-location node_modules/.cache/prettiercache --write .",
+    "format": "prettier --ignore-path .prettierignore --ignore-path .gitignore --ignore-unknown --cache --cache-location node_modules/.cache/prettiercache --write .",
     "validate": "run-p lint format publint typecheck",
     "typecheck": "pnpm run --recursive typecheck",
     "changeset": "changeset",

@@ -10,3 +10,4 @@ yalc.lock
 *.tgz
 # added during build
 /packages/*/LICENSE
+.tsup
