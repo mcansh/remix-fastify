@@ -1,7 +1,7 @@
 import path from "node:path";
 import url from "node:url";
 import fp from "fastify-plugin";
-import type { ViteDevServer } from "vite";
+import type { InlineConfig, ViteDevServer } from "vite";
 import fastifyStatic from "@fastify/static";
 import { cacheHeader } from "pretty-cache-header";
 
@@ -31,6 +31,10 @@ export type RemixFastifyOptions = {
   getLoadContext?: GetLoadContextFunction<HttpServer>;
   mode?: string;
   /**
+   * Options to pass to the Vite server in development.
+   */
+  viteOptions?: InlineConfig;
+  /**
    * The cache control options to use for build assets in production.
    * uses `pretty-cache-header` under the hood.
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
@@ -54,6 +58,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
       buildDirectory = "build",
       getLoadContext,
       mode = process.env.NODE_ENV,
+      viteOptions,
       assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
       defaultCacheControl = { public: true, maxAge: "1 hour" },
     },
@@ -64,7 +69,13 @@ export let remixFastify = fp<RemixFastifyOptions>(
 
     if (mode !== "production") {
       vite = await import("vite").then((mod) => {
-        return mod.createServer({ server: { middlewareMode: true } });
+        return mod.createServer({
+          ...viteOptions,
+          server: {
+            ...viteOptions?.server,
+            middlewareMode: true,
+          },
+        });
       });
     }
 
