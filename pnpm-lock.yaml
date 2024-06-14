@@ -4,7 +4,7 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-pnpmfileChecksum: znmcr2w7v6orfeadlj5d4hlxni
+pnpmfileChecksum: rsfhwskt7rbexv6tfpuu7xx3ey
 
 patchedDependencies:
   '@changesets/assemble-release-plan@6.0.0':
