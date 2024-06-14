@@ -46,6 +46,10 @@ jobs:
           echo "registry=https://registry.npmjs.org" >> ~/.npmrc
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
 
+      - name: 🟧 Set publish-branch to current branch
+        run: |
+          echo "publish-branch=$(git branch --show-current)" >> ~/.npmrc
+
         # This action has two responsibilities. The first time the workflow runs
         # (initial push to a `release-*` branch) it will create a new branch and
         # then open a PR with the related changes for the new version. After the

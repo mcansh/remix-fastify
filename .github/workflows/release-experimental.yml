@@ -69,5 +69,9 @@ jobs:
           echo "registry=https://registry.npmjs.org" >> ~/.npmrc
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
 
+      - name: 🟧 Set publish-branch to current branch
+        run: |
+          echo "publish-branch=$(git branch --show-current)" >> ~/.npmrc
+
       - name: 🚀 Publish
         run: npm run publish
