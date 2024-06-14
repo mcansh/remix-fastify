@@ -42,5 +42,6 @@
   },
   "engines": {
     "node": ">=18"
-  }
+  },
+  "version": "null-pre.0"
 }

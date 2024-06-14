@@ -4,5 +4,8 @@
   "initialVersions": {
     "@mcansh/remix-fastify": "3.3.1"
   },
-  "changesets": []
+  "changesets": [
+    "nice-bees-give",
+    "small-points-teach"
+  ]
 }
