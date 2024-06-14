@@ -1,6 +1,6 @@
 # @mcansh/remix-fastify
 
-## 3.3.2-pre.0
+## 3.3.2
 
 ### Patch Changes
 
