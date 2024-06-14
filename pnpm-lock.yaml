@@ -4,6 +4,8 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+pnpmfileChecksum: rsfhwskt7rbexv6tfpuu7xx3ey
+
 patchedDependencies:
   '@changesets/assemble-release-plan@6.0.0':
     hash: 77kuh66hvpglrcuvbigaufhgpm
@@ -86,8 +88,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       '@mcansh/remix-fastify':
-        specifier: 3.3.1
-        version: 3.3.1(@remix-run/node@2.9.0(typescript@5.4.5))(fastify@4.26.2)(vite@5.2.10(@types/node@20.12.7))
+        specifier: workspace:*
+        version: link:../../packages/remix-fastify
       '@remix-run/css-bundle':
         specifier: '*'
         version: 2.9.0
@@ -217,8 +219,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       '@mcansh/remix-fastify':
-        specifier: 3.3.1
-        version: 3.3.1(@remix-run/node@2.9.0(typescript@5.4.5))(fastify@4.26.2)(vite@5.2.10(@types/node@20.12.7))
+        specifier: workspace:*
+        version: link:../../packages/remix-fastify
       '@remix-run/node':
         specifier: '*'
         version: 2.9.0(typescript@5.4.5)
@@ -1120,17 +1122,6 @@ packages:
   '@manypkg/tools@1.1.0':
     resolution: {integrity: sha512-SkAyKAByB9l93Slyg8AUHGuM2kjvWioUTCckT/03J09jYnfEzMO/wSXmEhnKGYs6qx9De8TH4yJCl0Y9lRgnyQ==}
     engines: {node: '>=14.18.0'}
-
-  '@mcansh/remix-fastify@3.3.1':
-    resolution: {integrity: sha512-pStGCBCImBFEraDD7r50ac4Gm+iIit9a1t1HJLLoD9J25mv1nJJomjsED5vpbt5UhxAjqqja+2yMXVVEUhjC6A==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      '@remix-run/node': ^2.0.0
-      fastify: ^3.29.0 || ^4.0.0
-      vite: ^5.0.0
-    peerDependenciesMeta:
-      vite:
-        optional: true
 
   '@mdx-js/mdx@2.3.0':
     resolution: {integrity: sha512-jLuwRlz8DQfQNiUCJR50Y09CGPq3fLtmtUQfVrj79E0JWu3dvsVcxVIcfhR5h0iXu+/z++zDrYeiJqifRynJkA==}
@@ -6408,18 +6399,6 @@ snapshots:
       globby: 11.1.0
       jju: 1.4.0
       read-yaml-file: 1.1.0
-
-  '@mcansh/remix-fastify@3.3.1(@remix-run/node@2.9.0(typescript@5.4.5))(fastify@4.26.2)(vite@5.2.10(@types/node@20.12.7))':
-    dependencies:
-      '@fastify/middie': 8.3.0
-      '@fastify/static': 7.0.3
-      '@remix-run/node': 2.9.0(typescript@5.4.5)
-      '@remix-run/router': 1.16.0
-      fastify: 4.26.2
-      fastify-plugin: 4.5.1
-      pretty-cache-header: 1.0.0
-    optionalDependencies:
-      vite: 5.2.10(@types/node@20.12.7)
 
   '@mdx-js/mdx@2.3.0':
     dependencies:

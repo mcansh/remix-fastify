@@ -1,5 +1,12 @@
 # @mcansh/remix-fastify
 
+## 3.3.2-pre.0
+
+### Patch Changes
+
+- b83f33c: allows you to customize Vite dev server options. useful for reusing the fastify http(s) server for hmr in development
+- 822b878: use file urls for esm for windows compatibility
+
 ## 3.3.1
 
 ### Patch Changes

@@ -15,12 +15,13 @@ for (let file of changelogs) {
 }
 
 // 2. remove `version: null` from './examples/*/package.json'
-let packageJsons = glob.sync("./examples/*/package.json", { cwd: rootDir });
+let examplePackageJsons = glob.sync("./examples/*/package.json", {
+  cwd: rootDir,
+});
 
-for (let file of packageJsons) {
+for (let file of examplePackageJsons) {
   let pkg = await PackageJson.load(path.dirname(file));
-  if (!pkg.content.version) {
-    delete pkg.content.version;
-    await pkg.save();
-  }
+  delete pkg.content.version;
+  await pkg.save();
+  console.log(`✅ Removed version from ${file}`);
 }
