@@ -1,5 +1,13 @@
 import { NavLink, Outlet } from "@remix-run/react";
 
+let LINKS = [
+  { to: "/", label: "Home" },
+  { to: "/page-2", label: "Page 2" },
+  { to: "/fetcher", label: "Fetcher" },
+  { to: "loader-error", label: "Loader Error" },
+  { to: "route-error", label: "Route Error" },
+] as const;
+
 export default function Layout() {
   return (
     <div>
@@ -43,45 +51,21 @@ export default function Layout() {
               alignItems: "center",
             }}
           >
-            <li>
-              <NavLink
-                style={({ isActive }) => {
-                  return {
-                    color: isActive ? "red" : "blue",
-                    textDecoration: isActive ? "underline" : "none",
-                  };
-                }}
-                to="/"
-              >
-                Home
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                style={({ isActive }) => {
-                  return {
-                    color: isActive ? "red" : "blue",
-                    textDecoration: isActive ? "underline" : "none",
-                  };
-                }}
-                to="/page-2"
-              >
-                Page 2
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                style={({ isActive }) => {
-                  return {
-                    color: isActive ? "red" : "blue",
-                    textDecoration: isActive ? "underline" : "none",
-                  };
-                }}
-                to="/fetcher"
-              >
-                Fetcher
-              </NavLink>
-            </li>
+            {LINKS.map((link) => (
+              <li key={link.to}>
+                <NavLink
+                  to={link.to}
+                  style={({ isActive }) => {
+                    return {
+                      color: isActive ? "red" : "blue",
+                      textDecoration: isActive ? "underline" : "none",
+                    };
+                  }}
+                >
+                  {link.label}
+                </NavLink>
+              </li>
+            ))}
           </ul>
         </nav>
       </header>
