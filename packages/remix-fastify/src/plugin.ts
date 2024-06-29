@@ -84,6 +84,14 @@ export let remixFastify = fp<RemixFastifyOptions>(
     let SERVER_BUILD = path.join(resolvedBuildDirectory, "server", "index.js");
     let SERVER_BUILD_URL = url.pathToFileURL(SERVER_BUILD).href;
 
+    let remixHandler = createRequestHandler({
+      mode,
+      getLoadContext,
+      build: vite
+        ? () => vite.ssrLoadModule("virtual:remix/server-build")
+        : () => import(SERVER_BUILD_URL),
+    });
+
     // handle asset requests
     if (vite) {
       let middie = await import("@fastify/middie").then((mod) => mod.default);
@@ -124,25 +132,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
       let basepath = basename.replace(/\/+$/, "") + "/*";
 
       // handle SSR requests
-      childServer.all(basepath, async (request, reply) => {
-        try {
-          let handler = createRequestHandler({
-            mode,
-            getLoadContext,
-            build: vite
-              ? () => {
-                  if (!vite) throw new Error("we lost vite!");
-                  return vite.ssrLoadModule("virtual:remix/server-build");
-                }
-              : () => import(SERVER_BUILD_URL),
-          });
-
-          return handler(request, reply);
-        } catch (error) {
-          console.error(error);
-          return reply.status(500).send(error);
-        }
-      });
+      childServer.all(basepath, remixHandler);
     });
   },
   {
