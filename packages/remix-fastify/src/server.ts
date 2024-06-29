@@ -90,7 +90,8 @@ export function getUrl<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
 ): string {
   let origin = `${request.protocol}://${request.hostname}`;
-  let url = `${origin}${request.url}`;
+  // Use `request.originalUrl` so Remix is aware of the full path
+  let url = `${origin}${request.originalUrl}`;
   return url;
 }
 
@@ -132,8 +133,7 @@ export async function sendRemixResponse<Server extends HttpServer>(
     let stream = new PassThrough();
     reply.send(stream);
     await writeReadableStreamToWritable(nodeResponse.body, stream);
-  } else {
-    reply.send();
   }
+
   return reply;
 }
