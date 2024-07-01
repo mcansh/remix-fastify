@@ -273,6 +273,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.25
         version: 18.2.25
+      '@types/source-map-support':
+        specifier: ^0.5.10
+        version: 0.5.10
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -1723,6 +1726,9 @@ packages:
 
   '@types/serve-static@1.15.5':
     resolution: {integrity: sha512-PDRk21MnK70hja/YF8AHfC7yIsiQHn1rcXx7ijCFBX/k+XQJhQT/gw3xekXKJvx+5SXaMMS8oqQy09Mzvz2TuQ==}
+
+  '@types/source-map-support@0.5.10':
+    resolution: {integrity: sha512-tgVP2H469x9zq34Z0m/fgPewGhg/MLClalNOiPIzQlXrSS2YrKu/xCdSCKnEDwkFha51VKEKB6A9wW26/ZNwzA==}
 
   '@types/unist@2.0.10':
     resolution: {integrity: sha512-IfYcSBWE3hLpBg8+X2SEa8LVkJdJEkT2Ese2aaLs3ptGdVtABxndrMaxuFlQ1qdFf9Q5rDvDpxI3WwgvKFAsQA==}
@@ -7526,6 +7532,10 @@ snapshots:
       '@types/http-errors': 2.0.4
       '@types/mime': 3.0.4
       '@types/node': 20.14.9
+
+  '@types/source-map-support@0.5.10':
+    dependencies:
+      source-map: 0.6.1
 
   '@types/unist@2.0.10': {}
 
