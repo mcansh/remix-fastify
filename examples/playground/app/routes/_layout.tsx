@@ -12,21 +12,13 @@ export default function Layout() {
   return (
     <div>
       <header>
-        <h1
-          style={{
-            background: `linear-gradient(to right, #ee33aa, rgb(79 70 229 / 1))`,
-            fontSize: 36,
-            backgroundClip: "text",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}
-        >
+        <h1 className="bg-clip-text text-4xl transparent bg-gradient-to-r from-pink-500 to-purple-500 text-fill-transparent font-semibold text-center py-2">
           Welcome to{" "}
           <a
             target="_blank"
             rel="noreferrer nofollow noopener"
             href="https://remix.run"
-            style={{ borderBottom: "2px solid currentColor" }}
+            className="border-b-2"
           >
             Remix
           </a>{" "}
@@ -35,31 +27,21 @@ export default function Layout() {
             target="_blank"
             rel="noreferrer nofollow noopener"
             href="https://fastify.io"
-            style={{ borderBottom: "2px solid currentColor" }}
+            className="border-b-2"
           >
             Fastify
           </a>
         </h1>
         <nav>
-          <ul
-            style={{
-              display: "flex",
-              listStyle: "none",
-              gap: "1rem",
-              padding: 0,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <ul className="flex gap-4 justify-center items-center py-2">
             {LINKS.map((link) => (
               <li key={link.to}>
                 <NavLink
                   to={link.to}
-                  style={({ isActive }) => {
-                    return {
-                      color: isActive ? "red" : "blue",
-                      textDecoration: isActive ? "underline" : "none",
-                    };
+                  className={({ isActive }) => {
+                    return isActive
+                      ? "text-red-500 underline underline-offset-2"
+                      : "text-blue-500";
                   }}
                 >
                   {link.label}
@@ -69,6 +51,7 @@ export default function Layout() {
           </ul>
         </nav>
       </header>
+
       <Outlet />
     </div>
   );
