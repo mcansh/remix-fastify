@@ -50,7 +50,7 @@ export function createRequestHandler<Server extends HttpServer>({
   getLoadContext,
   mode = process.env.NODE_ENV,
 }: {
-  build: ServerBuild | (() => Promise<ServerBuild>);
+  build: ServerBuild | (() => ServerBuild | Promise<ServerBuild>);
   getLoadContext?: GetLoadContextFunction<Server>;
   mode?: string;
 }): RequestHandler<Server> {
@@ -113,7 +113,7 @@ export function createRemixRequest<Server extends HttpServer>(
 
   if (request.method !== "GET" && request.method !== "HEAD") {
     init.body = createReadableStreamFromReadable(request.raw);
-    (init as { duplex: "half" }).duplex = "half";
+    init.duplex = "half";
   }
 
   return new Request(url, init);
