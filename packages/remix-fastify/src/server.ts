@@ -113,7 +113,7 @@ export function createRemixRequest<Server extends HttpServer>(
 
   if (request.method !== "GET" && request.method !== "HEAD") {
     init.body = createReadableStreamFromReadable(request.raw);
-    (init as { duplex: "half" }).duplex = "half";
+    init.duplex = "half";
   }
 
   return new Request(url, init);
