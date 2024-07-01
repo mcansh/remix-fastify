@@ -1,8 +1,10 @@
 import { remixFastify } from "@mcansh/remix-fastify";
 import { installGlobals } from "@remix-run/node";
 import { fastify } from "fastify";
+import sourceMapSupport from "source-map-support";
 
 installGlobals();
+sourceMapSupport.install();
 
 let app = fastify();
 
