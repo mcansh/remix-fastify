@@ -59,8 +59,8 @@ export default function Index() {
   const [echo, setEcho] = React.useState<string | null>(null);
 
   return (
-    <div>
-      <React.Suspense fallback={<h2>loading...</h2>}>
+    <div className="mx-auto max-w-max text-center space-y-4 mt-4">
+      <React.Suspense fallback={<h2 className="text-gray-400">loading...</h2>}>
         <Await resolve={data.name} errorElement={<h2>failed...</h2>}>
           {(resolvedName) => <h2>Hello {resolvedName}</h2>}
         </Await>
@@ -68,10 +68,7 @@ export default function Index() {
 
       <h2>Context: {data.loadContextName}</h2>
 
-      <Form
-        method="post"
-        style={{ display: "flex", justifyContent: "center", gap: 4 }}
-      >
+      <Form method="post" className="flex justify-center gap-2">
         <label>
           <span>Name: </span>
           <React.Suspense fallback={<FallbackNameInput />}>
@@ -80,23 +77,27 @@ export default function Index() {
             </Await>
           </React.Suspense>
         </label>
-        <button name="intent" value="submit" type="submit">
+        <button
+          name="intent"
+          value="submit"
+          className="rounded-md bg-green-600 px-2 text-white"
+          type="submit"
+        >
           Submit
         </button>
-        <button name="intent" value="reset" type="submit">
+        <button
+          name="intent"
+          value="reset"
+          className="rounded-md bg-red-600 px-2 text-white"
+          type="submit"
+        >
           Reset
         </button>
       </Form>
 
       <form
         method="post"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: 4,
-          marginTop: 16,
-          flexDirection: "column",
-        }}
+        className="flex justify-center gap-4 mt-4 flex-col mx-auto max-w-max"
         action="/api/echo"
         onSubmit={async (event) => {
           event.preventDefault();
@@ -104,17 +105,23 @@ export default function Index() {
           let response = await fetch(event.currentTarget.action, {
             method: event.currentTarget.method,
             body: JSON.stringify(Object.fromEntries(formData.entries())),
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
           });
           let json = await response.json();
           setEcho(json);
         }}
       >
-        <div>
-          <input type="text" name="text" />
-          <button name="intent" type="submit" value="echo">
+        <div className="flex gap-2">
+          <label>
+            <span>Text: </span>
+            <input type="text" name="text" />
+          </label>
+          <button
+            name="intent"
+            type="submit"
+            value="echo"
+            className="rounded-md bg-green-600 px-2 text-white"
+          >
             Echo
           </button>
         </div>
@@ -139,10 +146,13 @@ function NameInput() {
       name="name"
       placeholder="Enter your name"
       defaultValue={defaultValue}
+      className="px-1"
     />
   );
 }
 
 function FallbackNameInput() {
-  return <input type="text" name="name" title="Enter your name" />;
+  return (
+    <input type="text" name="name" title="Enter your name" className="px-1" />
+  );
 }
