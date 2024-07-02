@@ -50,7 +50,7 @@ export function createRequestHandler<Server extends HttpServer>({
   getLoadContext,
   mode = process.env.NODE_ENV,
 }: {
-  build: ServerBuild | (() => Promise<ServerBuild>);
+  build: ServerBuild | (() => ServerBuild | Promise<ServerBuild>);
   getLoadContext?: GetLoadContextFunction<Server>;
   mode?: string;
 }): RequestHandler<Server> {
@@ -90,7 +90,8 @@ export function getUrl<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
 ): string {
   let origin = `${request.protocol}://${request.hostname}`;
-  let url = `${origin}${request.url}`;
+  // Use `request.originalUrl` so Remix is aware of the full path
+  let url = `${origin}${request.originalUrl}`;
   return url;
 }
 
@@ -112,7 +113,7 @@ export function createRemixRequest<Server extends HttpServer>(
 
   if (request.method !== "GET" && request.method !== "HEAD") {
     init.body = createReadableStreamFromReadable(request.raw);
-    (init as { duplex: "half" }).duplex = "half";
+    init.duplex = "half";
   }
 
   return new Request(url, init);
@@ -132,8 +133,7 @@ export async function sendRemixResponse<Server extends HttpServer>(
     let stream = new PassThrough();
     reply.send(stream);
     await writeReadableStreamToWritable(nodeResponse.body, stream);
-  } else {
-    reply.send();
   }
+
   return reply;
 }

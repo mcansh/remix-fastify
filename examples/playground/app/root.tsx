@@ -33,7 +33,9 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <div className="root-message">{data.message}</div>
+        <div className="bg-red-700 border-2 border-black text-white p-4 max-w-max mx-auto">
+          {data.message}
+        </div>
         <Outlet />
         <Scripts />
         <ScrollRestoration />
