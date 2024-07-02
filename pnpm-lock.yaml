@@ -212,9 +212,6 @@ importers:
 
   examples/vite:
     dependencies:
-      '@fastify/middie':
-        specifier: ^8.3.0
-        version: 8.3.0
       '@fastify/static':
         specifier: ^7.0.3
         version: 7.0.3
@@ -276,12 +273,6 @@ importers:
 
   packages/remix-fastify:
     dependencies:
-      '@fastify/middie':
-        specifier: ^8.3.0
-        version: 8.3.0
-      '@fastify/static':
-        specifier: ^7.0.3
-        version: 7.0.3
       '@remix-run/router':
         specifier: ^1.16.0
         version: 1.16.0
@@ -292,6 +283,12 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
     devDependencies:
+      '@fastify/middie':
+        specifier: ^8.3.0
+        version: 8.3.0
+      '@fastify/static':
+        specifier: ^7.0.3
+        version: 7.0.3
       '@remix-run/node':
         specifier: ^2.9.0
         version: 2.9.0(typescript@5.4.5)
