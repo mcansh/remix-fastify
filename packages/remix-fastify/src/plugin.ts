@@ -87,8 +87,11 @@ export let remixFastify = fp<RemixFastifyOptions>(
     }
 
     let resolvedBuildDirectory = path.resolve(cwd, buildDirectory);
-
-    let SERVER_BUILD = path.join(resolvedBuildDirectory, "server", serverBuildFile);
+    let SERVER_BUILD = path.join(
+      resolvedBuildDirectory,
+      "server",
+      serverBuildFile,
+    );
     let SERVER_BUILD_URL = url.pathToFileURL(SERVER_BUILD).href;
 
     // handle asset requests
