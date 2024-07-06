@@ -22,6 +22,12 @@ export type RemixFastifyOptions = {
    */
   buildDirectory?: string;
   /**
+   * The Remix server output filename
+   * This should match the `serverBuildFile` filename in your Remix config.
+   * @default "index.js"
+   */
+  serverBuildFile?: string;
+  /**
    * A function that returns the value to use as `context` in route `loader` and
    * `action` functions.
    *
@@ -56,6 +62,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
     {
       basename = "/",
       buildDirectory = "build",
+      serverBuildFile = "index.js",
       getLoadContext,
       mode = process.env.NODE_ENV,
       viteOptions,
@@ -80,8 +87,11 @@ export let remixFastify = fp<RemixFastifyOptions>(
     }
 
     let resolvedBuildDirectory = path.resolve(cwd, buildDirectory);
-
-    let SERVER_BUILD = path.join(resolvedBuildDirectory, "server", "index.js");
+    let SERVER_BUILD = path.join(
+      resolvedBuildDirectory,
+      "server",
+      serverBuildFile,
+    );
     let SERVER_BUILD_URL = url.pathToFileURL(SERVER_BUILD).href;
 
     // handle asset requests
