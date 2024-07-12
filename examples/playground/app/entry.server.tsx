@@ -101,6 +101,7 @@ function handleBrowserRequest(
           const stream = createReadableStreamFromReadable(body);
 
           responseHeaders.set("Content-Type", "text/html");
+          responseHeaders.set("Transfer-Encoding", "chunked");
 
           resolve(
             new Response(stream, {
