@@ -1,5 +1,23 @@
 # @mcansh/remix-fastify
 
+## 3.3.3
+
+### Patch Changes
+
+- be05e8b: The Remix Vite plugin allows you to customize the filename. This change allows you to pass a custom server file name to the Fastify plugin
+
+  ```js vite.config.ts
+  export default defineConfig({
+    plugins: [remix({ serverFilename: "example.js" })],
+  });
+  ```
+
+  ```js server.js
+  await app.register(remixFastify, {
+    serverFilename: "example.js",
+  });
+  ```
+
 ## 3.3.2
 
 ### Patch Changes
