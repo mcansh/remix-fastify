@@ -52,8 +52,8 @@
     "validate": "run-p typecheck test"
   },
   "dependencies": {
-    "@fastify/middie": "^8.3.0",
-    "@fastify/static": "^7.0.3",
+    "@fastify/middie": "^8.3.1",
+    "@fastify/static": "^7.0.4",
     "@remix-run/router": "^1.17.1",
     "fastify-plugin": "^4.5.1",
     "pretty-cache-header": "^1.0.0"
@@ -62,7 +62,7 @@
     "@remix-run/node": "^2.10.2",
     "@types/node": "^20.14.9",
     "@typescript/lib-dom": "npm:@types/web@^0.0.143",
-    "fastify": "^4.26.2",
+    "fastify": "^4.28.1",
     "node-mocks-http": "^1.14.1",
     "typescript": "^5.4.5",
     "vite": "^5.3.2"
