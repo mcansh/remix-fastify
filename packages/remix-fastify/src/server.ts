@@ -90,7 +90,7 @@ export function getUrl<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
 ): string {
   let origin = `${request.protocol}://${request.hostname}`;
-  let url = `${origin}${request.url}`;
+  let url = `${origin}${request.originalUrl}`;
   return url;
 }
 
@@ -112,7 +112,7 @@ export function createRemixRequest<Server extends HttpServer>(
 
   if (request.method !== "GET" && request.method !== "HEAD") {
     init.body = createReadableStreamFromReadable(request.raw);
-    (init as { duplex: "half" }).duplex = "half";
+    init.duplex = "half";
   }
 
   return new Request(url, init);
@@ -121,7 +121,7 @@ export function createRemixRequest<Server extends HttpServer>(
 export async function sendRemixResponse<Server extends HttpServer>(
   reply: FastifyReply<Server>,
   nodeResponse: Response,
-): Promise<void> {
+) {
   reply.status(nodeResponse.status);
 
   for (let [key, values] of nodeResponse.headers.entries()) {
@@ -129,11 +129,8 @@ export async function sendRemixResponse<Server extends HttpServer>(
   }
 
   if (nodeResponse.body) {
-    let stream = new PassThrough();
-    reply.send(stream);
-    await writeReadableStreamToWritable(nodeResponse.body, stream);
+    return nodeResponse.body;
   } else {
-    reply.send();
+    return reply.send();
   }
-  return reply;
 }
