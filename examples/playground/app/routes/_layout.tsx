@@ -6,6 +6,7 @@ let LINKS = [
   { to: "/fetcher", label: "Fetcher" },
   { to: "loader-error", label: "Loader Error" },
   { to: "route-error", label: "Route Error" },
+  { to: "resource-route-error", label: "Respurce Route Loader Error" },
 ] as const;
 
 export default function Layout() {
@@ -52,7 +53,10 @@ export default function Layout() {
         </nav>
       </header>
 
-      <Outlet />
+
+      <div className="mx-auto max-w-max text-center space-y-4 mt-4">
+	      <Outlet />
+      </div>
     </div>
   );
 }

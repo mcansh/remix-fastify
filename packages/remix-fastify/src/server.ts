@@ -1,7 +1,7 @@
+import { Readable } from "node:stream";
 import type * as http from "node:http";
 import type * as http2 from "node:http2";
 import type * as https from "node:https";
-import { PassThrough } from "node:stream";
 import type {
   FastifyRequest,
   FastifyReply,
@@ -13,7 +13,6 @@ import type { AppLoadContext, ServerBuild } from "@remix-run/node";
 import {
   createRequestHandler as createRemixRequestHandler,
   createReadableStreamFromReadable,
-  writeReadableStreamToWritable,
 } from "@remix-run/node";
 
 export type HttpServer =
@@ -130,10 +129,29 @@ export async function sendRemixResponse<Server extends HttpServer>(
   }
 
   if (nodeResponse.body) {
-    let stream = new PassThrough();
-    reply.send(stream);
-    await writeReadableStreamToWritable(nodeResponse.body, stream);
+    let stream = responseToReadable(nodeResponse.clone());
+    return reply.send(stream);
   }
 
-  return reply;
+  return reply.send(await nodeResponse.text());
+}
+
+function responseToReadable(response: Response) {
+  if (!response.body) {
+    return null;
+  }
+
+  let reader = response.body.getReader();
+  let rs = new Readable();
+  rs._read = async () => {
+    let result = await reader.read();
+    if (!result.done) {
+      rs.push(Buffer.from(result.value));
+    } else {
+      rs.push(null);
+      return;
+    }
+  };
+
+  return rs;
 }
