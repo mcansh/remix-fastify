@@ -59,7 +59,7 @@ export default function Index() {
   const [echo, setEcho] = React.useState<string | null>(null);
 
   return (
-    <div className="mx-auto max-w-max text-center space-y-4 mt-4">
+    <>
       <React.Suspense fallback={<h2 className="text-gray-400">loading...</h2>}>
         <Await resolve={data.name} errorElement={<h2>failed...</h2>}>
           {(resolvedName) => <h2>Hello {resolvedName}</h2>}
@@ -127,7 +127,7 @@ export default function Index() {
         </div>
         {echo ? <pre>{JSON.stringify(echo)}</pre> : null}
       </form>
-    </div>
+    </>
   );
 }
 
