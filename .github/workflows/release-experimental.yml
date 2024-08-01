@@ -62,7 +62,7 @@ jobs:
         run: pnpm install --recursive --frozen-lockfile --strict-peer-dependencies
 
       - name: 🏗 Build
-        run: yarn build
+        run: pnpm run build
 
       - name: 🔐 Setup npm auth
         run: |
