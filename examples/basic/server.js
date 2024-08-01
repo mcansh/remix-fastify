@@ -49,18 +49,6 @@ if (process.env.NODE_ENV === "production") {
     root: PUBLIC_DIR,
     prefix: "/",
     wildcard: false,
-    cacheControl: true,
-    dotfiles: "allow",
-    etag: true,
-    serveDotFiles: true,
-    lastModified: true,
-    setHeaders,
-  });
-} else
-  await app.register(fastifyStatic, {
-    root: BUILD_DIR,
-    prefix: "/build",
-    wildcard: true,
     decorateReply: false,
     cacheControl: true,
     dotfiles: "allow",
@@ -69,9 +57,10 @@ if (process.env.NODE_ENV === "production") {
     lastModified: true,
     setHeaders,
   });
+}
 
 await app.register(fastifyStatic, {
-  root: PUBLIC_DIR,
+  root: BUILD_DIR,
   prefix: "/",
   wildcard: false,
   cacheControl: true,
@@ -79,7 +68,13 @@ await app.register(fastifyStatic, {
   etag: true,
   serveDotFiles: true,
   lastModified: true,
-  setHeaders,
+  setHeaders(res, filepath) {
+    let isAsset = filepath.startsWith(BUILD_DIR);
+    res.setHeader(
+      "cache-control",
+      isAsset ? ASSET_CACHE_CONTROL : DEFAULT_CACHE_CONTROL,
+    );
+  },
 });
 
 app.register(async function (childServer) {
