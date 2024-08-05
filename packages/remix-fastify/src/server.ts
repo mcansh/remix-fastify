@@ -136,22 +136,20 @@ export async function sendRemixResponse<Server extends HttpServer>(
   return reply.send(await nodeResponse.text());
 }
 
-function responseToReadable(response: Response) {
-  if (!response.body) {
-    return null;
-  }
+function responseToReadable(response: Response): Readable | null {
+  if (!response.body) return null;
 
   let reader = response.body.getReader();
-  let rs = new Readable();
-  rs._read = async () => {
+  let readable = new Readable();
+  readable._read = async () => {
     let result = await reader.read();
     if (!result.done) {
-      rs.push(Buffer.from(result.value));
+      readable.push(Buffer.from(result.value));
     } else {
-      rs.push(null);
+      readable.push(null);
       return;
     }
   };
 
-  return rs;
+  return readable;
 }
