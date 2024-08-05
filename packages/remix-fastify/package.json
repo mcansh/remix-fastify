@@ -54,12 +54,12 @@
   "dependencies": {
     "@fastify/middie": "^8.3.1",
     "@fastify/static": "^7.0.4",
-    "@remix-run/router": "^1.17.1",
+    "@remix-run/router": "^1.19.0",
     "fastify-plugin": "^4.5.1",
     "pretty-cache-header": "^1.0.0"
   },
   "devDependencies": {
-    "@remix-run/node": "^2.10.2",
+    "@remix-run/node": "^2.11.0",
     "@types/node": "^20.14.9",
     "@typescript/lib-dom": "npm:@types/web@^0.0.143",
     "fastify": "^4.28.1",
