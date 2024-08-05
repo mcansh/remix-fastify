@@ -16,7 +16,7 @@
 # - Make whatever changes you need and commit them:
 #   - `git add . && git commit "experimental changes!"`
 # - Update version numbers and create a release tag:
-#   - `yarn run version:experimental`
+#   - `pnpm run version:experimental`
 # - Push to GitHub:
 #   - `git push origin --follow-tags`
 # - Create a new release for the tag on GitHub to trigger the CI workflow that
@@ -62,7 +62,7 @@ jobs:
         run: pnpm install --recursive --frozen-lockfile --strict-peer-dependencies
 
       - name: 🏗 Build
-        run: yarn build
+        run: pnpm run build
 
       - name: 🔐 Setup npm auth
         run: |
