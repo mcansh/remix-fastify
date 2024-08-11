@@ -4,6 +4,7 @@ import fp from "fastify-plugin";
 import type { InlineConfig, ViteDevServer } from "vite";
 import fastifyStatic from "@fastify/static";
 import { cacheHeader } from "pretty-cache-header";
+import type { ServerBuild } from "@remix-run/node";
 
 import { createRequestHandler } from "./server";
 import type { HttpServer, GetLoadContextFunction } from "./server";
@@ -54,6 +55,12 @@ export type RemixFastifyOptions = {
    * @default { public: true, maxAge: '1 hour' }
    */
   defaultCacheControl?: Parameters<typeof cacheHeader>[0];
+  /**
+   * The Remix server build to use in production. Use this only if the default approach doesn't work for you.
+   *
+   * If not provided, it will be loaded using `import()` with the server build path provided in the options.
+   */
+  productionServerBuild?: ServerBuild | (() => Promise<ServerBuild>);
 };
 
 export let remixFastify = fp<RemixFastifyOptions>(
@@ -68,6 +75,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
       viteOptions,
       assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
       defaultCacheControl = { public: true, maxAge: "1 hour" },
+      productionServerBuild,
     },
   ) => {
     let cwd = process.env.REMIX_ROOT ?? process.cwd();
@@ -144,7 +152,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
                   if (!vite) throw new Error("we lost vite!");
                   return vite.ssrLoadModule("virtual:remix/server-build");
                 }
-              : () => import(SERVER_BUILD_URL),
+              : productionServerBuild ?? (() => import(SERVER_BUILD_URL)),
           });
 
           return handler(request, reply);
