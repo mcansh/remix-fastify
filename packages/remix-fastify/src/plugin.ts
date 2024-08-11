@@ -2,7 +2,7 @@ import path from "node:path";
 import url from "node:url";
 import fp from "fastify-plugin";
 import type { InlineConfig, ViteDevServer } from "vite";
-import fastifyStatic from "@fastify/static";
+import fastifyStatic, { type FastifyStaticOptions } from "@fastify/static";
 import { cacheHeader } from "pretty-cache-header";
 
 import { createRequestHandler } from "./server";
@@ -41,6 +41,10 @@ export type RemixFastifyOptions = {
    */
   viteOptions?: InlineConfig;
   /**
+   * Options to pass to the `@fastify/static` plugin for serving compiled assets in production.
+   */
+  fastifyStaticOptions?: FastifyStaticOptions;
+  /**
    * The cache control options to use for build assets in production.
    * uses `pretty-cache-header` under the hood.
    * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
@@ -66,6 +70,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
       getLoadContext,
       mode = process.env.NODE_ENV,
       viteOptions,
+      fastifyStaticOptions,
       assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
       defaultCacheControl = { public: true, maxAge: "1 hour" },
     },
@@ -120,6 +125,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
               : cacheHeader(defaultCacheControl),
           );
         },
+        ...fastifyStaticOptions,
       });
     }
 
