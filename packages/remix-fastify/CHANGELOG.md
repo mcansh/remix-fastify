@@ -1,5 +1,16 @@
 # @mcansh/remix-fastify
 
+## 3.4.0
+
+### Minor Changes
+
+- 6d074ed: return streams directly from remix to fastify
+
+### Patch Changes
+
+- 352c74f: New optional parameter to customize the `@fastify/static` plugin options. This can be useful to customize options like `decorateReply` or `setHeaders` to match your needs or when you already have a `@fastify/static` plugin registered.
+- bd2a09c: New optional parameter to provide a custom server build for production. If not provided, it will be loaded using `import()` with the server build path provided in the options.
+
 ## 3.3.3
 
 ### Patch Changes
