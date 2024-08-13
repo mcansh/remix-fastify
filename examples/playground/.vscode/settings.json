@@ -1,6 +1,5 @@
 {
   "typescript.preferences.autoImportFileExcludePatterns": [
-    "@remix-run/router",
     "react-router-dom",
     "react-router"
   ]
