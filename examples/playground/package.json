@@ -44,12 +44,12 @@
     "vite": "^5.3.2",
     "vite-tsconfig-paths": "^4.3.2"
   },
-    "overrides": {
-      "@types/react": "$@types/react",
-      "@types/react-dom": "$@types/react-dom",
-      "react": "$react",
-      "react-dom": "$react-dom"
-    },
+  "overrides": {
+    "@types/react": "$@types/react",
+    "@types/react-dom": "$@types/react-dom",
+    "react": "$react",
+    "react-dom": "$react-dom"
+  },
   "engines": {
     "node": ">=18"
   }
