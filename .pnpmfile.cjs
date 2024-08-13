@@ -8,6 +8,19 @@ function readPackage(pkg) {
     pkg.dependencies["@mcansh/remix-fastify"] = "workspace:*";
   }
 
+  let remixPackages = Object.keys(pkg.dependencies).filter((p) => {
+    return p.startsWith("@remix-run");
+  });
+  if (pkg.dependencies["remix"]) {
+    pkg.dependencies["remix"] = "latest";
+  }
+
+  for (let p of remixPackages) {
+    if (pkg.dependencies[p]) {
+      pkg.dependencies[p] = "latest";
+    }
+  }
+
   return pkg;
 }
 

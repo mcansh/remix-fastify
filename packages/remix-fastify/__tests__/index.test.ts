@@ -1,5 +1,5 @@
 import { Readable } from "stream";
-import type { FastifyReply } from "fastify";
+import type { FastifyReply, FastifyRequest } from "fastify";
 import fastify from "fastify";
 import { createRequest } from "node-mocks-http";
 import {
@@ -66,13 +66,13 @@ describe("fastify createRequestHandler", () => {
 
       let response = await app.inject("/foo/bar");
 
-      expect(response.statusCode).toBe(200);
       expect(response.body).toBe("URL: /foo/bar");
+      expect(response.statusCode).toBe(200);
     });
 
     it("handles root // URLs", async () => {
       mockedCreateRequestHandler.mockImplementation(() => async (req) => {
-        return new Response("URL: " + new URL(req.url).pathname);
+        return new Response(`URL: ${new URL(req.url).pathname}`);
       });
 
       let app = createApp();
@@ -85,7 +85,7 @@ describe("fastify createRequestHandler", () => {
 
     it("handles nested // URLs", async () => {
       mockedCreateRequestHandler.mockImplementation(() => async (req) => {
-        return new Response("URL: " + new URL(req.url).pathname);
+        return new Response(`URL: ${new URL(req.url).pathname}`);
       });
 
       let app = createApp();
@@ -98,7 +98,7 @@ describe("fastify createRequestHandler", () => {
 
     it("handles null body", async () => {
       mockedCreateRequestHandler.mockImplementation(() => async () => {
-        return new Response(null, { status: 200 });
+        return new Response(null);
       });
 
       let app = createApp();
@@ -113,7 +113,7 @@ describe("fastify createRequestHandler", () => {
       mockedCreateRequestHandler.mockImplementation(() => async () => {
         let readable = Readable.from("hello world");
         let stream = createReadableStreamFromReadable(readable);
-        return new Response(stream, { status: 200 });
+        return new Response(stream);
       });
 
       let app = createApp();
@@ -129,9 +129,9 @@ describe("fastify createRequestHandler", () => {
       });
 
       let app = createApp();
-      let res = await app.inject("/");
+      let response = await app.inject("/");
 
-      expect(res.statusCode).toBe(204);
+      expect(response.statusCode).toBe(204);
     });
 
     it("sets headers", async () => {
@@ -153,10 +153,10 @@ describe("fastify createRequestHandler", () => {
       });
 
       let app = createApp();
-      let res = await app.inject("/");
+      let response = await app.inject("/");
 
-      expect(res.headers["x-time-of-year"]).toBe("most wonderful");
-      expect(res.headers["set-cookie"]).toEqual([
+      expect(response.headers["x-time-of-year"]).toBe("most wonderful");
+      expect(response.headers["set-cookie"]).toEqual([
         "first=one; Expires=0; Path=/; HttpOnly; Secure; SameSite=Lax",
         "second=two; MaxAge=1209600; Path=/; HttpOnly; Secure; SameSite=Lax",
         "third=three; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Path=/; HttpOnly; Secure; SameSite=Lax",
@@ -219,7 +219,7 @@ describe("fastify createRemixRequest", () => {
         "Cache-Control": "max-age=300, s-maxage=3600",
         Host: "localhost:3000",
       },
-    });
+    }) as unknown as FastifyRequest;
 
     let fastifyReply = { raw: { on: vi.fn() } } as unknown as FastifyReply;
 

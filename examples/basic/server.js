@@ -5,8 +5,10 @@ import fastify from "fastify";
 import { createRequestHandler } from "@mcansh/remix-fastify";
 import { broadcastDevReady, installGlobals } from "@remix-run/node";
 import { fastifyStatic } from "@fastify/static";
+import sourceMapSupport from "source-map-support";
 
 installGlobals();
+sourceMapSupport.install();
 
 let __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 let BUILD_PATH = "./build/index.js";

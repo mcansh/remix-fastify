@@ -1,7 +1,7 @@
+import { Readable } from "node:stream";
 import type * as http from "node:http";
 import type * as http2 from "node:http2";
 import type * as https from "node:https";
-import { PassThrough } from "node:stream";
 import type {
   FastifyRequest,
   FastifyReply,
@@ -13,7 +13,6 @@ import type { AppLoadContext, ServerBuild } from "@remix-run/node";
 import {
   createRequestHandler as createRemixRequestHandler,
   createReadableStreamFromReadable,
-  writeReadableStreamToWritable,
 } from "@remix-run/node";
 
 export type HttpServer =
@@ -90,7 +89,8 @@ export function getUrl<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
 ): string {
   let origin = `${request.protocol}://${request.hostname}`;
-  let url = `${origin}${request.url}`;
+  // Use `request.originalUrl` so Remix is aware of the full path
+  let url = `${origin}${request.originalUrl}`;
   return url;
 }
 
@@ -112,7 +112,7 @@ export function createRemixRequest<Server extends HttpServer>(
 
   if (request.method !== "GET" && request.method !== "HEAD") {
     init.body = createReadableStreamFromReadable(request.raw);
-    (init as { duplex: "half" }).duplex = "half";
+    init.duplex = "half";
   }
 
   return new Request(url, init);
@@ -129,11 +129,27 @@ export async function sendRemixResponse<Server extends HttpServer>(
   }
 
   if (nodeResponse.body) {
-    let stream = new PassThrough();
-    reply.send(stream);
-    await writeReadableStreamToWritable(nodeResponse.body, stream);
-  } else {
-    reply.send();
+    let stream = responseToReadable(nodeResponse.clone());
+    return reply.send(stream);
   }
-  return reply;
+
+  return reply.send(await nodeResponse.text());
+}
+
+function responseToReadable(response: Response): Readable | null {
+  if (!response.body) return null;
+
+  let reader = response.body.getReader();
+  let readable = new Readable();
+  readable._read = async () => {
+    let result = await reader.read();
+    if (!result.done) {
+      readable.push(Buffer.from(result.value));
+    } else {
+      readable.push(null);
+      return;
+    }
+  };
+
+  return readable;
 }

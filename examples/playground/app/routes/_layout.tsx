@@ -1,24 +1,25 @@
 import { NavLink, Outlet } from "@remix-run/react";
 
+let LINKS = [
+  { to: "/", label: "Home" },
+  { to: "/page-2", label: "Page 2" },
+  { to: "/fetcher", label: "Fetcher" },
+  { to: "loader-error", label: "Loader Error" },
+  { to: "route-error", label: "Route Error" },
+  { to: "resource-route-error", label: "Resource Route Loader Error", reloadDocument: true },
+] as const;
+
 export default function Layout() {
   return (
     <div>
       <header>
-        <h1
-          style={{
-            background: `linear-gradient(to right, #ee33aa, rgb(79 70 229 / 1))`,
-            fontSize: 36,
-            backgroundClip: "text",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}
-        >
+        <h1 className="bg-clip-text text-4xl transparent bg-gradient-to-r from-pink-500 to-purple-500 text-fill-transparent font-semibold text-center py-2">
           Welcome to{" "}
           <a
             target="_blank"
             rel="noreferrer nofollow noopener"
             href="https://remix.run"
-            style={{ borderBottom: "2px solid currentColor" }}
+            className="border-b-2"
           >
             Remix
           </a>{" "}
@@ -27,65 +28,36 @@ export default function Layout() {
             target="_blank"
             rel="noreferrer nofollow noopener"
             href="https://fastify.io"
-            style={{ borderBottom: "2px solid currentColor" }}
+            className="border-b-2"
           >
             Fastify
           </a>
         </h1>
         <nav>
-          <ul
-            style={{
-              display: "flex",
-              listStyle: "none",
-              gap: "1rem",
-              padding: 0,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <li>
-              <NavLink
-                style={({ isActive }) => {
-                  return {
-                    color: isActive ? "red" : "blue",
-                    textDecoration: isActive ? "underline" : "none",
-                  };
-                }}
-                to="/"
-              >
-                Home
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                style={({ isActive }) => {
-                  return {
-                    color: isActive ? "red" : "blue",
-                    textDecoration: isActive ? "underline" : "none",
-                  };
-                }}
-                to="/page-2"
-              >
-                Page 2
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                style={({ isActive }) => {
-                  return {
-                    color: isActive ? "red" : "blue",
-                    textDecoration: isActive ? "underline" : "none",
-                  };
-                }}
-                to="/fetcher"
-              >
-                Fetcher
-              </NavLink>
-            </li>
+          <ul className="flex gap-4 justify-center items-center py-2">
+            {LINKS.map((link) => (
+              <li key={link.to}>
+                <NavLink
+                  to={link.to}
+                  reloadDocument={'reloadDocument' in link ? link.reloadDocument : false}
+                  className={({ isActive }) => {
+                    return isActive
+                      ? "text-red-500 underline underline-offset-2"
+                      : "text-blue-500";
+                  }}
+                >
+                  {link.label}
+                </NavLink>
+              </li>
+            ))}
           </ul>
         </nav>
       </header>
-      <Outlet />
+
+
+      <div className="mx-auto max-w-max text-center space-y-4 mt-4">
+	      <Outlet />
+      </div>
     </div>
   );
 }
