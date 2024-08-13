@@ -60,7 +60,7 @@ export type RemixFastifyOptions = {
    *
    * If not provided, it will be loaded using `import()` with the server build path provided in the options.
    */
-  productionServerBuild?: ServerBuild | (() => Promise<ServerBuild>);
+  productionServerBuild?: ServerBuild | (() => ServerBuild | Promise<ServerBuild>);
 };
 
 export let remixFastify = fp<RemixFastifyOptions>(
