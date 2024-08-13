@@ -6,7 +6,7 @@ let LINKS = [
   { to: "/fetcher", label: "Fetcher" },
   { to: "loader-error", label: "Loader Error" },
   { to: "route-error", label: "Route Error" },
-  { to: "resource-route-error", label: "Resource Route Loader Error" },
+  { to: "resource-route-error", label: "Resource Route Loader Error", reloadDocument: true },
 ] as const;
 
 export default function Layout() {
@@ -39,6 +39,7 @@ export default function Layout() {
               <li key={link.to}>
                 <NavLink
                   to={link.to}
+                  reloadDocument={'reloadDocument' in link ? link.reloadDocument : false}
                   className={({ isActive }) => {
                     return isActive
                       ? "text-red-500 underline underline-offset-2"
