@@ -124,8 +124,17 @@ export async function sendRemixResponse<Server extends HttpServer>(
 ): Promise<void> {
   reply.status(nodeResponse.status);
 
-  for (let [key, values] of nodeResponse.headers.entries()) {
-    reply.headers({ [key]: values });
+  for (let [key, value] of nodeResponse.headers.entries()) {
+    let currentHeaders = reply.getHeader(key);
+    if (currentHeaders) {
+      if (Array.isArray(currentHeaders)) {
+        reply.headers({ [key]: [...currentHeaders, value] });
+        continue;
+      }
+      reply.headers({ [key]: [String(currentHeaders), value] });
+      continue;
+    }
+    reply.headers({ [key]: value });
   }
 
   if (nodeResponse.body) {
