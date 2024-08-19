@@ -58,7 +58,7 @@
     "pretty-cache-header": "^1.0.0"
   },
   "devDependencies": {
-    "@remix-run/node": "^2.10.2",
+    "@remix-run/node": "^2.11.2",
     "@types/node": "^20.14.9",
     "@typescript/lib-dom": "npm:@types/web@^0.0.143",
     "fastify": "^4.28.1",
