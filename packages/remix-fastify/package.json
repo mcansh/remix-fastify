@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@remix-run/node": "^2.10.2",
-    "@types/node": "^20.14.9",
+    "@types/node": "^22.4.1",
     "@typescript/lib-dom": "npm:@types/web@^0.0.143",
     "fastify": "^4.28.1",
     "node-mocks-http": "^1.14.1",
