@@ -19,6 +19,7 @@
     "@remix-run/react": "*",
     "cross-env": "^7.0.3",
     "fastify": "^4.28.1",
+    "get-port": "^7.1.0",
     "isbot": "^5.1.11",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

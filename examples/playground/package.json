@@ -20,6 +20,7 @@
     "@remix-run/node": "*",
     "@remix-run/react": "*",
     "fastify": "^4.28.1",
+    "get-port": "^7.1.0",
     "isbot": "^5.1.11",
     "react": "19.0.0-rc-100dfd7dab-20240701",
     "react-dom": "19.0.0-rc-100dfd7dab-20240701",

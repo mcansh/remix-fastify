@@ -1,11 +1,13 @@
 import fs from "node:fs";
-import url from "node:url";
 import path from "node:path";
+import url from "node:url";
+import { styleText } from "node:util";
 import fastify from "fastify";
 import { createRequestHandler } from "@mcansh/remix-fastify";
 import { broadcastDevReady, installGlobals } from "@remix-run/node";
 import { fastifyStatic } from "@fastify/static";
 import sourceMapSupport from "source-map-support";
+import getPort, { portNumbers } from "get-port";
 
 installGlobals();
 sourceMapSupport.install();
@@ -98,9 +100,23 @@ app.register(async function (childServer) {
   });
 });
 
-let port = process.env.PORT ? Number(process.env.PORT) || 3000 : 3000;
+const desiredPort = Number(process.env.PORT) || 3000;
+const portToUse = await getPort({
+  port: portNumbers(desiredPort, desiredPort + 100),
+});
 
-let address = await app.listen({ port, host: "0.0.0.0" });
+let address = await app.listen({ port: portToUse, host: "0.0.0.0" });
+let { port: usedPort } = new URL(address);
+
+if (usedPort !== String(desiredPort)) {
+  console.warn(
+    styleText(
+      "yellow",
+      `⚠️  Port ${desiredPort} is not available, using ${usedPort} instead.`,
+    ),
+  );
+}
+
 console.log(`✅ app ready: ${address}`);
 
 if (process.env.NODE_ENV === "development") {

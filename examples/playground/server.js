@@ -1,7 +1,9 @@
+import { styleText } from 'node:util'
 import { remixFastify } from "@mcansh/remix-fastify";
 import { installGlobals } from "@remix-run/node";
 import { fastify } from "fastify";
 import sourceMapSupport from "source-map-support";
+import getPort, { portNumbers } from 'get-port'
 
 installGlobals();
 sourceMapSupport.install();
@@ -18,7 +20,18 @@ await app.register(remixFastify, {
   },
 });
 
-let port = Number(process.env.PORT) || 3000;
+const desiredPort = Number(process.env.PORT) || 3000;
+const portToUse = await getPort({
+  port: portNumbers(desiredPort, desiredPort + 100),
+})
 
-let address = await app.listen({ port, host: "0.0.0.0" });
+let address = await app.listen({ port: portToUse, host: "0.0.0.0" });
+let parsedAddress = new URL(address);
+
+if (parsedAddress.port !== String(desiredPort)) {
+	console.warn(
+	  styleText('yellow', `⚠️  Port ${desiredPort} is not available, using ${parsedAddress.port} instead.`,)
+	)
+}
+
 console.log(`✅ app ready: ${address}`);
