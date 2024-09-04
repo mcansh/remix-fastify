@@ -1,5 +1,5 @@
 import process from "node:process";
-import { styleText } from "node:util";
+import chalk from "chalk";
 import { remixFastify } from "@mcansh/remix-fastify";
 import { installGlobals } from "@remix-run/node";
 import { fastify } from "fastify";
@@ -24,11 +24,10 @@ let { port: usedPort } = new URL(address);
 
 if (usedPort !== String(desiredPort)) {
   console.warn(
-    styleText(
-      "yellow",
+    chalk.yellow(
       `⚠️  Port ${desiredPort} is not available, using ${usedPort} instead.`,
     ),
   );
 }
 
-console.log(styleText("green", `✅ app ready: ${address}`));
+console.log(chalk.green(`✅ app ready: ${address}`));

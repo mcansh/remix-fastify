@@ -1,4 +1,4 @@
-import { styleText } from 'node:util'
+import chalk from "chalk";
 import { remixFastify } from "@mcansh/remix-fastify";
 import { installGlobals } from "@remix-run/node";
 import { fastify } from "fastify";
@@ -30,8 +30,8 @@ let parsedAddress = new URL(address);
 
 if (parsedAddress.port !== String(desiredPort)) {
 	console.warn(
-	  styleText('yellow', `⚠️  Port ${desiredPort} is not available, using ${parsedAddress.port} instead.`,)
+	  chalk.yellow(`⚠️  Port ${desiredPort} is not available, using ${parsedAddress.port} instead.`)
 	)
 }
 
-console.log(`✅ app ready: ${address}`);
+console.log(chalk.green(`✅ app ready: ${address}`));

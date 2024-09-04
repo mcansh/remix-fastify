@@ -99,6 +99,9 @@ importers:
       '@remix-run/react':
         specifier: latest
         version: 2.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4)
+      chalk:
+        specifier: ^5.3.0
+        version: 5.3.0
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
@@ -160,6 +163,9 @@ importers:
       '@remix-run/react':
         specifier: latest
         version: 2.11.2(react-dom@19.0.0-rc-100dfd7dab-20240701(react@19.0.0-rc-100dfd7dab-20240701))(react@19.0.0-rc-100dfd7dab-20240701)(typescript@5.5.4)
+      chalk:
+        specifier: ^5.3.0
+        version: 5.3.0
       fastify:
         specifier: ^4.28.1
         version: 4.28.1
@@ -248,6 +254,9 @@ importers:
       '@remix-run/react':
         specifier: latest
         version: 2.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4)
+      chalk:
+        specifier: ^5.3.0
+        version: 5.3.0
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
