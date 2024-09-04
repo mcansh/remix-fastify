@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import url from "node:url";
-import { styleText } from "node:util";
+import chalk from "chalk";
 import fastify from "fastify";
 import { createRequestHandler } from "@mcansh/remix-fastify";
 import { broadcastDevReady, installGlobals } from "@remix-run/node";
@@ -110,14 +110,13 @@ let { port: usedPort } = new URL(address);
 
 if (usedPort !== String(desiredPort)) {
   console.warn(
-    styleText(
-      "yellow",
+    chalk.yellow(
       `⚠️  Port ${desiredPort} is not available, using ${usedPort} instead.`,
     ),
   );
 }
 
-console.log(`✅ app ready: ${address}`);
+console.log(chalk.green(`✅ app ready: ${address}`));
 
 if (process.env.NODE_ENV === "development") {
   await broadcastDevReady(initialBuild);

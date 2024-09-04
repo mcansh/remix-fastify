@@ -17,6 +17,7 @@
     "@mcansh/remix-fastify": "3.4.0",
     "@remix-run/node": "*",
     "@remix-run/react": "*",
+    "chalk": "^5.3.0",
     "cross-env": "^7.0.3",
     "fastify": "^4.28.1",
     "get-port": "^7.1.0",
