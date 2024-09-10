@@ -106,12 +106,11 @@ const portToUse = await getPort({
 });
 
 let address = await app.listen({ port: portToUse, host: "0.0.0.0" });
-let { port: usedPort } = new URL(address);
 
-if (usedPort !== String(desiredPort)) {
+if (desiredPort !== portToUse) {
   console.warn(
     chalk.yellow(
-      `⚠️  Port ${desiredPort} is not available, using ${usedPort} instead.`,
+      `⚠️  Port ${desiredPort} is not available, using ${portToUse} instead.`,
     ),
   );
 }
