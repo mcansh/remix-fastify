@@ -71,6 +71,7 @@ export function createRemixHeaders(
   let headers = new Headers();
 
   for (let [key, values] of Object.entries(requestHeaders)) {
+    if (key.startsWith(":")) continue;
     if (values) {
       if (Array.isArray(values)) {
         for (let value of values) {
