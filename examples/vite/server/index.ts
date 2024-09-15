@@ -1,12 +1,10 @@
 import process from "node:process";
 import chalk from "chalk";
 import { remixFastify } from "@mcansh/remix-fastify";
-import { installGlobals } from "@remix-run/node";
 import { fastify } from "fastify";
 import sourceMapSupport from "source-map-support";
 import getPort, { portNumbers } from "get-port";
 
-installGlobals();
 sourceMapSupport.install();
 
 const app = fastify();

@@ -11,6 +11,7 @@ function readPackage(pkg) {
   let remixPackages = Object.keys(pkg.dependencies).filter((p) => {
     return p.startsWith("@remix-run");
   });
+
   if (pkg.dependencies["remix"]) {
     pkg.dependencies["remix"] = "latest";
   }
