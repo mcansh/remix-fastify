@@ -41,7 +41,7 @@
     "tsup": "^8.0.2",
     "type-fest": "^4.21.0",
     "typescript": "^5.5.4",
-    "vitest": "^1.5.0"
+    "vitest": "^2.1.1"
   },
   "pnpm": {
     "patchedDependencies": {
