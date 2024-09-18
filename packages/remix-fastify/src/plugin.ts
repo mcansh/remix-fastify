@@ -164,6 +164,6 @@ export let remixFastify = fp<RemixFastifyOptions>(
   {
     // replaced with the package name during build
     name: process.env.__PACKAGE_NAME__,
-    fastify: "4.x",
-  }
+    fastify: "5.x",
+  },
 );
