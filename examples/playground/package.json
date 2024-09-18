@@ -53,6 +53,6 @@
     "react-dom": "$react-dom"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20.0.0"
   }
 }
