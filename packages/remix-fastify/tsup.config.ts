@@ -17,6 +17,9 @@ export default defineConfig(() => {
     treeshake: true,
     define: {
       "process.env.__PACKAGE_NAME__": JSON.stringify(pkg.name),
+      "process.env.__FASTIFY_VERSION__": JSON.stringify(
+        pkg.peerDependencies.fastify,
+      ),
     },
   };
 });

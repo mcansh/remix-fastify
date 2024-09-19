@@ -31,7 +31,7 @@
     "@fastify/middie": "^9.0.1",
     "@remix-run/dev": "*",
     "@remix-run/eslint-config": "*",
-    "@tailwindcss/vite": "0.0.0-development.1",
+    "@tailwindcss/vite": "4.0.0-alpha.28",
     "@types/react": "npm:types-react@19.0.0-alpha.3",
     "@types/react-dom": "npm:types-react-dom@19.0.0-alpha.3",
     "chokidar": "^4.0.0",

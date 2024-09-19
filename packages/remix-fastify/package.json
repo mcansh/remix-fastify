@@ -23,14 +23,8 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": {
-        "require": "./dist/index.d.cts",
-        "import": "./dist/index.d.ts",
-        "default": "./dist/index.d.cts"
-      },
       "require": "./dist/index.cjs",
-      "import": "./dist/index.js",
-      "default": "./dist/index.cjs"
+      "import": "./dist/index.js"
     }
   },
   "main": "./dist/index.cjs",

@@ -9,7 +9,7 @@ import type { ServerBuild } from "@remix-run/node";
 import { createRequestHandler } from "./server";
 import type { HttpServer, GetLoadContextFunction } from "./server";
 
-export type RemixFastifyOptions = {
+export type RemixFastifyOptions<Server extends HttpServer = HttpServer> = {
   /**
    * The base path for the Remix app.
    * match the `basename` in your Vite config.
@@ -35,7 +35,7 @@ export type RemixFastifyOptions = {
    * You can think of this as an escape hatch that allows you to pass
    * environment/platform-specific values through to your loader/action.
    */
-  getLoadContext?: GetLoadContextFunction<HttpServer>;
+  getLoadContext?: GetLoadContextFunction<Server>;
   mode?: string;
   /**
    * Options to pass to the Vite server in development.
@@ -69,7 +69,7 @@ export type RemixFastifyOptions = {
     | (() => ServerBuild | Promise<ServerBuild>);
 };
 
-export let remixFastify = fp<RemixFastifyOptions>(
+export const remixFastify = fp<RemixFastifyOptions>(
   async (
     fastify,
     {
@@ -83,7 +83,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
       assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
       defaultCacheControl = { public: true, maxAge: "1 hour" },
       productionServerBuild,
-    }
+    },
   ) => {
     let cwd = process.env.REMIX_ROOT ?? process.cwd();
 
@@ -105,16 +105,16 @@ export let remixFastify = fp<RemixFastifyOptions>(
     let SERVER_BUILD = path.join(
       resolvedBuildDirectory,
       "server",
-      serverBuildFile
+      serverBuildFile,
     );
     let SERVER_BUILD_URL = url.pathToFileURL(SERVER_BUILD).href;
 
-    let remixHandler = createRequestHandler({
+    let remixHandler = createRequestHandler<HttpServer>({
       mode,
       getLoadContext,
       build: vite
         ? () => vite.ssrLoadModule("virtual:remix/server-build")
-        : productionServerBuild ?? (() => import(SERVER_BUILD_URL)),
+        : (productionServerBuild ?? (() => import(SERVER_BUILD_URL))),
     });
 
     // handle asset requests
@@ -140,7 +140,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
             "cache-control",
             isAsset
               ? cacheHeader(assetCacheControl)
-              : cacheHeader(defaultCacheControl)
+              : cacheHeader(defaultCacheControl),
           );
         },
         ...fastifyStaticOptions,
@@ -156,14 +156,16 @@ export let remixFastify = fp<RemixFastifyOptions>(
           done(null, payload);
         });
 
-        childServer.all("*", remixHandler);
+        childServer.all("*", (request, reply) => {
+          remixHandler(request, reply);
+        });
       },
-      { prefix: basename }
+      { prefix: basename },
     );
   },
   {
     // replaced with the package name during build
     name: process.env.__PACKAGE_NAME__,
-    fastify: "5.x",
+    fastify: process.env.__FASTIFY_VERSION__,
   },
 );
