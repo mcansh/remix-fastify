@@ -9,7 +9,6 @@ export default defineConfig(() => {
     tsconfig: "./tsconfig.json",
     dts: true,
     format: ["cjs", "esm"],
-    clean: true,
     cjsInterop: true,
     splitting: true,
     platform: "node",
