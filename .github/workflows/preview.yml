@@ -1,11 +1,14 @@
-name: Publish Approved Pull Requests
+name: 🚀 Release (preview)
 on:
-  pull_request_review:
-    types: [submitted]
+  push:
+    branches: [main]
+    tags:
+      - "!**"
+  pull_request:
+    branches: [main]
 
 jobs:
   approved:
-    if: github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
 
     steps:
@@ -34,4 +37,4 @@ jobs:
           echo "publish-branch=$(git branch --show-current)" >> ~/.npmrc
 
       - name: 🚀 Publish PR
-        run: pkg-pr-new publish
+        run: pkg-pr-new publish --compact './packages/*' --template './examples/*'
