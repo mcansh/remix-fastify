@@ -67,6 +67,9 @@ export type RemixFastifyOptions<Server extends HttpServer = HttpServer> = {
   productionServerBuild?:
     | ServerBuild
     | (() => ServerBuild | Promise<ServerBuild>);
+  virtualModule?:
+    | "virtual:remix/server-build"
+    | "virtual:react-router/server-build";
 };
 
 export const remixFastify = fp<RemixFastifyOptions>(
@@ -83,6 +86,7 @@ export const remixFastify = fp<RemixFastifyOptions>(
       assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
       defaultCacheControl = { public: true, maxAge: "1 hour" },
       productionServerBuild,
+      virtualModule = "virtual:remix/server-build",
     },
   ) => {
     let cwd = process.env.REMIX_ROOT ?? process.cwd();
@@ -113,7 +117,7 @@ export const remixFastify = fp<RemixFastifyOptions>(
       mode,
       getLoadContext,
       build: vite
-        ? () => vite.ssrLoadModule("virtual:remix/server-build")
+        ? () => vite.ssrLoadModule(virtualModule)
         : (productionServerBuild ?? (() => import(SERVER_BUILD_URL))),
     });
 
