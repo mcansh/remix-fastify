@@ -12,7 +12,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@fastify/static": "^8.0.0",
+    "@fastify/static": "^8.0.1",
     "@mcansh/remix-fastify": "3.4.1",
     "@remix-run/css-bundle": "*",
     "@remix-run/node": "*",
@@ -29,7 +29,7 @@
   "devDependencies": {
     "@remix-run/dev": "*",
     "@remix-run/eslint-config": "*",
-    "@types/react": "^18.3.7",
+    "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
     "chokidar": "^4.0.0",
     "eslint": "^8.57.0",
