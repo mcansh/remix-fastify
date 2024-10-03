@@ -328,6 +328,9 @@ importers:
       pretty-cache-header:
         specifier: ^1.0.0
         version: 1.0.0
+      react-router:
+        specifier: '*'
+        version: 6.27.0(react@19.0.0-rc-100dfd7dab-20240701)
     devDependencies:
       '@remix-run/node':
         specifier: ^2.13.1

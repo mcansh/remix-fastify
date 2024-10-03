@@ -63,9 +63,16 @@
   "peerDependencies": {
     "@remix-run/node": "^2.0.0",
     "fastify": "^3.29.0 || ^4.0.0 || ^5.0.0",
+    "react-router": "*",
     "vite": "^5.0.0"
   },
   "peerDependenciesMeta": {
+    "@remix-run/node": {
+      "optional": true
+    },
+    "react-router": {
+      "optional": true
+    },
     "vite": {
       "optional": true
     }
