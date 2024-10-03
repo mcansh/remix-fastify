@@ -1,4 +1,3 @@
-import type { LinksFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Links,
@@ -8,12 +7,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-
-import stylesUrl from "./styles/global.css?url";
-
-export let links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: stylesUrl }];
-};
+import "./styles/global.css";
 
 export function loader() {
   return json({ message: "Hello from the root loader" });

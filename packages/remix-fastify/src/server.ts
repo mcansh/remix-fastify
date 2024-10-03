@@ -33,12 +33,12 @@ export type HttpResponse = RawReplyDefaultExpression<HttpServer>;
  */
 export type GetLoadContextFunction<Server extends HttpServer> = (
   request: FastifyRequest<RouteGenericInterface, Server>,
-  reply: FastifyReply<Server>,
+  reply: FastifyReply<RouteGenericInterface, Server>,
 ) => Promise<AppLoadContext> | AppLoadContext;
 
 export type RequestHandler<Server extends HttpServer> = (
   request: FastifyRequest<RouteGenericInterface, Server>,
-  reply: FastifyReply<Server>,
+  reply: FastifyReply<RouteGenericInterface, Server>,
 ) => Promise<void>;
 
 /**
@@ -96,7 +96,7 @@ export function getUrl<Server extends HttpServer>(
 
 export function createRemixRequest<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
-  reply: FastifyReply<Server>,
+  reply: FastifyReply<RouteGenericInterface, Server>,
 ): Request {
   let url = getUrl(request);
 
@@ -119,7 +119,7 @@ export function createRemixRequest<Server extends HttpServer>(
 }
 
 export async function sendRemixResponse<Server extends HttpServer>(
-  reply: FastifyReply<Server>,
+  reply: FastifyReply<RouteGenericInterface, Server>,
   nodeResponse: Response,
 ): Promise<void> {
   reply.status(nodeResponse.status);

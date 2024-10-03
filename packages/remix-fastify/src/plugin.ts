@@ -5,6 +5,7 @@ import type { InlineConfig, ViteDevServer } from "vite";
 import fastifyStatic, { type FastifyStaticOptions } from "@fastify/static";
 import { cacheHeader } from "pretty-cache-header";
 import type { ServerBuild } from "@remix-run/node";
+import type { FastifyRequest } from "fastify";
 
 import { createRequestHandler } from "./server";
 import type { HttpServer, GetLoadContextFunction } from "./server";
@@ -67,9 +68,12 @@ export type RemixFastifyOptions = {
   productionServerBuild?:
     | ServerBuild
     | (() => ServerBuild | Promise<ServerBuild>);
+  virtualModule?:
+    | "virtual:remix/server-build"
+    | "virtual:react-router/server-build";
 };
 
-export let remixFastify = fp<RemixFastifyOptions>(
+export const remixFastify = fp<RemixFastifyOptions>(
   async (
     fastify,
     {
@@ -83,6 +87,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
       assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
       defaultCacheControl = { public: true, maxAge: "1 hour" },
       productionServerBuild,
+      virtualModule = "virtual:remix/server-build",
     },
   ) => {
     let cwd = process.env.REMIX_ROOT ?? process.cwd();
@@ -109,12 +114,12 @@ export let remixFastify = fp<RemixFastifyOptions>(
     );
     let SERVER_BUILD_URL = url.pathToFileURL(SERVER_BUILD).href;
 
-    let remixHandler = createRequestHandler({
+    let remixHandler = createRequestHandler<HttpServer>({
       mode,
       getLoadContext,
       build: vite
-        ? () => vite.ssrLoadModule("virtual:remix/server-build")
-        : productionServerBuild ?? (() => import(SERVER_BUILD_URL)),
+        ? () => vite.ssrLoadModule(virtualModule)
+        : (productionServerBuild ?? (() => import(SERVER_BUILD_URL))),
     });
 
     // handle asset requests
@@ -150,19 +155,23 @@ export let remixFastify = fp<RemixFastifyOptions>(
     fastify.register(async function createRemixRequestHandler(childServer) {
       // remove the default content type parsers
       childServer.removeAllContentTypeParsers();
+
       // allow all content types
-      childServer.addContentTypeParser("*", (_request, payload, done) => {
-        done(null, payload);
-      });
+      childServer.addContentTypeParser(
+        "*",
+        (_request: FastifyRequest, payload: unknown) => {
+          return payload;
+        },
+      );
 
+      // handle SSR requests
       let basepath = basename.replace(/\/+$/, "") + "/*";
-
       childServer.all(basepath, remixHandler);
     });
   },
   {
     // replaced with the package name during build
     name: process.env.__PACKAGE_NAME__,
-    fastify: "4.x",
+    fastify: process.env.__FASTIFY_VERSION__,
   },
 );
