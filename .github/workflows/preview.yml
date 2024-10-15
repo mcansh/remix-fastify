@@ -1,7 +1,10 @@
 name: 🚀 Release (preview)
 on:
   push:
-    branches: [main]
+    branches: 
+      - main
+    paths:
+      - ./packages/*
     tags:
       - "!**"
     paths:
