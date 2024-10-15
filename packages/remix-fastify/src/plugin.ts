@@ -155,7 +155,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
         done(null, payload);
       });
 
-      let basepath = basename.replace(/\/+$/, "") + "/*";
+      let basepath = basename.replace(/\/+$/, "/*");
 
       childServer.all(basepath, remixHandler);
     });

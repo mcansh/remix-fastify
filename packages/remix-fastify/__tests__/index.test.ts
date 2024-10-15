@@ -10,6 +10,7 @@ import "@remix-run/node/install";
 import type { MockedFunction } from "vitest";
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
+import type { GetLoadContextFunction, HttpServer } from "../src/server";
 import {
   createRemixHeaders,
   createRemixRequest,
@@ -31,18 +32,20 @@ let mockedCreateRequestHandler = createRemixRequestHandler as MockedFunction<
   typeof createRemixRequestHandler
 >;
 
-function createApp() {
+function createApp(getLoadContext?: GetLoadContextFunction<HttpServer>) {
   let app = fastify();
 
-  app.all(
-    "*",
-    createRequestHandler({
+  app.all("*", (request, reply) => {
+    let handler = createRequestHandler({
       // We don't have a real app to test, but it doesn't matter. We
       // won't ever call through to the real createRequestHandler
       // @ts-expect-error
       build: undefined,
-    }),
-  );
+      getLoadContext,
+    });
+
+    return handler(request, reply);
+  });
 
   return app;
 }
@@ -132,6 +135,26 @@ describe("fastify createRequestHandler", () => {
       let response = await app.inject("/");
 
       expect(response.statusCode).toBe(204);
+    });
+
+    it("merges headers set by the server and by remix", async () => {
+      mockedCreateRequestHandler.mockImplementation(() => async () => {
+        return new Response(null, {
+          headers: { Link: "</style.css>; rel=preload; as=style" },
+        });
+      });
+
+      let app = createApp((_request, reply) => {
+        reply.header("Link", "</script.js>; rel=preload; as=script");
+        return {};
+      });
+
+      let response = await app.inject("/");
+
+      expect(response.headers["link"]).toEqual([
+        "</style.css>; rel=preload; as=style",
+        "</script.js>; rel=preload; as=script",
+      ]);
     });
 
     it("sets headers", async () => {
