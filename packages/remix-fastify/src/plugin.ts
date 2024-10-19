@@ -127,7 +127,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
       let ASSET_DIR = path.join(BUILD_DIR, "assets");
       await fastify.register(fastifyStatic, {
         root: BUILD_DIR,
-        prefix: "/",
+        prefix: basename,
         wildcard: false,
         cacheControl: true,
         dotfiles: "allow",
