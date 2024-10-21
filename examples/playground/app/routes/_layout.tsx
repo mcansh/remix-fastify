@@ -6,14 +6,18 @@ let LINKS = [
   { to: "/fetcher", label: "Fetcher" },
   { to: "loader-error", label: "Loader Error" },
   { to: "route-error", label: "Route Error" },
-  { to: "resource-route-error", label: "Resource Route Loader Error", reloadDocument: true },
+  {
+    to: "resource-route-error",
+    label: "Resource Route Loader Error",
+    reloadDocument: true,
+  },
 ] as const;
 
 export default function Layout() {
   return (
     <div>
       <header>
-        <h1 className="bg-clip-text text-4xl transparent bg-gradient-to-r from-pink-500 to-purple-500 text-fill-transparent font-semibold text-center py-2">
+        <h1 className="transparent text-fill-transparent bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text py-2 text-center text-4xl font-semibold">
           Welcome to{" "}
           <a
             target="_blank"
@@ -34,12 +38,14 @@ export default function Layout() {
           </a>
         </h1>
         <nav>
-          <ul className="flex gap-4 justify-center items-center py-2">
+          <ul className="flex items-center justify-center gap-4 py-2">
             {LINKS.map((link) => (
               <li key={link.to}>
                 <NavLink
                   to={link.to}
-                  reloadDocument={'reloadDocument' in link ? link.reloadDocument : false}
+                  reloadDocument={
+                    "reloadDocument" in link ? link.reloadDocument : false
+                  }
                   className={({ isActive }) => {
                     return isActive
                       ? "text-red-500 underline underline-offset-2"
@@ -54,9 +60,8 @@ export default function Layout() {
         </nav>
       </header>
 
-
-      <div className="mx-auto max-w-max text-center space-y-4 mt-4">
-	      <Outlet />
+      <div className="mt-4 mx-auto max-w-max space-y-4 text-center">
+        <Outlet />
       </div>
     </div>
   );

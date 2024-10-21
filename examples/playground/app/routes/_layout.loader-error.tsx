@@ -3,5 +3,5 @@ export function loader() {
 }
 
 export default function Component() {
-	return <p>You'll never see this</p>;
+  return <p>You'll never see this</p>;
 }

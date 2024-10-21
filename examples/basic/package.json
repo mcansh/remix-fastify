@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@fastify/static": "^7.0.4",
-    "@mcansh/remix-fastify": "3.4.0",
+    "@mcansh/remix-fastify": "3.4.1",
     "@remix-run/css-bundle": "*",
     "@remix-run/node": "*",
     "@remix-run/react": "*",

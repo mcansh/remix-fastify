@@ -33,7 +33,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <div className="bg-red-700 border-2 border-black text-white p-4 max-w-max mx-auto">
+        <div className="mx-auto max-w-max border-2 border-black bg-red-700 p-4 text-white">
           {data.message}
         </div>
         <Outlet />

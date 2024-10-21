@@ -97,7 +97,7 @@ export default function Index() {
 
       <form
         method="post"
-        className="flex justify-center gap-4 mt-4 flex-col mx-auto max-w-max"
+        className="mt-4 mx-auto flex max-w-max flex-col justify-center gap-4"
         action="/api/echo"
         onSubmit={async (event) => {
           event.preventDefault();
