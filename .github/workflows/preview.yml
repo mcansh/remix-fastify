@@ -4,11 +4,13 @@ on:
     branches: [main]
     tags:
       - "!**"
+    paths:
+      - ./packages/*
   pull_request:
     branches: [main]
 
 jobs:
-  approved:
+  preview:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,5 +38,11 @@ jobs:
         run: |
           echo "publish-branch=$(git branch --show-current)" >> ~/.npmrc
 
+      - name: 🏗️ Build
+        run: pnpm run build
+
+      - name: 📦 Package
+        run: pnpm run attw
+
       - name: 🚀 Publish PR
-        run: pkg-pr-new publish --compact './packages/*' --template './examples/*'
+        run: pnpx pkg-pr-new publish --compact './packages/*' --template './examples/*'
