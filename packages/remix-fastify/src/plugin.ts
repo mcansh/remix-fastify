@@ -83,7 +83,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
       assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
       defaultCacheControl = { public: true, maxAge: "1 hour" },
       productionServerBuild,
-    },
+    }
   ) => {
     let cwd = process.env.REMIX_ROOT ?? process.cwd();
 
@@ -105,7 +105,7 @@ export let remixFastify = fp<RemixFastifyOptions>(
     let SERVER_BUILD = path.join(
       resolvedBuildDirectory,
       "server",
-      serverBuildFile,
+      serverBuildFile
     );
     let SERVER_BUILD_URL = url.pathToFileURL(SERVER_BUILD).href;
 
@@ -140,29 +140,30 @@ export let remixFastify = fp<RemixFastifyOptions>(
             "cache-control",
             isAsset
               ? cacheHeader(assetCacheControl)
-              : cacheHeader(defaultCacheControl),
+              : cacheHeader(defaultCacheControl)
           );
         },
         ...fastifyStaticOptions,
       });
     }
 
-    fastify.register(async function createRemixRequestHandler(childServer) {
-      // remove the default content type parsers
-      childServer.removeAllContentTypeParsers();
-      // allow all content types
-      childServer.addContentTypeParser("*", (_request, payload, done) => {
-        done(null, payload);
-      });
+    fastify.register(
+      async function createRemixRequestHandler(childServer) {
+        // remove the default content type parsers
+        childServer.removeAllContentTypeParsers();
+        // allow all content types
+        childServer.addContentTypeParser("*", (_request, payload, done) => {
+          done(null, payload);
+        });
 
-      let basepath = basename.replace(/\/+$/, "") + "/*";
-
-      childServer.all(basepath, remixHandler);
-    });
+        childServer.all("*", remixHandler);
+      },
+      { prefix: basename }
+    );
   },
   {
     // replaced with the package name during build
     name: process.env.__PACKAGE_NAME__,
     fastify: "4.x",
-  },
+  }
 );
