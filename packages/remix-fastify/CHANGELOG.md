@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 3.4.1
+
+### Patch Changes
+
+- 88e2ad1: fix asset serving when using a basename
+
 ## 3.4.0
 
 ### Minor Changes
