@@ -15,7 +15,7 @@
     "validate": "run-p lint format typecheck"
   },
   "dependencies": {
-    "@fastify/static": "^8.0.1",
+    "@fastify/static": "^8.0.2",
     "@mcansh/remix-fastify": "workspace:*",
     "@remix-run/node": "*",
     "@remix-run/react": "*",
@@ -32,18 +32,18 @@
     "@remix-run/dev": "*",
     "@remix-run/eslint-config": "*",
     "@tailwindcss/vite": "4.0.0-alpha.28",
-    "@types/react": "npm:types-react@19.0.0-alpha.3",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-alpha.3",
-    "chokidar": "^4.0.0",
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+    "chokidar": "^4.0.1",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.3.3",
-    "prettier-plugin-tailwindcss": "^0.6.6",
+    "prettier-plugin-tailwindcss": "^0.6.8",
     "tailwindcss": "4.0.0-alpha.28",
-    "typescript": "^5.6.2",
-    "vite": "^5.4.7",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.9",
     "vite-tsconfig-paths": "^5.0.1"
   },
   "overrides": {
