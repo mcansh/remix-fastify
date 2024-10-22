@@ -7,8 +7,6 @@ on:
       - ./packages/*
     tags:
       - "!**"
-    paths:
-      - ./packages/*
   pull_request:
     branches: [main]
 
