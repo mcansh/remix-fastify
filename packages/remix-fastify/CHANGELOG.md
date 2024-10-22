@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 4.0.0
+
+### Major Changes
+
+- 3df5d21: feat: fastify v5 support
+
 ## 3.4.1
 
 ### Patch Changes
