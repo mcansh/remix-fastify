@@ -81,12 +81,12 @@ await app.register(fastifyStatic, {
   },
 });
 
-app.register(async function (childServer) {
+app.register(async function createRemixRequestHandler(childServer) {
   childServer.removeAllContentTypeParsers();
 
   // allow all content types
-  childServer.addContentTypeParser("*", (_request, payload, done) => {
-    done(null, payload);
+  childServer.addContentTypeParser("*", async (_request, payload) => {
+    return payload;
   });
 
   // handle SSR requests
