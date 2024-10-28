@@ -54,7 +54,7 @@ if (process.env.NODE_ENV === "production") {
     prefix: "/",
     wildcard: false,
     decorateReply: false,
-    cacheControl: true,
+    cacheControl: false,
     dotfiles: "allow",
     etag: true,
     serveDotFiles: true,
@@ -67,18 +67,12 @@ await app.register(fastifyStatic, {
   root: BUILD_DIR,
   prefix: "/",
   wildcard: false,
-  cacheControl: true,
+  cacheControl: false,
   dotfiles: "allow",
   etag: true,
   serveDotFiles: true,
   lastModified: true,
-  setHeaders(res, filepath) {
-    let isAsset = filepath.startsWith(BUILD_DIR);
-    res.setHeader(
-      "cache-control",
-      isAsset ? ASSET_CACHE_CONTROL : DEFAULT_CACHE_CONTROL,
-    );
-  },
+  setHeaders,
 });
 
 app.register(async function createRemixRequestHandler(childServer) {
