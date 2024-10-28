@@ -12,10 +12,6 @@ const app = fastify();
 
 await app.register(remixFastify);
 
-await app.register(cors, {
-  prefix: "/api",
-});
-
 const host = process.env.HOST === "true" ? "0.0.0.0" : "127.0.0.1";
 const desiredPort = Number(process.env.PORT) || 3000;
 const portToUse = await getPort({

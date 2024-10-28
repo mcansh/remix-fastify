@@ -1,4 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
+import { Link } from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -12,28 +13,36 @@ export default function Index() {
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>
       <ul>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/blog"
-            rel="noreferrer"
+      <li>
+          <Link to="/test"
           >
-            15m Quickstart Blog Tutorial
-          </a>
+            Static Test /test/_index
+          </Link>
         </li>
         <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/jokes"
-            rel="noreferrer"
+          <Link to="/inline-dynamic/test"
           >
-            Deep Dive Jokes App Tutorial
-          </a>
+            Inline Dynamic Test /inline-dynamic/$stub
+          </Link>
         </li>
         <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
-          </a>
+          <Link to="/dynamic/test"
+          >
+            Dynamic Test /dynamic/$stub
+          </Link>
+        </li>
+        <li>
+        <Link to="/non-dynamic"
+          >
+            Non-Dynamic Test /non-dynamic
+          </Link>
+        </li>
+
+        <li>
+        <Link to="/webgl2/extensions/WEBGL_anisotropy"
+          >
+            Bug Reproduction /webgl2/extensions/WEBGL_anisotropy
+          </Link>
         </li>
       </ul>
     </div>
