@@ -133,7 +133,7 @@ export const remixFastify = fp<RemixFastifyOptions>(
         root: BUILD_DIR,
         prefix: basename,
         wildcard: false,
-        cacheControl: true,
+        cacheControl: false,
         dotfiles: "allow",
         etag: true,
         serveDotFiles: true,
