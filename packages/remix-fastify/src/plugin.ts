@@ -133,7 +133,7 @@ export const remixFastify = fp<RemixFastifyOptions>(
         root: BUILD_DIR,
         prefix: basename,
         wildcard: false,
-        cacheControl: true,
+        cacheControl: false, // required because we are setting custom cache-control headers in setHeaders
         dotfiles: "allow",
         etag: true,
         serveDotFiles: true,
