@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 4.0.1
+
+### Patch Changes
+
+- 54fff80: Make cache-control headers work again.
+
 ## 4.0.0
 
 ### Major Changes
