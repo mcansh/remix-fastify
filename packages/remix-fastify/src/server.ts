@@ -108,7 +108,7 @@ export function createRemixRequest<Server extends HttpServer>(
     signal: controller.signal,
   };
 
-  // Abort action/loaders once we can no longer write a response iff we have
+  // Abort action/loaders once we can no longer write a response if we have
   // not yet sent a response (i.e., `close` without `finish`)
   // `finish` -> done rendering the response
   // `close` -> response can no longer be written to
