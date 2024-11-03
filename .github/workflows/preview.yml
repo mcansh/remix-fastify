@@ -1,7 +1,7 @@
 name: 🚀 Release (preview)
 on:
   push:
-    branches: 
+    branches:
       - main
     paths:
       - ./packages/*

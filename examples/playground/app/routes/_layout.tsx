@@ -60,7 +60,7 @@ export default function Layout() {
         </nav>
       </header>
 
-      <div className="mt-4 mx-auto max-w-max space-y-4 text-center">
+      <div className="mx-auto mt-4 max-w-max space-y-4 text-center">
         <Outlet />
       </div>
     </div>
