@@ -100,15 +100,20 @@ export function createRemixRequest<Server extends HttpServer>(
 ): Request {
   let url = getUrl(request);
 
-  // Abort action/loaders once we can no longer write a response
-  let controller = new AbortController();
-  reply.raw.on("close", () => controller.abort());
+  let controller: AbortController | null = new AbortController();
 
   let init: RequestInit = {
     method: request.method,
     headers: createRemixHeaders(request.headers),
     signal: controller.signal,
   };
+
+  // Abort action/loaders once we can no longer write a response if we have
+  // not yet sent a response (i.e., `close` without `finish`)
+  // `finish` -> done rendering the response
+  // `close` -> response can no longer be written to
+  reply.raw.on("finish", () => (controller = null));
+  reply.raw.on("close", () => controller?.abort());
 
   if (request.method !== "GET" && request.method !== "HEAD") {
     init.body = createReadableStreamFromReadable(request.raw);
