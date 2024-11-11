@@ -88,7 +88,7 @@ export function createRemixHeaders(
 export function getUrl<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
 ): string {
-  let origin = `${request.protocol}://${request.hostname}`;
+  let origin = `${request.protocol}://${request.host}`;
   // Use `request.originalUrl` so Remix is aware of the full path
   let url = `${origin}${request.originalUrl}`;
   return url;
