@@ -34,3 +34,15 @@ services:
         - ./packages/**/*
     buildCommand: corepack enable && pnpm i && pnpm run build
     startCommand: cd examples/vite && pnpm run start
+
+  - type: web
+    name: remix-fastify-react-router
+    plan: free
+    runtime: node
+    buildFilter:
+      paths:
+        - ./examples/react-router
+        - ./packages/**/*
+    buildCommand: corepack enable && pnpm i && pnpm run build
+    startCommand: cd examples/react-router && pnpm run start
+
