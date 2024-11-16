@@ -4,7 +4,7 @@ import type {
   RouteGenericInterface,
 } from "fastify";
 import type { AppLoadContext, ServerBuild } from "react-router";
-import { createRequestHandler as createRemixRequestHandler } from "react-router";
+import { createRequestHandler as createReactRouterRequestHandler } from "react-router";
 import { createReadableStreamFromReadable } from "@react-router/node";
 import { createRequest, sendResponse } from "../shared";
 import type {
@@ -29,7 +29,7 @@ export function createRequestHandler<Server extends HttpServer>({
   getLoadContext?: GetLoadContextFunction<Server>;
   mode?: string;
 }): RequestHandler<Server> {
-  let handleRequest = createRemixRequestHandler(build, mode);
+  let handleRequest = createReactRouterRequestHandler(build, mode);
 
   return async (request, reply) => {
     let remixRequest = createReactRouterRequest(request, reply);
