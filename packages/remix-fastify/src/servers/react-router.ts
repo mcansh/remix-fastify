@@ -3,14 +3,14 @@ import type {
   FastifyReply,
   RouteGenericInterface,
 } from "fastify";
-import { createRequestHandler as createRemixRequestHandler } from "react-router";
 import type { AppLoadContext, ServerBuild } from "react-router";
+import { createRequestHandler as createRemixRequestHandler } from "react-router";
 import { createReadableStreamFromReadable } from "@react-router/node";
-import { createRequestInit, getUrl, sendResponse } from "../shared";
+import { createRequest, sendResponse } from "../shared";
 import type {
+  GetLoadContextFunction as GenericGetLoadContextFunction,
   HttpServer,
   RequestHandler,
-  GetLoadContextFunction as GenericGetLoadContextFunction,
 } from "../shared";
 
 export type CreateRequestHandlerFunction = typeof createRequestHandler;
@@ -32,24 +32,16 @@ export function createRequestHandler<Server extends HttpServer>({
   let handleRequest = createRemixRequestHandler(build, mode);
 
   return async (request, reply) => {
-    let remixRequest = createRequest(request, reply);
+    let remixRequest = createReactRouterRequest(request, reply);
     let loadContext = await getLoadContext?.(request, reply);
     let response = await handleRequest(remixRequest, loadContext);
     return sendResponse(reply, response);
   };
 }
 
-function createRequest<Server extends HttpServer>(
+export function createReactRouterRequest<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
   reply: FastifyReply<RouteGenericInterface, Server>,
 ): Request {
-  let url = getUrl(request);
-  let init = createRequestInit(request, reply);
-
-  if (request.method !== "GET" && request.method !== "HEAD") {
-    init.body = createReadableStreamFromReadable(request.raw);
-    init.duplex = "half";
-  }
-
-  return new Request(url, init);
+  return createRequest(request, reply, createReadableStreamFromReadable);
 }

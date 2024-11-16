@@ -9,6 +9,8 @@ import type {
   RawRequestDefaultExpression,
   RouteGenericInterface,
 } from "fastify";
+import type { createReadableStreamFromReadable as RRCreateReadableStreamFromReadable } from "@react-router/node";
+import type { createReadableStreamFromReadable as RemixCreateReadableStreamFromReadable } from "@remix-run/node";
 
 export type HttpServer =
   | http.Server
@@ -39,7 +41,7 @@ export type GetLoadContextFunction<
   reply: FastifyReply<RouteGenericInterface, Server>,
 ) => Promise<AppLoadContext> | AppLoadContext;
 
-export function createRemixHeaders(
+export function createHeaders(
   requestHeaders: FastifyRequest["headers"],
 ): Headers {
   let headers = new Headers();
@@ -63,20 +65,25 @@ export function getUrl<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
 ): string {
   let origin = `${request.protocol}://${request.host}`;
-  // Use `request.originalUrl` so Remix is aware of the full path
+  // Use `request.originalUrl` so Remix and React Router are aware of the full path
   let url = `${origin}${request.originalUrl}`;
   return url;
 }
 
-export function createRequestInit<Server extends HttpServer>(
+export function createRequest<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
   reply: FastifyReply<RouteGenericInterface, Server>,
-): RequestInit {
+  createReadableStreamFromReadable:
+    | typeof RemixCreateReadableStreamFromReadable
+    | typeof RRCreateReadableStreamFromReadable,
+): Request {
+  let url = getUrl(request);
+
   let controller: AbortController | null = new AbortController();
 
   let init: RequestInit = {
     method: request.method,
-    headers: createRemixHeaders(request.headers),
+    headers: createHeaders(request.headers),
     signal: controller.signal,
   };
 
@@ -87,7 +94,12 @@ export function createRequestInit<Server extends HttpServer>(
   reply.raw.on("finish", () => (controller = null));
   reply.raw.on("close", () => controller?.abort());
 
-  return init;
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    init.body = createReadableStreamFromReadable(request.raw);
+    init.duplex = "half";
+  }
+
+  return new Request(url, init);
 }
 
 export async function sendResponse<Server extends HttpServer>(
