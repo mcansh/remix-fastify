@@ -1,15 +1,19 @@
+import type { FastifyInstance } from "fastify";
+
 import path from "node:path";
 import url from "node:url";
-import fp from "fastify-plugin";
 import type { InlineConfig, ViteDevServer } from "vite";
 import fastifyStatic, { type FastifyStaticOptions } from "@fastify/static";
 import { cacheHeader } from "pretty-cache-header";
-import type { ServerBuild } from "@remix-run/node";
+import type { GetLoadContextFunction, HttpServer } from "../shared";
+import type { CreateRequestHandlerFunction as RRCreateRequestHandlerFunction } from "../servers/react-router";
+import type { CreateRequestHandlerFunction as RemixCreateRequestHandlerFunction } from "../servers/remix";
 
-import { createRequestHandler } from "./server";
-import type { HttpServer, GetLoadContextFunction } from "./server";
-
-export type RemixFastifyOptions<Server extends HttpServer = HttpServer> = {
+export type PluginOptions<
+  Server extends HttpServer = HttpServer,
+  AppLoadContext = unknown,
+  ServerBuild = unknown,
+> = {
   /**
    * The base path for the Remix app.
    * match the `basename` in your Vite config.
@@ -35,7 +39,7 @@ export type RemixFastifyOptions<Server extends HttpServer = HttpServer> = {
    * You can think of this as an escape hatch that allows you to pass
    * environment/platform-specific values through to your loader/action.
    */
-  getLoadContext?: GetLoadContextFunction<Server>;
+  getLoadContext: GetLoadContextFunction<Server, AppLoadContext>;
   mode?: string;
   /**
    * Options to pass to the Vite server in development.
@@ -67,28 +71,40 @@ export type RemixFastifyOptions<Server extends HttpServer = HttpServer> = {
   productionServerBuild?:
     | ServerBuild
     | (() => ServerBuild | Promise<ServerBuild>);
-  virtualModule?:
+
+  /**
+   * The virtual module to load in development.
+   */
+  virtualModule:
     | "virtual:remix/server-build"
     | "virtual:react-router/server-build";
 };
 
-export const remixFastify = fp<RemixFastifyOptions>(
-  async (
-    fastify,
-    {
-      basename = "/",
-      buildDirectory = "build",
-      serverBuildFile = "index.js",
-      getLoadContext,
-      mode = process.env.NODE_ENV,
-      viteOptions,
-      fastifyStaticOptions,
-      assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
-      defaultCacheControl = { public: true, maxAge: "1 hour" },
-      productionServerBuild,
-      virtualModule = "virtual:remix/server-build",
-    },
-  ) => {
+export function createPlugin(
+  fastify: FastifyInstance,
+  {
+    basename = "/",
+    buildDirectory = "build",
+    serverBuildFile = "index.js",
+    getLoadContext,
+    mode = process.env.NODE_ENV,
+    viteOptions,
+    fastifyStaticOptions,
+    assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
+    defaultCacheControl = { public: true, maxAge: "1 hour" },
+    productionServerBuild,
+    virtualModule,
+  }: PluginOptions,
+  // TODO: look if importing the function as a type requires the peer dependency
+  createRequestHandler:
+    | RemixCreateRequestHandlerFunction
+    | RRCreateRequestHandlerFunction,
+) {
+  console.log(`inside createPlugin`);
+
+  return async () => {
+    console.log(`inside createPlugin async`);
+
     let cwd = process.env.REMIX_ROOT ?? process.cwd();
 
     let vite: ViteDevServer | undefined;
@@ -113,9 +129,11 @@ export const remixFastify = fp<RemixFastifyOptions>(
     );
     let SERVER_BUILD_URL = url.pathToFileURL(SERVER_BUILD).href;
 
-    let remixHandler = createRequestHandler<HttpServer>({
+    let handler = createRequestHandler<HttpServer>({
       mode,
+      // @ts-expect-error - fix this
       getLoadContext,
+      // @ts-expect-error - fix this
       build: vite
         ? () => vite.ssrLoadModule(virtualModule)
         : (productionServerBuild ?? (() => import(SERVER_BUILD_URL))),
@@ -139,6 +157,7 @@ export const remixFastify = fp<RemixFastifyOptions>(
         serveDotFiles: true,
         lastModified: true,
         setHeaders(res, filepath) {
+          console.log({ filepath });
           let isAsset = filepath.startsWith(ASSET_DIR);
           res.setHeader(
             "cache-control",
@@ -161,15 +180,10 @@ export const remixFastify = fp<RemixFastifyOptions>(
         });
 
         childServer.all("*", (request, reply) => {
-          remixHandler(request, reply);
+          handler(request, reply);
         });
       },
       { prefix: basename },
     );
-  },
-  {
-    // replaced with the package name during build
-    name: process.env.__PACKAGE_NAME__,
-    fastify: process.env.__FASTIFY_VERSION__,
-  },
-);
+  };
+}

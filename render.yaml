@@ -45,4 +45,3 @@ services:
         - ./packages/**/*
     buildCommand: corepack enable && pnpm i && pnpm run build
     startCommand: cd examples/react-router && pnpm run start
-

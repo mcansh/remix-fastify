@@ -1,7 +1,7 @@
 {
   "name": "@mcansh/remix-fastify",
   "version": "4.0.1",
-  "description": "Fastify server request handler for Remix",
+  "description": "Fastify server request handler for Remix and React Router",
   "repository": "mcansh/remix-fastify",
   "license": "MIT",
   "author": "Logan McAnsh <logan@mcan.sh> (https://mcan.sh)",
@@ -11,6 +11,7 @@
   "keywords": [
     "remix",
     "remix-run",
+    "react-router",
     "fastify"
   ],
   "funding": [
@@ -25,6 +26,14 @@
     ".": {
       "require": "./dist/index.cjs",
       "import": "./dist/index.js"
+    },
+    "./react-router": {
+      "require": "./dist/react-router.cjs",
+      "import": "./dist/react-router.js"
+    },
+    "./remix": {
+      "require": "./dist/remix.cjs",
+      "import": "./dist/remix.js"
     }
   },
   "main": "./dist/index.cjs",
@@ -35,10 +44,18 @@
     "dist",
     "package.json",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "react-router.cjs",
+    "react-router.d.cts",
+    "react-router.d.ts",
+    "react-router.js",
+    "remix.cjs",
+    "remix.d.cts",
+    "remix.d.ts",
+    "remix.js"
   ],
   "scripts": {
-    "prepublishOnly": "npm run build && cp ../../LICENSE LICENSE && publint && attw $(npm pack)",
+    "prepublishOnly": "npm run build && cp ../../LICENSE LICENSE && publint && attw --pack",
     "typecheck": "tsc",
     "dev": "tsup --watch",
     "build": "tsup",
@@ -52,18 +69,20 @@
     "pretty-cache-header": "^1.0.0"
   },
   "devDependencies": {
+    "@react-router/node": "7.0.0-pre.5",
     "@remix-run/node": "^2.13.1",
     "@types/node": "^22.7.7",
     "@typescript/lib-dom": "npm:@types/web@^0.0.174",
     "fastify": "^5.0.0",
     "node-mocks-http": "^1.16.1",
+    "react-router": "^7.0.0-pre.5",
     "typescript": "^5.6.3",
     "vite": "^5.4.9"
   },
   "peerDependencies": {
     "@remix-run/node": "^2.0.0",
     "fastify": "^3.29.0 || ^4.0.0 || ^5.0.0",
-    "react-router": "*",
+    "react-router": ">=7.0.0 || >=7.0.0.pre",
     "vite": "^5.0.0"
   },
   "peerDependenciesMeta": {

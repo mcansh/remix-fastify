@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { remixFastify } from "@mcansh/remix-fastify";
+import { reactRouterFastify } from "@mcansh/remix-fastify/react-router";
 import { installGlobals } from "@remix-run/node";
 import { fastify } from "fastify";
 import sourceMapSupport from "source-map-support";
@@ -14,7 +14,7 @@ app.post("/api/echo", async (request, reply) => {
   reply.send(request.body);
 });
 
-await app.register(remixFastify, {
+await app.register(reactRouterFastify, {
   getLoadContext(request, reply) {
     return { loadContextName: "Logan" };
   },
