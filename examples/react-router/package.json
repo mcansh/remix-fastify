@@ -1,4 +1,5 @@
 {
+  "name": "react-router-example-template",
   "private": true,
   "sideEffects": false,
   "type": "module",
