@@ -11,3 +11,4 @@ yalc.lock
 # added during build
 /packages/*/LICENSE
 .tsup
+.idea
