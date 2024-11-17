@@ -25,6 +25,7 @@
     "@manypkg/get-packages": "^2.2.2",
     "@npmcli/package-json": "^6.0.1",
     "@remix-run/eslint-config": "2.13.1",
+    "@total-typescript/tsconfig": "^1.0.4",
     "@types/npmcli__package-json": "^4.0.4",
     "chalk": "^5.3.0",
     "eslint": "^9.13.0",
