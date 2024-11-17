@@ -100,11 +100,7 @@ export function createPlugin(
     | RemixCreateRequestHandlerFunction
     | RRCreateRequestHandlerFunction,
 ) {
-  console.log(`inside createPlugin`);
-
   return async () => {
-    console.log(`inside createPlugin async`);
-
     let cwd = process.env.REMIX_ROOT ?? process.cwd();
 
     let vite: ViteDevServer | undefined;
@@ -157,7 +153,6 @@ export function createPlugin(
         serveDotFiles: true,
         lastModified: true,
         setHeaders(res, filepath) {
-          console.log({ filepath });
           let isAsset = filepath.startsWith(ASSET_DIR);
           res.setHeader(
             "cache-control",
