@@ -1,4 +1,5 @@
 {
+  "extends": "@total-typescript/tsconfig/bundler/dom/app",
   "include": [
     "**/*.ts",
     "**/*.tsx",
@@ -8,26 +9,13 @@
     "**/.client/**/*.tsx"
   ],
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": ["@remix-run/node", "vite/client"],
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "module": "ESNext",
     "jsx": "react-jsx",
-    "moduleResolution": "Bundler",
-    "moduleDetection": "force",
-    "resolveJsonModule": true,
-    "target": "ES2022",
-    "skipLibCheck": true,
-    "strict": true,
-    "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
       "~/*": ["./app/*"]
     },
-
-    // Remix takes care of building everything in `remix build`.
     "noEmit": true
   }
 }

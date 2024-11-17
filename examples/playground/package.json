@@ -32,6 +32,7 @@
     "@remix-run/dev": "*",
     "@remix-run/eslint-config": "*",
     "@tailwindcss/vite": "4.0.0-alpha.28",
+    "@total-typescript/tsconfig": "^1.0.4",
     "@types/react": "npm:types-react@19.0.0-rc.1",
     "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
     "chokidar": "^4.0.1",
