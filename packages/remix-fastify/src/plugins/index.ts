@@ -71,13 +71,6 @@ export type PluginOptions<
   productionServerBuild?:
     | ServerBuild
     | (() => ServerBuild | Promise<ServerBuild>);
-
-  /**
-   * The virtual module to load in development.
-   */
-  virtualModule:
-    | "virtual:remix/server-build"
-    | "virtual:react-router/server-build";
 };
 
 export function createPlugin(
@@ -93,8 +86,10 @@ export function createPlugin(
     assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
     defaultCacheControl = { public: true, maxAge: "1 hour" },
     productionServerBuild,
-    virtualModule,
   }: PluginOptions,
+  virtualModule:
+    | "virtual:remix/server-build"
+    | "virtual:react-router/server-build",
   // TODO: look if importing the function as a type requires the peer dependency
   createRequestHandler:
     | RemixCreateRequestHandlerFunction

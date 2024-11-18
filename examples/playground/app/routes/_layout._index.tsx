@@ -1,12 +1,12 @@
 import * as React from "react";
-import type { DataFunctionArgs } from "@remix-run/node";
-import { defer, redirect } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { Await, Form, useAsyncValue, useLoaderData } from "@remix-run/react";
 
 import { sessionStorage } from "~/session.server";
 import { sleep } from "~/sleep";
 
-export async function loader({ request, context }: DataFunctionArgs) {
+export async function loader({ request, context }: LoaderFunctionArgs) {
   let cookie = request.headers.get("Cookie");
   let session = await sessionStorage.getSession(cookie);
 
@@ -16,13 +16,13 @@ export async function loader({ request, context }: DataFunctionArgs) {
     throw new Error("loadContextName must be a string");
   }
 
-  return defer({
+  return {
     name: sleep<string>(1_000, session.get("name") || "Anonymous"),
     loadContextName,
-  });
+  };
 }
 
-export async function action({ request }: DataFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   let cookie = request.headers.get("Cookie");
   let session = await sessionStorage.getSession(cookie);
   let formData = await request.formData();
@@ -55,24 +55,24 @@ export async function action({ request }: DataFunctionArgs) {
 }
 
 export default function Index() {
-  let data = useLoaderData<typeof loader>();
+  let loaderData = useLoaderData<typeof loader>();
   const [echo, setEcho] = React.useState<string | null>(null);
 
   return (
     <>
       <React.Suspense fallback={<h2 className="text-gray-400">loading...</h2>}>
-        <Await resolve={data.name} errorElement={<h2>failed...</h2>}>
+        <Await resolve={loaderData.name} errorElement={<h2>failed...</h2>}>
           {(resolvedName) => <h2>Hello {resolvedName}</h2>}
         </Await>
       </React.Suspense>
 
-      <h2>Context: {data.loadContextName}</h2>
+      <h2>Context: {loaderData.loadContextName}</h2>
 
       <Form method="post" className="flex justify-center gap-2">
         <label>
           <span>Name: </span>
           <React.Suspense fallback={<FallbackNameInput />}>
-            <Await resolve={data.name}>
+            <Await resolve={loaderData.name}>
               <NameInput />
             </Await>
           </React.Suspense>

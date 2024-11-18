@@ -2,7 +2,7 @@
   "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
   "extends": "@total-typescript/tsconfig/bundler/dom/app",
   "compilerOptions": {
-    "types": ["@react-router/node", "vite/client"],
+    "types": ["@remix-run/node"],
     "jsx": "react-jsx",
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",

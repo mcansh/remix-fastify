@@ -13,7 +13,8 @@ import type {
   RequestHandler,
 } from "../shared";
 
-export type CreateRequestHandlerFunction = typeof createRequestHandler;
+export type CreateRequestHandlerFunction =
+  typeof createReactRouterRequestHandler;
 export type GetLoadContextFunction<Server extends HttpServer = HttpServer> =
   GenericGetLoadContextFunction<Server, AppLoadContext>;
 

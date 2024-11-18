@@ -17,21 +17,21 @@
   "dependencies": {
     "@fastify/static": "^8.0.2",
     "@mcansh/remix-fastify": "workspace:*",
-    "@remix-run/node": "*",
-    "@remix-run/react": "*",
+    "@remix-run/node": "^2.14.0",
+    "@remix-run/react": "^2.14.0",
     "chalk": "^5.3.0",
-    "fastify": "^5.0.0",
+    "fastify": "^5.1.0",
     "get-port": "^7.1.0",
     "isbot": "^5.1.17",
-    "react": "19.0.0-rc-100dfd7dab-20240701",
-    "react-dom": "19.0.0-rc-100dfd7dab-20240701",
+    "react": "19.0.0-rc.1",
+    "react-dom": "19.0.0-rc.1",
     "source-map-support": "^0.5.21"
   },
   "devDependencies": {
     "@fastify/middie": "^9.0.2",
-    "@remix-run/dev": "*",
-    "@remix-run/eslint-config": "*",
-    "@tailwindcss/vite": "4.0.0-alpha.28",
+    "@remix-run/dev": "^2.14.0",
+    "@remix-run/eslint-config": "^2.14.0",
+    "@tailwindcss/vite": "4.0.0-alpha.34",
     "@total-typescript/tsconfig": "^1.0.4",
     "@types/react": "npm:types-react@19.0.0-rc.1",
     "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
@@ -42,10 +42,10 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
-    "tailwindcss": "4.0.0-alpha.28",
+    "tailwindcss": "4.0.0-alpha.34",
     "typescript": "^5.6.3",
-    "vite": "^5.4.9",
-    "vite-tsconfig-paths": "^5.0.1"
+    "vite": "^5.4.11",
+    "vite-tsconfig-paths": "^5.1.2"
   },
   "overrides": {
     "@types/react": "$@types/react",

@@ -1,7 +1,7 @@
 import fp from "fastify-plugin";
 import type { AppLoadContext, ServerBuild } from "@remix-run/node";
 
-import { createRequestHandler } from "../servers/remix";
+import { createRemixRequestHandler } from "../servers/remix";
 import type { HttpServer } from "../shared";
 import { createPlugin, type PluginOptions } from ".";
 
@@ -14,11 +14,9 @@ export const remixFastify = fp<RemixFastifyOptions>(
   async (fastify, options) => {
     let plugin = createPlugin(
       fastify,
-      {
-        ...options,
-        virtualModule: "virtual:remix/server-build",
-      },
-      createRequestHandler,
+      options,
+      "virtual:remix/server-build",
+      createRemixRequestHandler,
     );
     return plugin();
   },
