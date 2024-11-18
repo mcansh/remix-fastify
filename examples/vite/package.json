@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "build": "remix vite:build && tsc --project ./tsconfig.server.json",
-    "dev": "cross-env NODE_ENV=development tsx --watch-path ./server/index.ts ./server/index.ts",
+    "dev": "cross-env NODE_ENV=development node --no-warnings --experimental-strip-types --experimental-transform-types ./server/index.ts",
     "lint": "eslint --ignore-path .gitignore --no-error-on-unmatched-pattern --cache --cache-location node_modules/.cache/eslint --fix .",
     "format": "prettier --ignore-path .gitignore --ignore-unknown --cache --cache-location node_modules/.cache/prettiercache --write .",
-    "start": "cross-env NODE_ENV=production node ./server/index.js",
+    "start": "cross-env NODE_ENV=production node --no-warnings --experimental-strip-types --experimental-transform-types ./server/index.ts",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -35,7 +35,6 @@
     "@types/source-map-support": "^0.5.10",
     "eslint": "^8.57.0",
     "prettier": "^3.3.3",
-    "tsx": "^4.19.1",
     "typescript": "^5.6.3",
     "vite": "^5.4.9",
     "vite-tsconfig-paths": "^5.0.1"
