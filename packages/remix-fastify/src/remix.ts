@@ -4,7 +4,10 @@ import type {
   GetLoadContextFunction as SharedGetLoadContextFunction,
 } from "./shared";
 export type { RequestHandler } from "./shared";
-export { createRequestHandler } from "./servers/remix";
+export { createRemixRequestHandler } from "./servers/remix";
+
+/** @deprecated this function has been renamed to createRemixRequestHandler */
+export { createRemixRequestHandler as createRequestHandler } from "./servers/remix";
 export { remixFastify } from "./plugins/remix";
 export type { RemixFastifyOptions } from "./plugins/remix";
 

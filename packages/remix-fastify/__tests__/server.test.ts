@@ -1,17 +1,24 @@
 import { Readable } from "stream";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import fastify from "fastify";
-import { createRequest } from "node-mocks-http";
+import { createRequest as createMockRequest } from "node-mocks-http";
 import {
   createReadableStreamFromReadable as remixCreateReadableStreamFromReadable,
-  createRequestHandler as createRemixRequestHandler,
+  createRequestHandler as createRemixRequestHandlerImpl,
 } from "@remix-run/node";
-import { createRequestHandler as createReactRouterRequestHandler } from "react-router";
+import { createRequestHandler as createReactRouterRequestHandlerImpl } from "react-router";
 import { createReadableStreamFromReadable as reactRouterCreateReadableStreamFromReadable } from "@react-router/node";
 import type { MockedFunction } from "vitest";
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
-import { createRemixRequest, createRequestHandler } from "../src/servers/remix";
+import {
+  createRemixRequest,
+  createRemixRequestHandler,
+} from "../src/servers/remix";
+import {
+  createReactRouterRequest,
+  createReactRouterRequestHandler,
+} from "../src/servers/react-router";
 import { createHeaders } from "../src/shared";
 
 // We don't want to test that the remix server works here (that's what the
@@ -27,10 +34,8 @@ vi.mock("@remix-run/node", async () => {
 });
 // We don't want to test that the remix server works here (that's what the
 // playwright tests do), we just want to test the fastify adapter
-vi.mock("react-router", async () => {
-  let original =
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    await vi.importActual<typeof import("react-router")>("react-router");
+vi.mock("react-router", () => {
+  let original = vi.importActual("react-router");
   return {
     ...original,
     createRequestHandler: vi.fn(),
@@ -38,46 +43,58 @@ vi.mock("react-router", async () => {
 });
 
 let mockedRemixCreateRequestHandler =
-  createRemixRequestHandler as MockedFunction<typeof createRemixRequestHandler>;
+  createRemixRequestHandlerImpl as MockedFunction<
+    typeof createRemixRequestHandlerImpl
+  >;
 let mockedReactRouterCreateRequestHandler =
-  createReactRouterRequestHandler as MockedFunction<
-    typeof createReactRouterRequestHandler
+  createReactRouterRequestHandlerImpl as MockedFunction<
+    typeof createReactRouterRequestHandlerImpl
   >;
 
-function createApp() {
-  let app = fastify();
+type MockedCreateRequestHandler =
+  | typeof mockedRemixCreateRequestHandler
+  | typeof mockedReactRouterCreateRequestHandler;
 
-  app.all(
-    "*",
-    createRequestHandler({
-      // We don't have a real app to test, but it doesn't matter. We
-      // won't ever call through to the real createRequestHandler
-      // @ts-expect-error
-      build: undefined,
-    }),
-  );
-
-  return app;
-}
+type CreateReadableStreamFromReadable =
+  | typeof remixCreateReadableStreamFromReadable
+  | typeof reactRouterCreateReadableStreamFromReadable;
 
 function runTests(
   name: string,
   {
+    createRequest,
+    createRequestHandler,
     createReadableStreamFromReadable,
-    handler,
+    mockedHandler,
   }: {
-    handler:
-      | typeof mockedRemixCreateRequestHandler
-      | typeof mockedReactRouterCreateRequestHandler;
-    createReadableStreamFromReadable:
-      | typeof remixCreateReadableStreamFromReadable
-      | typeof reactRouterCreateReadableStreamFromReadable;
+    createRequest: typeof createRemixRequest | typeof createReactRouterRequest;
+    createRequestHandler:
+      | typeof createRemixRequestHandler
+      | typeof createReactRouterRequestHandler;
+    mockedHandler: MockedCreateRequestHandler;
+    createReadableStreamFromReadable: CreateReadableStreamFromReadable;
   },
 ) {
+  function createApp() {
+    let app = fastify();
+
+    app.all(
+      "*",
+      createRequestHandler({
+        // We don't have a real app to test, but it doesn't matter. We
+        // won't ever call through to the real createRequestHandler
+        // @ts-expect-error
+        build: undefined,
+      }),
+    );
+
+    return app;
+  }
+
   describe(`[${name}] fastify createRequestHandler`, () => {
     describe(`[${name}] basic requests`, () => {
       afterEach(() => {
-        handler.mockReset();
+        mockedHandler.mockReset();
       });
 
       afterAll(() => {
@@ -85,7 +102,7 @@ function runTests(
       });
 
       it(`[${name}] handles requests`, async () => {
-        handler.mockImplementation(() => async (req) => {
+        mockedHandler.mockImplementation(() => async (req) => {
           return new Response(`URL: ${new URL(req.url).pathname}`);
         });
 
@@ -98,7 +115,7 @@ function runTests(
       });
 
       it(`[${name}] handles root // URLs`, async () => {
-        handler.mockImplementation(() => async (req) => {
+        mockedHandler.mockImplementation(() => async (req) => {
           return new Response(`URL: ${new URL(req.url).pathname}`);
         });
 
@@ -111,7 +128,7 @@ function runTests(
       });
 
       it(`[${name}] handles nested // URLs`, async () => {
-        handler.mockImplementation(() => async (req) => {
+        mockedHandler.mockImplementation(() => async (req) => {
           return new Response(`URL: ${new URL(req.url).pathname}`);
         });
 
@@ -124,7 +141,7 @@ function runTests(
       });
 
       it(`[${name}] handles null body`, async () => {
-        handler.mockImplementation(() => async () => {
+        mockedHandler.mockImplementation(() => async () => {
           return new Response(null);
         });
 
@@ -137,7 +154,7 @@ function runTests(
 
       // https://github.com/node-fetch/node-fetch/blob/4ae35388b078bddda238277142bf091898ce6fda/test/response.js#L142-L148
       it(`[${name}] handles body as stream`, async () => {
-        handler.mockImplementation(() => async () => {
+        mockedHandler.mockImplementation(() => async () => {
           let readable = Readable.from("hello world");
           let stream = createReadableStreamFromReadable(readable);
           return new Response(stream);
@@ -151,7 +168,7 @@ function runTests(
       });
 
       it(`[${name}] handles status codes`, async () => {
-        handler.mockImplementation(() => async () => {
+        mockedHandler.mockImplementation(() => async () => {
           return new Response(null, { status: 204 });
         });
 
@@ -162,7 +179,7 @@ function runTests(
       });
 
       it(`[${name}] sets headers`, async () => {
-        handler.mockImplementation(() => async () => {
+        mockedHandler.mockImplementation(() => async () => {
           let headers = new Headers({ "X-Time-Of-Year": "most wonderful" });
           headers.append(
             "Set-Cookie",
@@ -235,9 +252,9 @@ function runTests(
     });
   });
 
-  describe("fastify createRemixRequest", () => {
+  describe(`[${name}] fastify createRequest`, () => {
     it(`[${name}] creates a request with the correct headers`, async () => {
-      let fastifyRequest = createRequest({
+      let fastifyRequest = createMockRequest({
         url: "/foo/bar",
         method: "GET",
         protocol: "http",
@@ -250,7 +267,7 @@ function runTests(
 
       let fastifyReply = { raw: { on: vi.fn() } } as unknown as FastifyReply;
 
-      let request = createRemixRequest(fastifyRequest, fastifyReply);
+      let request = createRequest(fastifyRequest, fastifyReply);
 
       expect(request.headers.get("cache-control")).toBe(
         "max-age=300, s-maxage=3600",
@@ -261,10 +278,14 @@ function runTests(
 }
 
 runTests("remix", {
-  handler: mockedRemixCreateRequestHandler,
+  createRequest: createRemixRequest,
+  createRequestHandler: createRemixRequestHandler,
+  mockedHandler: mockedRemixCreateRequestHandler,
   createReadableStreamFromReadable: remixCreateReadableStreamFromReadable,
 });
 runTests("react-router", {
-  handler: mockedReactRouterCreateRequestHandler,
+  createRequest: createReactRouterRequest,
+  createRequestHandler: createReactRouterRequestHandler,
+  mockedHandler: mockedReactRouterCreateRequestHandler,
   createReadableStreamFromReadable: reactRouterCreateReadableStreamFromReadable,
 });

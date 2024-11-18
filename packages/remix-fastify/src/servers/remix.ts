@@ -5,7 +5,7 @@ import type {
 } from "fastify";
 import type { AppLoadContext, ServerBuild } from "@remix-run/node";
 import {
-  createRequestHandler as createRemixRequestHandler,
+  createRequestHandler,
   createReadableStreamFromReadable,
 } from "@remix-run/node";
 import { createRequest, sendResponse } from "../shared";
@@ -15,14 +15,14 @@ import type {
   RequestHandler,
 } from "../shared";
 
-export type CreateRequestHandlerFunction = typeof createRequestHandler;
+export type CreateRequestHandlerFunction = typeof createRemixRequestHandler;
 export type GetLoadContextFunction<Server extends HttpServer = HttpServer> =
   GenericGetLoadContextFunction<Server, AppLoadContext>;
 
 /**
  * Returns a request handler for Fastify that serves the response using Remix.
  */
-export function createRequestHandler<Server extends HttpServer>({
+export function createRemixRequestHandler<Server extends HttpServer>({
   build,
   getLoadContext,
   mode = process.env.NODE_ENV,
@@ -31,7 +31,7 @@ export function createRequestHandler<Server extends HttpServer>({
   getLoadContext?: GetLoadContextFunction<Server>;
   mode?: string;
 }): RequestHandler<Server> {
-  let handleRequest = createRemixRequestHandler(build, mode);
+  let handleRequest = createRequestHandler(build, mode);
 
   return async (request, reply) => {
     let remixRequest = createRemixRequest(request, reply);
