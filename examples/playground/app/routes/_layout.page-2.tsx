@@ -1,14 +1,14 @@
 import * as React from "react";
-import { defer } from "@remix-run/node";
+
 import { Await, useLoaderData } from "@remix-run/react";
 
 import { withDelay } from "~/sleep";
 
 export function loader() {
-  return defer({
+  return {
     message: "loader data from page 2",
     deferred: withDelay(2_000, "some text\n".repeat(2_000)),
-  });
+  };
 }
 
 export default function Page2() {

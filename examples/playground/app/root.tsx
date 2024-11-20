@@ -1,4 +1,4 @@
-import { json } from "@remix-run/node";
+import { data } from "@remix-run/node";
 import {
   Links,
   Meta,
@@ -10,11 +10,12 @@ import {
 import "./styles/global.css";
 
 export function loader() {
-  return json({ message: "Hello from the root loader" });
+  return data({ message: "Hello from the root loader" });
 }
 
 export default function App() {
-  let data = useLoaderData<typeof loader>();
+  let loaderData = useLoaderData<typeof loader>();
+
   return (
     <html lang="en">
       <head>
@@ -28,7 +29,7 @@ export default function App() {
       </head>
       <body>
         <div className="mx-auto max-w-max border-2 border-black bg-red-700 p-4 text-white">
-          {data.message}
+          {loaderData.message}
         </div>
         <Outlet />
         <Scripts />

@@ -1,23 +1,10 @@
 {
   "exclude": ["./dist", "./__tests__", "./node_modules"],
   "include": ["./src"],
+  "extends": "@total-typescript/tsconfig/bundler/no-dom/library",
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "target": "ES2022",
-    "module": "ES2022",
-    "verbatimModuleSyntax": true,
-    "noUncheckedIndexedAccess": true,
-
-    "moduleResolution": "Bundler",
-    "moduleDetection": "force",
-    "strict": true,
-    "outDir": "./dist",
-    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "rootDir": ".",
-    "declaration": true,
-    "emitDeclarationOnly": true
+    "outDir": "./dist",
+    "rootDir": "."
   }
 }

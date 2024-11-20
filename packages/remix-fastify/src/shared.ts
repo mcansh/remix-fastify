@@ -3,17 +3,14 @@ import type * as http from "node:http";
 import type * as http2 from "node:http2";
 import type * as https from "node:https";
 import type {
-  FastifyRequest,
   FastifyReply,
-  RawRequestDefaultExpression,
+  FastifyRequest,
   RawReplyDefaultExpression,
+  RawRequestDefaultExpression,
   RouteGenericInterface,
 } from "fastify";
-import type { AppLoadContext, ServerBuild } from "@remix-run/node";
-import {
-  createRequestHandler as createRemixRequestHandler,
-  createReadableStreamFromReadable,
-} from "@remix-run/node";
+import type { createReadableStreamFromReadable as RRCreateReadableStreamFromReadable } from "@react-router/node";
+import type { createReadableStreamFromReadable as RemixCreateReadableStreamFromReadable } from "@remix-run/node";
 
 export type HttpServer =
   | http.Server
@@ -24,6 +21,11 @@ export type HttpServer =
 export type HttpRequest = RawRequestDefaultExpression<HttpServer>;
 export type HttpResponse = RawReplyDefaultExpression<HttpServer>;
 
+export type RequestHandler<Server extends HttpServer> = (
+  request: FastifyRequest<RouteGenericInterface, Server>,
+  reply: FastifyReply<RouteGenericInterface, Server>,
+) => Promise<void>;
+
 /**
  * A function that returns the value to use as `context` in route `loader` and
  * `action` functions.
@@ -31,41 +33,15 @@ export type HttpResponse = RawReplyDefaultExpression<HttpServer>;
  * You can think of this as an escape hatch that allows you to pass
  * environment/platform-specific values through to your loader/action.
  */
-export type GetLoadContextFunction<Server extends HttpServer> = (
+export type GetLoadContextFunction<
+  Server extends HttpServer,
+  AppLoadContext,
+> = (
   request: FastifyRequest<RouteGenericInterface, Server>,
   reply: FastifyReply<RouteGenericInterface, Server>,
 ) => Promise<AppLoadContext> | AppLoadContext;
 
-export type RequestHandler<Server extends HttpServer> = (
-  request: FastifyRequest<RouteGenericInterface, Server>,
-  reply: FastifyReply<RouteGenericInterface, Server>,
-) => Promise<void>;
-
-/**
- * Returns a request handler for Fastify that serves the response using Remix.
- */
-export function createRequestHandler<Server extends HttpServer>({
-  build,
-  getLoadContext,
-  mode = process.env.NODE_ENV,
-}: {
-  build: ServerBuild | (() => ServerBuild | Promise<ServerBuild>);
-  getLoadContext?: GetLoadContextFunction<Server>;
-  mode?: string;
-}): RequestHandler<Server> {
-  let handleRequest = createRemixRequestHandler(build, mode);
-
-  return async (request, reply) => {
-    let remixRequest = createRemixRequest(request, reply);
-    let loadContext = await getLoadContext?.(request, reply);
-
-    let response = await handleRequest(remixRequest, loadContext);
-
-    return sendRemixResponse(reply, response);
-  };
-}
-
-export function createRemixHeaders(
+export function createHeaders(
   requestHeaders: FastifyRequest["headers"],
 ): Headers {
   let headers = new Headers();
@@ -89,14 +65,17 @@ export function getUrl<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
 ): string {
   let origin = `${request.protocol}://${request.host}`;
-  // Use `request.originalUrl` so Remix is aware of the full path
+  // Use `request.originalUrl` so Remix and React Router are aware of the full path
   let url = `${origin}${request.originalUrl}`;
   return url;
 }
 
-export function createRemixRequest<Server extends HttpServer>(
+export function createRequest<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
   reply: FastifyReply<RouteGenericInterface, Server>,
+  createReadableStreamFromReadable:
+    | typeof RemixCreateReadableStreamFromReadable
+    | typeof RRCreateReadableStreamFromReadable,
 ): Request {
   let url = getUrl(request);
 
@@ -104,7 +83,7 @@ export function createRemixRequest<Server extends HttpServer>(
 
   let init: RequestInit = {
     method: request.method,
-    headers: createRemixHeaders(request.headers),
+    headers: createHeaders(request.headers),
     signal: controller.signal,
   };
 
@@ -123,7 +102,7 @@ export function createRemixRequest<Server extends HttpServer>(
   return new Request(url, init);
 }
 
-export async function sendRemixResponse<Server extends HttpServer>(
+export async function sendResponse<Server extends HttpServer>(
   reply: FastifyReply<RouteGenericInterface, Server>,
   nodeResponse: Response,
 ): Promise<void> {
@@ -152,7 +131,6 @@ function responseToReadable(response: Response): Readable | null {
       readable.push(Buffer.from(result.value));
     } else {
       readable.push(null);
-      return;
     }
   };
 

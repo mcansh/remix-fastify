@@ -30,6 +30,7 @@
   "devDependencies": {
     "@remix-run/dev": "*",
     "@remix-run/eslint-config": "*",
+    "@total-typescript/tsconfig": "^1.0.4",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
     "@types/source-map-support": "^0.5.10",

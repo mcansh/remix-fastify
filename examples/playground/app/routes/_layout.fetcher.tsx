@@ -1,10 +1,9 @@
-import type { DataFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { useFetcher } from "@remix-run/react";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import { data, useFetcher } from "@remix-run/react";
 
-export async function action({ request }: DataFunctionArgs) {
-  let data = await request.json();
-  return json(data);
+export async function action({ request }: ActionFunctionArgs) {
+  let response = await request.json();
+  return data(response);
 }
 
 export default function () {

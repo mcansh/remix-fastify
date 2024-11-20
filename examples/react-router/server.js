@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { remixFastify } from "@mcansh/remix-fastify";
+import { reactRouterFastify } from "@mcansh/remix-fastify/react-router";
 import { fastify } from "fastify";
 import sourceMapSupport from "source-map-support";
 import getPort, { portNumbers } from "get-port";
@@ -8,9 +8,7 @@ sourceMapSupport.install();
 
 let app = fastify();
 
-await app.register(remixFastify, {
-  virtualModule: "virtual:react-router/server-build",
-});
+await app.register(reactRouterFastify);
 
 const desiredPort = Number(process.env.PORT) || 3000;
 const portToUse = await getPort({
