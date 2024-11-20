@@ -1,5 +1,13 @@
 # @mcansh/remix-fastify
 
+## 4.0.2
+
+### Patch Changes
+
+- bf0b464: fix: update url generation for fastify v5
+- cd7e8d5: chore: update adapter logic for aborting requests
+- 206509a: feat: add react router entry point
+
 ## 4.0.1
 
 ### Patch Changes
