@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 4.0.3
+
+### Patch Changes
+
+- a8559e0: fix: mark getLoadContext as optional
+
 ## 4.0.2
 
 ### Patch Changes
