@@ -1,3 +1,4 @@
+import { createReadableStreamFromReadable } from "@react-router/node";
 import type {
   FastifyRequest,
   FastifyReply,
@@ -5,7 +6,7 @@ import type {
 } from "fastify";
 import type { AppLoadContext, ServerBuild } from "react-router";
 import { createRequestHandler } from "react-router";
-import { createReadableStreamFromReadable } from "@react-router/node";
+
 import { createRequest, sendResponse } from "../shared";
 import type {
   GetLoadContextFunction as GenericGetLoadContextFunction,

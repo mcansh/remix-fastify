@@ -1,13 +1,14 @@
-import type {
-  FastifyRequest,
-  FastifyReply,
-  RouteGenericInterface,
-} from "fastify";
 import type { AppLoadContext, ServerBuild } from "@remix-run/node";
 import {
   createRequestHandler,
   createReadableStreamFromReadable,
 } from "@remix-run/node";
+import type {
+  FastifyRequest,
+  FastifyReply,
+  RouteGenericInterface,
+} from "fastify";
+
 import { createRequest, sendResponse } from "../shared";
 import type {
   GetLoadContextFunction as GenericGetLoadContextFunction,

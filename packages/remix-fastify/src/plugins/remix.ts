@@ -1,9 +1,11 @@
-import fp from "fastify-plugin";
 import type { AppLoadContext, ServerBuild } from "@remix-run/node";
+import fp from "fastify-plugin";
 
 import { createRemixRequestHandler } from "../servers/remix";
 import type { HttpServer } from "../shared";
-import { createPlugin, type PluginOptions } from ".";
+
+import { createPlugin } from ".";
+import type { PluginOptions } from ".";
 
 export type RemixFastifyOptions = Omit<
   PluginOptions<HttpServer, AppLoadContext, ServerBuild>,
