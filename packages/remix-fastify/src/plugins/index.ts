@@ -1,13 +1,15 @@
-import type { FastifyInstance } from "fastify";
-
 import path from "node:path";
 import url from "node:url";
-import type { InlineConfig, ViteDevServer } from "vite";
-import fastifyStatic, { type FastifyStaticOptions } from "@fastify/static";
+
+import fastifyStatic from "@fastify/static";
+import type { FastifyStaticOptions } from "@fastify/static";
+import type { FastifyInstance } from "fastify";
 import { cacheHeader } from "pretty-cache-header";
-import type { GetLoadContextFunction, HttpServer } from "../shared";
+import type { InlineConfig, ViteDevServer } from "vite";
+
 import type { CreateRequestHandlerFunction as RRCreateRequestHandlerFunction } from "../servers/react-router";
 import type { CreateRequestHandlerFunction as RemixCreateRequestHandlerFunction } from "../servers/remix";
+import type { GetLoadContextFunction, HttpServer } from "../shared";
 
 export type PluginOptions<
   Server extends HttpServer = HttpServer,
@@ -39,7 +41,7 @@ export type PluginOptions<
    * You can think of this as an escape hatch that allows you to pass
    * environment/platform-specific values through to your loader/action.
    */
-  getLoadContext: GetLoadContextFunction<Server, AppLoadContext>;
+  getLoadContext?: GetLoadContextFunction<Server, AppLoadContext>;
   mode?: string;
   /**
    * Options to pass to the Vite server in development.
