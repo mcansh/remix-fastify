@@ -4,6 +4,7 @@ import { remixFastify } from "@mcansh/remix-fastify";
 import { fastify } from "fastify";
 import sourceMapSupport from "source-map-support";
 import getPort, { portNumbers } from "get-port";
+import cors from "@fastify/cors";
 
 sourceMapSupport.install();
 
