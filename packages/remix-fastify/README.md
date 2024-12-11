@@ -35,32 +35,30 @@ in the root of your project create a server directory and add index.ts
 `server/index.ts`
 
 ```ts
-import process from "node:process";
-import { remixFastify } from "@mcansh/remix-fastify";
 import chalk from "chalk";
+import { remixFastify } from "@mcansh/remix-fastify";
 import { fastify } from "fastify";
 import sourceMapSupport from "source-map-support";
 import getPort, { portNumbers } from "get-port";
 
 sourceMapSupport.install();
 
-const app = fastify();
+let app = fastify();
 
 await app.register(remixFastify);
 
-const host = process.env.HOST || "127.0.0.1";
-const desiredPort = Number(process.env.PORT) || 3000;
-const portToUse = await getPort({
+let host = process.env.HOST || "127.0.0.1";
+let desiredPort = Number(process.env.PORT) || 3000;
+let portToUse = await getPort({
   port: portNumbers(desiredPort, desiredPort + 100),
 });
 
 let address = await app.listen({ port: portToUse, host });
-let { port: usedPort } = new URL(address);
 
-if (usedPort !== String(desiredPort)) {
+if (portToUse !== desiredPort) {
   console.warn(
     chalk.yellow(
-      `⚠️ Port ${desiredPort} is not available, using ${usedPort} instead.`,
+      `⚠️ Port ${desiredPort} is not available, using ${portToUse} instead.`,
     ),
   );
 }
