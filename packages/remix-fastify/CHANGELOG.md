@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 4.0.4
+
+### Patch Changes
+
+- 0601d19: expand vite peer dependency range to allow vite@6
+
 ## 4.0.3
 
 ### Patch Changes
