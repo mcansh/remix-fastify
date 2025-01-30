@@ -110,8 +110,8 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0
       isbot:
-        specifier: ^5.1.17
-        version: 5.1.17
+        specifier: ^5.1.21
+        version: 5.1.21
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -174,8 +174,8 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0
       isbot:
-        specifier: ^5.1.17
-        version: 5.1.17
+        specifier: ^5.1.21
+        version: 5.1.21
       react:
         specifier: 19.0.0-rc.1
         version: 19.0.0-rc.1
@@ -265,8 +265,8 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0
       isbot:
-        specifier: ^5.1.17
-        version: 5.1.17
+        specifier: ^5.1.21
+        version: 5.1.21
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -347,8 +347,8 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0
       isbot:
-        specifier: ^5.1.17
-        version: 5.1.17
+        specifier: ^5.1.21
+        version: 5.1.21
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -4348,8 +4348,8 @@ packages:
     resolution: {integrity: sha512-GvcjojwonMjWbTkfMpnVHVqXW/wKMYDfEpY94/8zy8HFMOqb/VL6oeONq9v87q4ttVlaTLnGXnJD4B5B1OTGIg==}
     engines: {node: '>= 18.0.0'}
 
-  isbot@5.1.17:
-    resolution: {integrity: sha512-/wch8pRKZE+aoVhRX/hYPY1C7dMCeeMyhkQLNLNlYAbGQn9bkvMB8fOUXNnk5I0m4vDYbBJ9ciVtkr9zfBJ7qA==}
+  isbot@5.1.21:
+    resolution: {integrity: sha512-0q3naRVpENL0ReKHeNcwn/G7BDynp0DqZUckKyFtM9+hmpnPqgm8+8wbjiVZ0XNhq1wPQV28/Pb8Snh5adeUHA==}
     engines: {node: '>=18'}
 
   isexe@2.0.0:
@@ -11878,7 +11878,7 @@ snapshots:
 
   isbinaryfile@5.0.2: {}
 
-  isbot@5.1.17: {}
+  isbot@5.1.21: {}
 
   isexe@2.0.0: {}
 
