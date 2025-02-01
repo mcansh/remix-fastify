@@ -17,6 +17,10 @@ These are the currently available templates that you can get jump started with:
   npx create-remix@latest --template mcansh/remix-fastify/examples/basic
   ```
 
+Get started with an existing boilerplate that integrates React Router 7 & Fastify:
+
+* https://github.com/simonsmith/react-router-fastify
+
 ## Add to existing remix vite app
 
 ### Install dependencies
