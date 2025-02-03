@@ -25,7 +25,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: ⎔ Enable corepack
-        run: corepack enable
+        run: |
+          npm i -g corepack@latest
+          corepack enable
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v4
@@ -37,10 +39,10 @@ jobs:
         run: pnpm install --recursive --frozen-lockfile --strict-peer-dependencies
 
       - name: 🏗 Build
-        run: npm run build
+        run: pnpm run build
 
       - name: 📦 Package
-        run: npm run attw
+        run: pnpm run attw
 
   test:
     name: "${{ matrix.os }} | ${{ matrix.node }}"
@@ -55,7 +57,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: ⎔ Enable corepack
-        run: corepack enable
+        run: |
+          npm i -g corepack@latest
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v4
