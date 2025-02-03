@@ -37,10 +37,10 @@ jobs:
         run: pnpm install --recursive --frozen-lockfile --strict-peer-dependencies
 
       - name: 🏗 Build
-        run: npm run build
+        run: pnpm run build
 
       - name: 📦 Package
-        run: npm run attw
+        run: pnpm run attw
 
   test:
     name: "${{ matrix.os }} | ${{ matrix.node }}"
