@@ -19,3 +19,7 @@ updates:
         patterns:
           - "@fastify/*"
           - fastify
+      "react-router":
+        patterns:
+          - "@react-router/*"
+          - react-router
