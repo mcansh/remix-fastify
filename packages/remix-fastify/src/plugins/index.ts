@@ -1,8 +1,8 @@
 import path from "node:path";
 import url from "node:url";
 
-import fastifyStatic from "@fastify/static";
 import type { FastifyStaticOptions } from "@fastify/static";
+import fastifyStatic from "@fastify/static";
 import type { FastifyInstance } from "fastify";
 import { cacheHeader } from "pretty-cache-header";
 import type { InlineConfig, ViteDevServer } from "vite";
@@ -126,10 +126,9 @@ export function createPlugin(
       mode,
       // @ts-expect-error - fix this
       getLoadContext,
-      // @ts-expect-error - fix this
       build: vite
         ? () => vite.ssrLoadModule(virtualModule)
-        : (productionServerBuild ?? (() => import(SERVER_BUILD_URL))),
+        : (productionServerBuild ?? (await import(SERVER_BUILD_URL))),
     });
 
     // handle asset requests
