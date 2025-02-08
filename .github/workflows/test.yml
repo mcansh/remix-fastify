@@ -26,7 +26,6 @@ jobs:
 
       - name: ⎔ Enable corepack
         run: |
-          npm i -g corepack@latest
           corepack enable
 
       - name: ⎔ Setup node
