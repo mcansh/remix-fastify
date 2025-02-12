@@ -24,7 +24,7 @@ export type HttpResponse = RawReplyDefaultExpression<HttpServer>;
 
 export type RequestHandler<Server extends HttpServer> = (
   request: FastifyRequest<RouteGenericInterface, Server>,
-  reply: FastifyReply<RouteGenericInterface, Server>,
+  reply: FastifyReply<RouteGenericInterface, Server>
 ) => Promise<void>;
 
 /**
@@ -36,14 +36,14 @@ export type RequestHandler<Server extends HttpServer> = (
  */
 export type GetLoadContextFunction<
   Server extends HttpServer,
-  AppLoadContext,
+  AppLoadContext
 > = (
   request: FastifyRequest<RouteGenericInterface, Server>,
-  reply: FastifyReply<RouteGenericInterface, Server>,
+  reply: FastifyReply<RouteGenericInterface, Server>
 ) => Promise<AppLoadContext> | AppLoadContext;
 
 export function createHeaders(
-  requestHeaders: FastifyRequest["headers"],
+  requestHeaders: FastifyRequest["headers"]
 ): Headers {
   let headers = new Headers();
 
@@ -63,7 +63,7 @@ export function createHeaders(
 }
 
 export function getUrl<Server extends HttpServer>(
-  request: FastifyRequest<RouteGenericInterface, Server>,
+  request: FastifyRequest<RouteGenericInterface, Server>
 ): string {
   let origin = `${request.protocol}://${request.host}`;
   // Use `request.originalUrl` so Remix and React Router are aware of the full path
@@ -76,7 +76,7 @@ export function createRequest<Server extends HttpServer>(
   reply: FastifyReply<RouteGenericInterface, Server>,
   createReadableStreamFromReadable:
     | typeof RemixCreateReadableStreamFromReadable
-    | typeof RRCreateReadableStreamFromReadable,
+    | typeof RRCreateReadableStreamFromReadable
 ): Request {
   let url = getUrl(request);
 
@@ -105,7 +105,7 @@ export function createRequest<Server extends HttpServer>(
 
 export async function sendResponse<Server extends HttpServer>(
   reply: FastifyReply<RouteGenericInterface, Server>,
-  nodeResponse: Response,
+  nodeResponse: Response
 ): Promise<void> {
   reply.status(nodeResponse.status);
 
@@ -126,14 +126,20 @@ function responseToReadable(response: Response): Readable | null {
 
   let reader = response.body.getReader();
   let readable = new Readable();
-  readable._read = async () => {
-    let result = await reader.read();
-    if (!result.done) {
-      readable.push(Buffer.from(result.value));
-    } else {
-      readable.push(null);
-    }
-  };
 
-  return readable;
+  try {
+    readable._read = async () => {
+      let result = await reader.read();
+      if (!result.done) {
+        readable.push(Buffer.from(result.value));
+      } else {
+        readable.push(null);
+      }
+    };
+
+    return readable;
+  } catch (error) {
+    readable.destroy(error);
+    throw error;
+  }
 }
