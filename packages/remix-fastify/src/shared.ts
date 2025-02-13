@@ -139,7 +139,7 @@ function responseToReadable(response: Response): Readable | null {
 
     return readable;
   } catch (error) {
-    readable.destroy(error);
+    readable.destroy(error as Error);
     throw error;
   }
 }
