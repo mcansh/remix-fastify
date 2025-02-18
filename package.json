@@ -7,7 +7,7 @@
     "dev": "pnpm run --filter remix-fastify --filter playground --recursive --parallel dev",
     "dev:vite": "pnpm run --filter remix-fastify --filter vite-remix --recursive --parallel dev",
     "build": "pnpm run --recursive build",
-    "test": "pnpm --filter ./packages/* test --if-present",
+    "test": "pnpm --filter ./packages/* test",
     "publish": "./scripts/publish.js",
     "publint": "publint ./packages/**",
     "attw": "attw ./packages/** --pack",
