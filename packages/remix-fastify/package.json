@@ -24,8 +24,8 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js"
+      "require": "./dist/remix.cjs",
+      "import": "./dist/remix.js"
     },
     "./react-router": {
       "require": "./dist/react-router.cjs",
@@ -36,10 +36,10 @@
       "import": "./dist/remix.js"
     }
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "source": "./src/index.ts",
-  "types": "./dist/index.d.cts",
+  "main": "./dist/remix.cjs",
+  "module": "./dist/remix.js",
+  "source": "./src/remix.ts",
+  "types": "./dist/remix.d.cts",
   "files": [
     "dist",
     "package.json",
