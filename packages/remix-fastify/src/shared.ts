@@ -127,11 +127,16 @@ function responseToReadable(response: Response): Readable | null {
   let reader = response.body.getReader();
   let readable = new Readable();
   readable._read = async () => {
-    let result = await reader.read();
-    if (!result.done) {
-      readable.push(Buffer.from(result.value));
-    } else {
-      readable.push(null);
+    try {
+      let result = await reader.read();
+      if (!result.done) {
+        readable.push(Buffer.from(result.value));
+      } else {
+        readable.push(null);
+      }
+    } catch (error) {
+      readable.destroy(error as Error);
+      return null;
     }
   };
 
