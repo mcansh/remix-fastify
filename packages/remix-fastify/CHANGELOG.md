@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 4.0.5
+
+### Patch Changes
+
+- 74abcef: eagerly build output
+
 ## 4.0.4
 
 ### Patch Changes

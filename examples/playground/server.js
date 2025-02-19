@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { reactRouterFastify } from "@mcansh/remix-fastify/react-router";
+import { remixFastify } from "@mcansh/remix-fastify/remix";
 import { installGlobals } from "@remix-run/node";
 import { fastify } from "fastify";
 import sourceMapSupport from "source-map-support";
@@ -14,7 +14,7 @@ app.post("/api/echo", async (request, reply) => {
   reply.send(request.body);
 });
 
-await app.register(reactRouterFastify, {
+await app.register(remixFastify, {
   getLoadContext(request, reply) {
     return { loadContextName: "Logan" };
   },
@@ -30,7 +30,7 @@ let address = await app.listen({ port: portToUse, host: "0.0.0.0" });
 if (portToUse !== desiredPort) {
   console.warn(
     chalk.yellow(
-      `⚠️  Port ${desiredPort} is not available, using ${portToUse} instead.`,
+      `⚠️ Port ${desiredPort} is not available, using ${portToUse} instead.`,
     ),
   );
 }
