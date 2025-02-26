@@ -136,7 +136,7 @@ function responseToReadable(response: Response): Readable | null {
       }
     } catch (error) {
       readable.destroy(error as Error);
-      return null;
+      throw error;
     }
   };
 
