@@ -26,7 +26,7 @@ jobs:
 
       - name: ⎔ Enable corepack
         run: |
-          npm i -g corepack@latest
+          npm i -g corepack@latest --force
           corepack enable
 
       - name: ⎔ Setup node
@@ -58,8 +58,8 @@ jobs:
 
       - name: ⎔ Enable corepack
         run: |
-          npm i -g corepack@latest
-
+          npm i -g corepack@latest --force
+          corepack enable
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v4
