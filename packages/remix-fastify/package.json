@@ -69,13 +69,13 @@
     "pretty-cache-header": "^1.0.0"
   },
   "devDependencies": {
-    "@react-router/node": "7.0.1",
+    "@react-router/node": "7.1.5",
     "@remix-run/node": "^2.15.3",
     "@types/node": "^22.9.2",
     "@typescript/lib-dom": "npm:@types/web@^0.0.182",
     "fastify": "^5.2.1",
     "node-mocks-http": "^1.16.1",
-    "react-router": "^7.0.1",
+    "react-router": "^7.1.5",
     "typescript": "^5.7.2",
     "vite": "^5.4.12"
   },
