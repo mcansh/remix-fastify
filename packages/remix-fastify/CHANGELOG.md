@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 4.0.6
+
+### Patch Changes
+
+- 629269a: destroy stream on errors
+
 ## 4.0.5
 
 ### Patch Changes
