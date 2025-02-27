@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 4.0.7
+
+### Patch Changes
+
+- 373f34f: rethrow caught error when destroying stream
+
 ## 4.0.6
 
 ### Patch Changes
