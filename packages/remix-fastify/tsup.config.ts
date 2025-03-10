@@ -29,7 +29,7 @@ export default defineConfig(() => {
       ),
     },
     async onSuccess() {
-      let subPaths = ["remix", "react-router"];
+      let subPaths = ["remix", "react-router", "middleware"];
 
       // generate root re-exports for each sub-path
       for (let subPath of subPaths) {
