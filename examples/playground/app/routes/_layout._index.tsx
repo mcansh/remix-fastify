@@ -7,19 +7,12 @@ import { Button } from "~/components/button";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 
-export async function loader({ context, request }: Route.LoaderArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   let cookie = request.headers.get("Cookie");
   let session = await sessionStorage.getSession(cookie);
 
-  // let loadContextName = context.loadContextName;
-
-  // if (typeof loadContextName !== "string") {
-  //   throw new Error("loadContextName must be a string");
-  // }
-
   return {
     name: sleep<string>(1_000, session.get("name") || "Anonymous"),
-    // loadContextName,
   };
 }
 
