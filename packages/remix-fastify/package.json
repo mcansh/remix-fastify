@@ -56,7 +56,11 @@
     "remix.cjs",
     "remix.d.cts",
     "remix.d.ts",
-    "remix.js"
+    "remix.js",
+    "middleware.cjs",
+    "middleware.d.cts",
+    "middleware.d.ts",
+    "middleware.js"
   ],
   "scripts": {
     "prepublishOnly": "npm run build && cp ../../LICENSE LICENSE && publint && attw --pack",
