@@ -5,7 +5,12 @@ import pkg from "./package.json";
 
 export default defineConfig(() => {
   return {
-    entry: ["./src/index.ts", "./src/remix.ts", "./src/react-router.ts"],
+    entry: [
+      "./src/index.ts",
+      "./src/remix.ts",
+      "./src/react-router.ts",
+      "./src/middleware.ts",
+    ],
     sourcemap: true,
     tsconfig: "./tsconfig.json",
     dts: true,

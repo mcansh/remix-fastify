@@ -1,11 +1,10 @@
+import { reactRouterFastify } from "@mcansh/remix-fastify/react-router";
 import chalk from "chalk";
-import { remixFastify } from "@mcansh/remix-fastify/remix";
-import { installGlobals } from "@remix-run/node";
 import { fastify } from "fastify";
-import sourceMapSupport from "source-map-support";
 import getPort, { portNumbers } from "get-port";
+import { unstable_createContext } from "react-router";
+import sourceMapSupport from "source-map-support";
 
-installGlobals();
 sourceMapSupport.install();
 
 let app = fastify();
@@ -14,11 +13,7 @@ app.post("/api/echo", async (request, reply) => {
   reply.send(request.body);
 });
 
-await app.register(remixFastify, {
-  getLoadContext(request, reply) {
-    return { loadContextName: "Logan" };
-  },
-});
+await app.register(reactRouterFastify);
 
 const desiredPort = Number(process.env.PORT) || 3000;
 const portToUse = await getPort({

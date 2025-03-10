@@ -34,6 +34,10 @@
     "./remix": {
       "require": "./dist/remix.cjs",
       "import": "./dist/remix.js"
+    },
+    "./middleware": {
+      "require": "./dist/middleware.cjs",
+      "import": "./dist/middleware.js"
     }
   },
   "main": "./dist/index.cjs",

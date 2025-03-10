@@ -1,28 +1,29 @@
 import * as React from "react";
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { Await, Form, useAsyncValue, useLoaderData } from "@remix-run/react";
-
+import { Await, Form, redirect, useAsyncValue } from "react-router";
 import { sessionStorage } from "~/session.server";
-import { sleep } from "~/sleep";
+import { sleep } from "~/utils";
+import type { Route } from "./+types/_layout._index";
+import { Button } from "~/components/button";
+import { Label } from "~/components/ui/label";
+import { Input } from "~/components/ui/input";
 
-export async function loader({ request, context }: LoaderFunctionArgs) {
+export async function loader({ context, request }: Route.LoaderArgs) {
   let cookie = request.headers.get("Cookie");
   let session = await sessionStorage.getSession(cookie);
 
-  let loadContextName = context.loadContextName;
+  // let loadContextName = context.loadContextName;
 
-  if (typeof loadContextName !== "string") {
-    throw new Error("loadContextName must be a string");
-  }
+  // if (typeof loadContextName !== "string") {
+  //   throw new Error("loadContextName must be a string");
+  // }
 
   return {
     name: sleep<string>(1_000, session.get("name") || "Anonymous"),
-    loadContextName,
+    // loadContextName,
   };
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request }: Route.ActionArgs) {
   let cookie = request.headers.get("Cookie");
   let session = await sessionStorage.getSession(cookie);
   let formData = await request.formData();
@@ -34,7 +35,7 @@ export async function action({ request }: ActionFunctionArgs) {
       let name = formData.get("name");
       if (!name) throw new Response("Name is required", { status: 400 });
       session.set("name", name);
-      return redirect("/", {
+      throw redirect("/", {
         headers: {
           "Set-Cookie": await sessionStorage.commitSession(session),
         },
@@ -42,7 +43,7 @@ export async function action({ request }: ActionFunctionArgs) {
     }
     case "reset": {
       session.unset("name");
-      return redirect("/", {
+      throw redirect("/", {
         headers: {
           "Set-Cookie": await sessionStorage.commitSession(session),
         },
@@ -54,8 +55,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function Index() {
-  let loaderData = useLoaderData<typeof loader>();
+export default function Index({ loaderData }: Route.ComponentProps) {
   const [echo, setEcho] = React.useState<string | null>(null);
 
   return (
@@ -66,33 +66,25 @@ export default function Index() {
         </Await>
       </React.Suspense>
 
-      <h2>Context: {loaderData.loadContextName}</h2>
+      <h2 className="text-3xl font-bold tracking-tight">
+        Context: {loaderData.loadContextName}
+      </h2>
 
       <Form method="post" className="flex justify-center gap-2">
-        <label>
+        <Label>
           <span>Name: </span>
           <React.Suspense fallback={<FallbackNameInput />}>
             <Await resolve={loaderData.name}>
               <NameInput />
             </Await>
           </React.Suspense>
-        </label>
-        <button
-          name="intent"
-          value="submit"
-          className="rounded-md bg-green-600 px-2 text-white"
-          type="submit"
-        >
+        </Label>
+        <Button name="intent" value="submit" type="submit">
           Submit
-        </button>
-        <button
-          name="intent"
-          value="reset"
-          className="rounded-md bg-red-600 px-2 text-white"
-          type="submit"
-        >
+        </Button>
+        <Button name="intent" value="reset" type="submit" variant="destructive">
           Reset
-        </button>
+        </Button>
       </Form>
 
       <form
@@ -112,18 +104,13 @@ export default function Index() {
         }}
       >
         <div className="flex gap-2">
-          <label>
+          <Label>
             <span>Text: </span>
-            <input type="text" name="text" />
-          </label>
-          <button
-            name="intent"
-            type="submit"
-            value="echo"
-            className="rounded-md bg-green-600 px-2 text-white"
-          >
+            <Input type="text" name="text" />
+          </Label>
+          <Button name="intent" type="submit" value="echo">
             Echo
-          </button>
+          </Button>
         </div>
         {echo ? <pre>{JSON.stringify(echo)}</pre> : null}
       </form>
@@ -141,18 +128,15 @@ function NameInput() {
   }
 
   return (
-    <input
+    <Input
       type="text"
       name="name"
       placeholder="Enter your name"
       defaultValue={defaultValue}
-      className="px-1"
     />
   );
 }
 
 function FallbackNameInput() {
-  return (
-    <input type="text" name="name" title="Enter your name" className="px-1" />
-  );
+  return <Input type="text" name="name" title="Enter your name" />;
 }

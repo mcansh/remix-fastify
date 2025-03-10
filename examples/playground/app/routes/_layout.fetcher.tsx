@@ -1,18 +1,19 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { data, useFetcher } from "@remix-run/react";
+import { data, useFetcher } from "react-router";
+import type { Route } from "./+types/_layout.fetcher";
+import { Button } from "~/components/button";
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request }: Route.ActionArgs) {
   let response = await request.json();
   return data(response);
 }
 
-export default function () {
+export default function Page() {
   let fetcher = useFetcher<typeof action>();
 
   return (
     <>
       {fetcher.data ? <pre>{JSON.stringify(fetcher.data)}</pre> : null}
-      <button
+      <Button
         type="button"
         onClick={() => {
           fetcher.submit(
@@ -22,7 +23,8 @@ export default function () {
         }}
       >
         fetcher.submit
-      </button>
+      </Button>
     </>
   );
 }
+1;
