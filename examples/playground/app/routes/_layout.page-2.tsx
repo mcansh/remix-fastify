@@ -1,8 +1,6 @@
 import * as React from "react";
-
-import { Await, useLoaderData } from "@remix-run/react";
-
-import { withDelay } from "~/sleep";
+import { Await, useLoaderData } from "react-router";
+import { withDelay } from "~/utils";
 
 export function loader() {
   return {

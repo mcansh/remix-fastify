@@ -1,22 +1,22 @@
 {
   "extends": "@total-typescript/tsconfig/bundler/dom/app",
+  "exclude": ["node_modules", "build"],
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/.server/**/*.ts",
-    "**/.server/**/*.tsx",
-    "**/.client/**/*.ts",
-    "**/.client/**/*.tsx",
+    "**/*",
+    "**/.server/**/*",
+    "**/.client/**/*",
     ".react-router/types/**/*"
   ],
   "compilerOptions": {
-    "types": ["@remix-run/node", "vite/client"],
+    "types": ["node", "vite/client", "@mcansh/remix-fastify/middleware"],
     "jsx": "react-jsx",
     "forceConsistentCasingInFileNames": true,
+    "checkJs": true,
+    "allowJs": true,
+    "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
-    "paths": {
-      "~/*": ["./app/*"]
-    },
-    "noEmit": true
+    "paths": { "~/*": ["./app/*"] },
+    "rootDirs": [".", "./.react-router/types"],
+    "plugins": [{ "name": "@react-router/dev" }]
   }
 }

@@ -1,4 +1,4 @@
-import { createCookieSessionStorage } from "@remix-run/node";
+import { createCookieSessionStorage } from "react-router";
 
 let sessionSecret = process.env.SESSION_SECRET;
 if (!sessionSecret) {
@@ -7,7 +7,7 @@ if (!sessionSecret) {
 
 export let sessionStorage = createCookieSessionStorage({
   cookie: {
-    name: "RJ_session",
+    name: "__session",
     secrets: [sessionSecret],
     sameSite: "lax",
     path: "/",

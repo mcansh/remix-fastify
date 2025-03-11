@@ -1,21 +1,52 @@
-import { data } from "@remix-run/node";
 import {
+  data,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
-} from "@remix-run/react";
+} from "react-router";
+import type { Route } from "./+types/root";
 import "./styles/global.css";
+import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert";
 
 export function loader() {
   return data({ message: "Hello from the root loader" });
 }
 
-export default function App() {
-  let loaderData = useLoaderData<typeof loader>();
+const clientLogger: Route.unstable_ClientMiddlewareFunction = async (
+  { request },
+  next,
+) => {
+  let start = performance.now();
 
+  // Run the remaining middlewares and all route loaders
+  await next();
+
+  let duration = performance.now() - start;
+  console.log(`Navigated to ${request.url} (${duration}ms)`);
+};
+
+const serverLogger: Route.unstable_MiddlewareFunction = async (
+  { request },
+  next,
+) => {
+  let start = performance.now();
+
+  // 👇 Grab the response here
+  let res = await next();
+
+  let duration = performance.now() - start;
+  console.log(`Navigated to ${request.url} (${duration}ms)`);
+
+  // 👇 And return it here (optional if you don't modify the response)
+  return res;
+};
+
+export const unstable_middleware = [serverLogger];
+export const unstable_clientMiddleware = [clientLogger];
+
+export default function App({ loaderData }: Route.ComponentProps) {
   return (
     <html lang="en">
       <head>
@@ -28,9 +59,11 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <div className="mx-auto max-w-max border-2 border-black bg-red-700 p-4 text-white">
-          {loaderData.message}
-        </div>
+        <Alert className="mx-auto max-w-sm" variant="destructive">
+          <AlertTitle>Heads up!</AlertTitle>
+          <AlertDescription>{loaderData.message}</AlertDescription>
+        </Alert>
+
         <Outlet />
         <Scripts />
         <ScrollRestoration />

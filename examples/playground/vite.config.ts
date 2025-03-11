@@ -1,27 +1,20 @@
-import { vitePlugin as remix } from "@remix-run/dev";
+import { reactRouter } from "@react-router/dev/vite";
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-import tailwindcss from "@tailwindcss/vite";
 
-declare module "@remix-run/node" {
+declare module "react-router" {
   interface Future {
-    v3_singleFetch: true;
+    unstable_middleware: true;
   }
 }
 
-export default defineConfig({
-  plugins: [
-    remix({
-      future: {
-        unstable_optimizeDeps: true,
-        v3_fetcherPersist: true,
-        v3_lazyRouteDiscovery: true,
-        v3_relativeSplatPath: true,
-        v3_singleFetch: true,
-        v3_throwAbortReason: true,
-      },
-    }),
-    tsconfigPaths(),
-    tailwindcss(),
-  ],
+export default defineConfig(({ isSsrBuild }) => {
+  return {
+    build: {
+      minify: false,
+      rollupOptions: isSsrBuild ? { input: "./server.ts" } : undefined,
+    },
+    plugins: [reactRouter(), tsconfigPaths(), tailwindcss()],
+  };
 });
