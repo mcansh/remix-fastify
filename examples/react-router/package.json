@@ -10,7 +10,7 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
-    "@mcansh/remix-fastify": "^4.0.7",
+    "@mcansh/remix-fastify": "^4.0.8",
     "@react-router/node": "7.1.5",
     "@react-router/serve": "7.1.5",
     "chalk": "^5.3.0",
