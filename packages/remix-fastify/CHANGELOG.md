@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 4.0.8
+
+### Patch Changes
+
+- f4580d8: add support for react-router middleware
+
 ## 4.0.7
 
 ### Patch Changes
