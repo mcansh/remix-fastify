@@ -85,7 +85,7 @@
     "node-mocks-http": "^1.16.2",
     "react-router": "^7.1.5",
     "typescript": "^5.7.2",
-    "vite": "^5.4.12"
+    "vite": "^5.4.15"
   },
   "peerDependencies": {
     "@remix-run/node": "^2.0.0",
