@@ -67,8 +67,8 @@ export function getUrl<Server extends HttpServer>(
 ): string {
   // req.hostname doesn't include port information so grab that from
   // `X-Forwarded-Host` or `Host`
-  let [, hostnamePortStr] = req.get("X-Forwarded-Host")?.split(":") ?? [];
-  let [, hostPortStr] = req.get("host")?.split(":") ?? [];
+  let [, hostnamePortStr] = request.headers["X-Forwarded-Host"]?.split(":") ?? [];
+  let [, hostPortStr] = request.headers.host?.split(":") ?? [];
   let hostnamePort = Number.parseInt(hostnamePortStr, 10);
   let hostPort = Number.parseInt(hostPortStr, 10);
   let port = Number.isSafeInteger(hostnamePort)
