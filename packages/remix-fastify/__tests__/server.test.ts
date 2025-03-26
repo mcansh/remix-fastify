@@ -275,6 +275,30 @@ function runTests(
       expect(request.headers.get("host")).toBe("localhost:3000");
     });
   });
+
+  it("validates parsed port", async () => {
+     let fastifyRequest = createRequest({
+       url: "/foo/bar",
+       method: "GET",
+       protocol: "http",
+       hostname: "localhost",
+       headers: {
+         "Cache-Control": "max-age=300, s-maxage=3600",
+         Host: "localhost:3000",
+         "x-forwarded-host": ":/spoofed"
+       },
+     });
+     let fastifyResponse = createResponse();
+
+     let remixRequest = createRemixRequest(fastifyRequest, fastifyResponse);
+
+     expect(remixRequest.method).toBe("GET");
+     expect(remixRequest.headers.get("cache-control")).toBe(
+       "max-age=300, s-maxage=3600"
+     );
+     expect(remixRequest.headers.get("host")).toBe("localhost:3000");
+     expect(remixRequest.url).toBe("http://localhost:3000/foo/bar");
+   });
 }
 
 runTests("remix", {
