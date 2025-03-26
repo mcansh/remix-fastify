@@ -65,10 +65,23 @@ export function createHeaders(
 export function getUrl<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
 ): string {
-  let origin = `${request.protocol}://${request.host}`;
-  // Use `request.originalUrl` so Remix and React Router are aware of the full path
-  let url = `${origin}${request.originalUrl}`;
-  return url;
+  // req.hostname doesn't include port information so grab that from
+  // `X-Forwarded-Host` or `Host`
+  let [, hostnamePortStr] = req.get("X-Forwarded-Host")?.split(":") ?? [];
+  let [, hostPortStr] = req.get("host")?.split(":") ?? [];
+  let hostnamePort = Number.parseInt(hostnamePortStr, 10);
+  let hostPort = Number.parseInt(hostPortStr, 10);
+  let port = Number.isSafeInteger(hostnamePort)
+    ? hostnamePort
+    : Number.isSafeInteger(hostPort)
+    ? hostPort
+    : "";
+  
+  // Use req.hostname here as it respects the "trust proxy" setting
+  let resolvedHost = `${req.hostname}${port ? `:${port}` : ""}`;
+  // Use `req.originalUrl` so Remix is aware of the full path
+  let url = new URL(req.originalUrl, `${req.protocol}://${resolvedHost}`);
+  return url.toString()
 }
 
 export function createRequest<Server extends HttpServer>(
