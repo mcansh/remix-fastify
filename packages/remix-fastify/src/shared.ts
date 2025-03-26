@@ -78,9 +78,9 @@ export function getUrl<Server extends HttpServer>(
     : "";
   
   // Use req.hostname here as it respects the "trust proxy" setting
-  let resolvedHost = `${req.hostname}${port ? `:${port}` : ""}`;
+  let resolvedHost = `${request.hostname}${port ? `:${port}` : ""}`;
   // Use `req.originalUrl` so Remix is aware of the full path
-  let url = new URL(req.originalUrl, `${req.protocol}://${resolvedHost}`);
+  let url = new URL(request.originalUrl, `${request.protocol}://${resolvedHost}`);
   return url.toString()
 }
 
