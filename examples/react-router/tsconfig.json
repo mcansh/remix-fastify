@@ -10,7 +10,7 @@
     ".react-router/types/**/*"
   ],
   "compilerOptions": {
-    "types": ["@react-router/node", "vite/client"],
+    "types": ["@react-router/node", "vite/client", "@mcansh/remix-fastify/middleware"],
     "jsx": "react-jsx",
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
