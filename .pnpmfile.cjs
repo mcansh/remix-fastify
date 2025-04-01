@@ -9,16 +9,19 @@ function readPackage(pkg) {
   }
 
   let remixPackages = Object.keys(pkg.dependencies).filter((p) => {
-    return p.startsWith("@remix-run");
+    return (
+      p.startsWith("@remix-run/") ||
+      p === "remix" ||
+      p === "react-router" ||
+      p.startsWith("@react-router/")
+    );
   });
-
-  if (pkg.dependencies["remix"]) {
-    pkg.dependencies["remix"] = "latest";
-  }
 
   for (let p of remixPackages) {
     if (pkg.dependencies[p]) {
       pkg.dependencies[p] = "latest";
+    } else if (pkg.devDependencies[p]) {
+      pkg.devDependencies[p] = "latest";
     }
   }
 
