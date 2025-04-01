@@ -78,7 +78,7 @@
   },
   "devDependencies": {
     "@react-router/node": "7.1.5",
-    "@remix-run/node": "^2.15.3",
+    "@remix-run/node": "^2.16.4",
     "@types/node": "^22.9.2",
     "@typescript/lib-dom": "npm:@types/web@^0.0.182",
     "fastify": "^5.2.1",
