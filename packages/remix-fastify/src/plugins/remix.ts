@@ -15,6 +15,7 @@ export type RemixFastifyOptions = Omit<
 export const remixFastify = fp<RemixFastifyOptions>(
   async (fastify, options) => {
     let plugin = createPlugin(
+      // @ts-expect-error
       fastify,
       options,
       "virtual:remix/server-build",
