@@ -34,10 +34,6 @@
     "./remix": {
       "require": "./dist/remix.cjs",
       "import": "./dist/remix.js"
-    },
-    "./middleware": {
-      "require": "./dist/middleware.cjs",
-      "import": "./dist/middleware.js"
     }
   },
   "main": "./dist/index.cjs",
@@ -56,11 +52,7 @@
     "remix.cjs",
     "remix.d.cts",
     "remix.d.ts",
-    "remix.js",
-    "middleware.cjs",
-    "middleware.d.cts",
-    "middleware.d.ts",
-    "middleware.js"
+    "remix.js"
   ],
   "scripts": {
     "prepublishOnly": "npm run build && cp ../../LICENSE LICENSE && publint && attw --pack",
