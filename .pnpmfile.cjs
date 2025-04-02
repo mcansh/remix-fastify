@@ -4,7 +4,7 @@ const fsp = require("node:fs/promises");
 let cache = new Map();
 
 async function getExamples() {
-  if (Object.keys(cache).length > 0) {
+  if (cache.size > 0) {
     return cache;
   }
 
