@@ -30,7 +30,6 @@
     "chalk": "^5.3.0",
     "eslint": "^9.15.0",
     "eslint-plugin-prefer-let": "^4.0.0",
-    "get-root-path": "^3.0.1",
     "glob": "^11.0.0",
     "jsonfile": "^6.1.0",
     "pkg-pr-new": "^0.0.30",
