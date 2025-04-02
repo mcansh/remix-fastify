@@ -14,6 +14,7 @@ sourceMapSupport.install();
 
 let app = fastify();
 
+// @ts-expect-error
 await app.register(reactRouterFastify, {
   getLoadContext(_request): unstable_InitialContext {
     const map = new Map<unstable_RouterContext, unknown>();

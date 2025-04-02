@@ -1,5 +1,5 @@
 {
-  "name": "vite-remix",
+  "name": "example-vite-remix",
   "private": true,
   "sideEffects": false,
   "type": "module",
