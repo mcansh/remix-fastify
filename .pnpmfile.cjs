@@ -1,4 +1,6 @@
+const path = require("node:path");
 const fsp = require("node:fs/promises");
+const { getRootPathSync } = require("get-root-path");
 
 let cache = new Map();
 
@@ -6,15 +8,18 @@ async function getExamples() {
   if (Object.keys(cache).length > 0) {
     return cache;
   }
+  let rootPath = getRootPathSync();
 
-  let exampleContents = await fsp.readdir("examples", { withFileTypes: true });
+  let exampleContents = await fsp.readdir(path.join(rootPath, "examples"), {
+    withFileTypes: true,
+  });
   let directories = exampleContents
     .filter((dirent) => dirent.isDirectory())
     .map((dirent) => dirent.name);
 
   for (const file of directories) {
     const content = await fsp.readFile(
-      `examples/${file}/package.json`,
+      path.join(rootPath, "examples", file, "package.json"),
       "utf-8",
     );
 
