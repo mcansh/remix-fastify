@@ -1,7 +1,20 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
-import type { LinksFunction } from "react-router";
-
+import type { LinksFunction, unstable_MiddlewareFunction } from "react-router";
 import "./app.css";
+import type { Route } from "./+types/root";
+import { adapterContext } from "../context";
+
+export function loader({ context }: Route.LoaderArgs) {
+  console.log({ context: context.get(adapterContext) });
+}
+
+export const unstable_middleware: unstable_MiddlewareFunction[] = [
+  async ({ context }) => {
+    const adapterContextValue = context.get(adapterContext);
+    console.log({ adapterContextValue });
+    context.set(adapterContext, { session: "updated" });
+  },
+];
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
