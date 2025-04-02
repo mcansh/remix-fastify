@@ -9,7 +9,6 @@ sourceMapSupport.install();
 
 const app = fastify();
 
-// @ts-expect-error
 await app.register(remixFastify);
 
 const host = process.env.HOST === "true" ? "0.0.0.0" : "127.0.0.1";

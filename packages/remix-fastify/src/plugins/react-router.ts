@@ -15,7 +15,6 @@ export type ReactRouterFastifyOptions = Omit<
 export const reactRouterFastify = fp<ReactRouterFastifyOptions>(
   async (fastify, options) => {
     let plugin = createPlugin(
-      // @ts-expect-error
       fastify,
       options,
       "virtual:react-router/server-build",
