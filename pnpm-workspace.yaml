@@ -1,3 +1,9 @@
 packages:
-  - "packages/*"
-  - "examples/*"
+  - packages/*
+  - examples/*
+
+onlyBuiltDependencies:
+  - esbuild
+
+overrides:
+  find-up: "file:./vendor/find-up"
