@@ -14,28 +14,28 @@
   "dependencies": {
     "@fastify/static": "^8.1.1",
     "@mcansh/remix-fastify": "4.0.8",
-    "@remix-run/css-bundle": "^2.16.4",
-    "@remix-run/node": "^2.16.4",
-    "@remix-run/react": "^2.16.4",
+    "@remix-run/css-bundle": "^2.16.5",
+    "@remix-run/node": "^2.16.5",
+    "@remix-run/react": "^2.16.5",
     "chalk": "^5.4.1",
     "cross-env": "^7.0.3",
-    "fastify": "^5.2.2",
+    "fastify": "^5.3.2",
     "get-port": "^7.1.0",
-    "isbot": "^5.1.25",
+    "isbot": "^5.1.26",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "source-map-support": "^0.5.21"
   },
   "devDependencies": {
-    "@remix-run/dev": "^2.16.4",
-    "@remix-run/eslint-config": "^2.16.4",
+    "@remix-run/dev": "^2.16.5",
+    "@remix-run/eslint-config": "^2.16.5",
     "@total-typescript/tsconfig": "^1.0.4",
-    "@types/react": "^19.0.12",
-    "@types/react-dom": "^19.0.4",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
     "chokidar": "^4.0.3",
     "eslint": "^8.57.0",
     "prettier": "^3.5.3",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   },
   "engines": {
     "node": ">=20.0.0"

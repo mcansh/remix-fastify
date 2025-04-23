@@ -1,7 +1,10 @@
 packages:
   - packages/*
   - examples/*
+
 onlyBuiltDependencies:
   - esbuild
+  - svelte-preprocess
+
 overrides:
-  find-up: "file:./vendor/find-up"
+  find-up: file:./vendor/find-up
