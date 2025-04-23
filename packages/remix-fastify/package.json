@@ -34,10 +34,6 @@
     "./remix": {
       "require": "./dist/remix.cjs",
       "import": "./dist/remix.js"
-    },
-    "./middleware": {
-      "require": "./dist/middleware.cjs",
-      "import": "./dist/middleware.js"
     }
   },
   "main": "./dist/index.cjs",
@@ -56,11 +52,7 @@
     "remix.cjs",
     "remix.d.cts",
     "remix.d.ts",
-    "remix.js",
-    "middleware.cjs",
-    "middleware.d.cts",
-    "middleware.d.ts",
-    "middleware.js"
+    "remix.js"
   ],
   "scripts": {
     "prepublishOnly": "npm run build && cp ../../LICENSE LICENSE && publint && attw --pack",
@@ -77,15 +69,15 @@
     "pretty-cache-header": "^1.0.0"
   },
   "devDependencies": {
-    "@react-router/node": "7.1.5",
-    "@remix-run/node": "^2.15.3",
-    "@types/node": "^22.9.2",
-    "@typescript/lib-dom": "npm:@types/web@^0.0.182",
-    "fastify": "^5.2.1",
+    "@react-router/node": "7.5.1",
+    "@remix-run/node": "^2.16.5",
+    "@types/node": "^22.14.1",
+    "@typescript/lib-dom": "npm:@types/web@^0.0.224",
+    "fastify": "^5.3.2",
     "node-mocks-http": "^1.16.2",
-    "react-router": "^7.1.5",
-    "typescript": "^5.7.2",
-    "vite": "^6.2.4"
+    "react-router": "^7.5.1",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.2"
   },
   "peerDependencies": {
     "@remix-run/node": "^2.0.0",

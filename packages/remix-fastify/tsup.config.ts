@@ -5,12 +5,7 @@ import pkg from "./package.json";
 
 export default defineConfig(() => {
   return {
-    entry: [
-      "./src/index.ts",
-      "./src/remix.ts",
-      "./src/react-router.ts",
-      "./src/middleware.ts",
-    ],
+    entry: ["./src/index.ts", "./src/remix.ts", "./src/react-router.ts"],
     sourcemap: true,
     tsconfig: "./tsconfig.json",
     dts: true,
@@ -29,7 +24,7 @@ export default defineConfig(() => {
       ),
     },
     async onSuccess() {
-      let subPaths = ["remix", "react-router", "middleware"];
+      let subPaths = ["remix", "react-router"];
 
       // generate root re-exports for each sub-path
       for (let subPath of subPaths) {

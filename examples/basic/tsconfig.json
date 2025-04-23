@@ -1,6 +1,6 @@
 {
   "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
-  "extends": "@total-typescript/tsconfig/bundler/dom/app",
+  "extends": "@total-typescript/tsconfig/bundler/dom",
   "compilerOptions": {
     "types": ["@remix-run/node"],
     "jsx": "react-jsx",
