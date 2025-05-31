@@ -1,14 +1,12 @@
 const path = require("node:path");
 const fsp = require("node:fs/promises");
-const { findWorkspaceDir } = require("./vendor/@pnpm/find-workspace-dir");
 
 let cache = new Map();
 
 async function getExamples() {
   if (cache.size > 0) return cache;
 
-  let root = await findWorkspaceDir(process.cwd());
-  let exampleRoot = path.join(root, "examples");
+  let exampleRoot = path.join(__dirname, "examples");
   let exampleContents = await fsp.readdir(exampleRoot, { withFileTypes: true });
   let directories = exampleContents
     .filter((dirent) => dirent.isDirectory())
