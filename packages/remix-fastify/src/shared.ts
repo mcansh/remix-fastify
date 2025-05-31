@@ -114,7 +114,7 @@ export async function sendResponse<Server extends HttpServer>(
   }
 
   if (nodeResponse.body) {
-    let stream = responseToReadable(nodeResponse.clone());
+    let stream = responseToReadable(nodeResponse);
     return reply.send(stream);
   }
 
