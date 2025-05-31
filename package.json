@@ -24,6 +24,7 @@
     "@changesets/cli": "^2.27.10",
     "@manypkg/get-packages": "^2.2.2",
     "@npmcli/package-json": "^6.0.1",
+    "@remix-run/changelog-github": "^0.0.5",
     "@remix-run/eslint-config": "2.15.3",
     "@total-typescript/tsconfig": "^1.0.4",
     "@types/npmcli__package-json": "^4.0.4",
