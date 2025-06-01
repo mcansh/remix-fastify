@@ -20,7 +20,7 @@
     "changeset:release": "pnpm run build && pnpm publish -r"
   },
   "dependencies": {
-    "@arethetypeswrong/cli": "^0.17.0",
+    "@arethetypeswrong/cli": "^0.18.1",
     "@changesets/cli": "^2.29.4",
     "@manypkg/get-packages": "^3.0.0",
     "@npmcli/package-json": "^6.2.0",
