@@ -81,7 +81,7 @@
     "@remix-run/node": "^2.15.3",
     "@types/node": "^22.9.2",
     "@typescript/lib-dom": "npm:@types/web@^0.0.182",
-    "fastify": "^5.2.1",
+    "fastify": "^5.3.2",
     "node-mocks-http": "^1.16.2",
     "react-router": "^7.1.5",
     "typescript": "^5.7.2",
