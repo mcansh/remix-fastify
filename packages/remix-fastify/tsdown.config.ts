@@ -1,7 +1,6 @@
 import Fsp from "node:fs/promises";
-import { defineConfig } from "tsup";
-
-import pkg from "./package.json";
+import { defineConfig } from "tsdown";
+import pkg from "./package.json" with { type: "json" };
 
 export default defineConfig(() => {
   return {
