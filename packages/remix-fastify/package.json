@@ -65,8 +65,8 @@
   "scripts": {
     "prepublishOnly": "npm run build && cp ../../LICENSE LICENSE && publint && attw --pack",
     "typecheck": "tsc",
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "dev": "tsdown --watch",
+    "build": "tsdown",
     "test": "vitest",
     "validate": "run-p typecheck test"
   },
