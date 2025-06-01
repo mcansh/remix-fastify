@@ -1,5 +1,18 @@
 # @mcansh/remix-fastify
 
+## 4.1.0
+
+### Minor Changes
+
+- replace tsup with tsdown ([#529](https://github.com/mcansh/remix-fastify/pull/529))
+- remove index re-export, point main to ./remix ([#534](https://github.com/mcansh/remix-fastify/pull/534))
+
+  before this PR, both `.` (bare import) and `./remix` (sub path import) would both be generated, now only the bare import is available.
+
+### Patch Changes
+
+- fix: dont clone response when streaming body ([#525](https://github.com/mcansh/remix-fastify/pull/525))
+
 ## 4.0.8
 
 ### Patch Changes

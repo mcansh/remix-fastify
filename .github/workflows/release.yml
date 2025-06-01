@@ -13,6 +13,7 @@ permissions:
   id-token: write
   pull-requests: write
   contents: write
+  issues: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

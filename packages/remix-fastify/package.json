@@ -1,6 +1,6 @@
 {
   "name": "@mcansh/remix-fastify",
-  "version": "4.0.8",
+  "version": "4.1.0",
   "description": "Fastify server request handler for Remix and React Router",
   "repository": "mcansh/remix-fastify",
   "license": "MIT",
@@ -24,26 +24,22 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js"
+      "require": "./dist/remix.cjs",
+      "import": "./dist/remix.js"
     },
     "./react-router": {
       "require": "./dist/react-router.cjs",
       "import": "./dist/react-router.js"
-    },
-    "./remix": {
-      "require": "./dist/remix.cjs",
-      "import": "./dist/remix.js"
     },
     "./middleware": {
       "require": "./dist/middleware.cjs",
       "import": "./dist/middleware.js"
     }
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "source": "./src/index.ts",
-  "types": "./dist/index.d.cts",
+  "main": "./dist/remix.cjs",
+  "module": "./dist/remix.js",
+  "source": "./src/remix.ts",
+  "types": "./dist/remix.d.cts",
   "files": [
     "dist",
     "package.json",
@@ -53,10 +49,6 @@
     "react-router.d.cts",
     "react-router.d.ts",
     "react-router.js",
-    "remix.cjs",
-    "remix.d.cts",
-    "remix.d.ts",
-    "remix.js",
     "middleware.cjs",
     "middleware.d.cts",
     "middleware.d.ts",
@@ -65,27 +57,27 @@
   "scripts": {
     "prepublishOnly": "npm run build && cp ../../LICENSE LICENSE && publint && attw --pack",
     "typecheck": "tsc",
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "dev": "tsdown --watch",
+    "build": "tsdown",
     "test": "vitest",
     "validate": "run-p typecheck test"
   },
   "dependencies": {
     "@fastify/middie": "^9.0.3",
-    "@fastify/static": "^8.1.1",
+    "@fastify/static": "^8.2.0",
     "fastify-plugin": "^5.0.1",
     "pretty-cache-header": "^1.0.0"
   },
   "devDependencies": {
-    "@react-router/node": "7.1.5",
-    "@remix-run/node": "^2.15.3",
-    "@types/node": "^22.9.2",
-    "@typescript/lib-dom": "npm:@types/web@^0.0.182",
-    "fastify": "^5.2.1",
-    "node-mocks-http": "^1.16.2",
-    "react-router": "^7.1.5",
-    "typescript": "^5.7.2",
-    "vite": "^6.2.4"
+    "@react-router/node": "7.6.1",
+    "@remix-run/node": "^2.16.8",
+    "@types/node": "^22.15.29",
+    "@typescript/lib-dom": "npm:@types/web@^0.0.237",
+    "fastify": "^5.3.3",
+    "node-mocks-http": "^1.17.2",
+    "react-router": "^7.6.1",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
   },
   "peerDependencies": {
     "@remix-run/node": "^2.0.0",

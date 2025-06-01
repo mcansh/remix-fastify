@@ -1,16 +1,10 @@
 import Fsp from "node:fs/promises";
-import { defineConfig } from "tsup";
-
-import pkg from "./package.json";
+import { defineConfig } from "tsdown";
+import pkg from "./package.json" with { type: "json" };
 
 export default defineConfig(() => {
   return {
-    entry: [
-      "./src/index.ts",
-      "./src/remix.ts",
-      "./src/react-router.ts",
-      "./src/middleware.ts",
-    ],
+    entry: ["./src/remix.ts", "./src/react-router.ts", "./src/middleware.ts"],
     sourcemap: true,
     tsconfig: "./tsconfig.json",
     dts: true,
@@ -29,7 +23,7 @@ export default defineConfig(() => {
       ),
     },
     async onSuccess() {
-      let subPaths = ["remix", "react-router", "middleware"];
+      let subPaths = ["react-router", "middleware"];
 
       // generate root re-exports for each sub-path
       for (let subPath of subPaths) {

@@ -1,9 +1,7 @@
 packages:
   - packages/*
   - examples/*
-
 onlyBuiltDependencies:
+  - '@tailwindcss/oxide'
   - esbuild
-
-overrides:
-  find-up: "file:./vendor/find-up"
+  - svelte-preprocess
