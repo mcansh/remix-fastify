@@ -1,13 +1,8 @@
 import { reactRouter } from "@react-router/dev/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vite";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  plugins: [
-    reactRouter({
-      // Server-side render by default, to enable SPA mode set this to `false`
-      ssr: true,
-    }),
-    tsconfigPaths(),
-  ],
+  plugins: [reactRouter(), tsconfigPaths(), tailwindcss()],
 });

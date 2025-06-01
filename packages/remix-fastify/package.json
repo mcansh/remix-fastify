@@ -70,14 +70,14 @@
   },
   "devDependencies": {
     "@react-router/node": "7.6.1",
-    "@remix-run/node": "^2.15.3",
-    "@types/node": "^22.9.2",
-    "@typescript/lib-dom": "npm:@types/web@^0.0.182",
-    "fastify": "^5.2.1",
-    "node-mocks-http": "^1.16.2",
+    "@remix-run/node": "^2.16.8",
+    "@types/node": "^22.15.29",
+    "@typescript/lib-dom": "npm:@types/web@^0.0.237",
+    "fastify": "^5.3.3",
+    "node-mocks-http": "^1.17.2",
     "react-router": "^7.6.1",
-    "typescript": "^5.7.2",
-    "vite": "^6.2.4"
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
   },
   "peerDependencies": {
     "@remix-run/node": "^2.0.0",
