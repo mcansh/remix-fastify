@@ -35,7 +35,7 @@ export default defineConfig(() => {
           Fsp.writeFile(`${subPath}.cjs`, cjs),
           Fsp.writeFile(`${subPath}.js`, esm),
           Fsp.writeFile(`${subPath}.d.ts`, dts),
-          Fsp.writeFile(`${subPath}.d.cts`, dts),
+          Fsp.writeFile(`${subPath}.d.cts`, esm),
         ]);
       }
     },
