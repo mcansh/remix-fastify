@@ -74,7 +74,7 @@ export type PluginOptions<
     | ServerBuild
     | (() => ServerBuild | Promise<ServerBuild>);
 
-  childServerOptions: any;
+  childServerOptions?: any;
 };
 
 export function createPlugin(
