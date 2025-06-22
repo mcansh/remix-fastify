@@ -73,6 +73,8 @@ export type PluginOptions<
   productionServerBuild?:
     | ServerBuild
     | (() => ServerBuild | Promise<ServerBuild>);
+
+  childServerOptions: any;
 };
 
 export function createPlugin(
@@ -88,6 +90,7 @@ export function createPlugin(
     assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
     defaultCacheControl = { public: true, maxAge: "1 hour" },
     productionServerBuild,
+    childServerOptions,
   }: PluginOptions,
   virtualModule:
     | "virtual:remix/server-build"
@@ -170,9 +173,15 @@ export function createPlugin(
           done(null, payload);
         });
 
-        childServer.all("*", (request, reply) => {
-          handler(request, reply);
-        });
+        if (childServerOptions) {
+          childServer.all("*", childServerOptions, (request, reply) => {
+            handler(request, reply);
+          });
+        } else {
+          childServer.all("*", (request, reply) => {
+            handler(request, reply);
+          });
+        }
       },
       { prefix: basename },
     );
