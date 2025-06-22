@@ -28,13 +28,12 @@ export default defineConfig(() => {
       // generate root re-exports for each sub-path
       for (let subPath of subPaths) {
         let cjs = js`module.exports = require("./dist/${subPath}");`;
-        let esm = js`export * from "./dist/${subPath}";`;
-        let dts = js`export type * from "./dist/${subPath}";`;
+        let esm = js`export * from "./dist/${subPath}";
 
         await Promise.all([
           Fsp.writeFile(`${subPath}.cjs`, cjs),
           Fsp.writeFile(`${subPath}.js`, esm),
-          Fsp.writeFile(`${subPath}.d.ts`, dts),
+          Fsp.writeFile(`${subPath}.d.ts`, esm),
           Fsp.writeFile(`${subPath}.d.cts`, esm),
         ]);
       }
