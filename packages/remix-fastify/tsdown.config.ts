@@ -27,7 +27,7 @@ export default defineConfig(() => {
 
       // generate root re-exports for each sub-path
       for (let subPath of subPaths) {
-        let cjs = js`module.exports = require("./dist/${subPath}");`;
+        let cjs = js`module.exports = require("./dist/${subPath}");
         let esm = js`export * from "./dist/${subPath}";
 
         await Promise.all([
