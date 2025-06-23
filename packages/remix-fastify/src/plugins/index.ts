@@ -3,7 +3,7 @@ import url from "node:url";
 
 import type { FastifyStaticOptions } from "@fastify/static";
 import fastifyStatic from "@fastify/static";
-import type { FastifyInstance } from "fastify";
+import type { FastifyInstance, RouteShorthandOptions } from "fastify";
 import { cacheHeader } from "pretty-cache-header";
 import type { InlineConfig, ViteDevServer } from "vite";
 
@@ -74,7 +74,7 @@ export type PluginOptions<
     | ServerBuild
     | (() => ServerBuild | Promise<ServerBuild>);
 
-  childServerOptions?: any;
+  childServerOptions?: RouteShorthandOptions<Server>;
 };
 
 export function createPlugin(
