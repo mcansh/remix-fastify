@@ -1,1 +1,1 @@
-export type * from "./dist/react-router";
+export * from "./dist/react-router";

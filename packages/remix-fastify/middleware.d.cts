@@ -1,1 +1,1 @@
-export type * from "./dist/middleware";
+export * from "./dist/middleware";
