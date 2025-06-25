@@ -1,5 +1,19 @@
 # @mcansh/remix-fastify
 
+## 4.1.1
+
+### Patch Changes
+
+- allow passing options to childServer for use cases of other logging set ups ([#541](https://github.com/mcansh/remix-fastify/pull/541))
+
+  ```
+  fastify.register(reactRouterFastify, {
+    childServerOptions: { logLevel: 'silent' }
+  })
+  ```
+
+- dont `export type *` for subpath reexports ([#540](https://github.com/mcansh/remix-fastify/pull/540))
+
 ## 4.1.0
 
 ### Minor Changes

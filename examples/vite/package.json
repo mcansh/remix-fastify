@@ -14,7 +14,7 @@
   "dependencies": {
     "@fastify/middie": "^9.0.3",
     "@fastify/static": "^8.2.0",
-    "@mcansh/remix-fastify": "4.1.0",
+    "@mcansh/remix-fastify": "4.1.1",
     "@remix-run/node": "*",
     "@remix-run/react": "*",
     "@remix-run/server-runtime": "*",
