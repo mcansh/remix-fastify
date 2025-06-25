@@ -174,13 +174,9 @@ export function createPlugin(
         });
 
         if (childServerOptions) {
-          childServer.all("*", childServerOptions, (request, reply) => {
-            handler(request, reply);
-          });
+          childServer.all("*", childServerOptions, handler);
         } else {
-          childServer.all("*", (request, reply) => {
-            handler(request, reply);
-          });
+          childServer.all("*", handler);
         }
       },
       { prefix: basename },
