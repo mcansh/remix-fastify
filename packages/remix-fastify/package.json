@@ -22,6 +22,10 @@
   ],
   "type": "module",
   "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
     "./middleware": {
       "import": "./dist/middleware.js",
       "require": "./dist/middleware.cjs"
@@ -30,16 +34,12 @@
       "import": "./dist/react-router.js",
       "require": "./dist/react-router.cjs"
     },
-    "./remix": {
-      "import": "./dist/remix.js",
-      "require": "./dist/remix.cjs"
-    },
     "./package.json": "./package.json"
   },
-  "main": "./dist/remix.cjs",
-  "module": "./dist/remix.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "source": "./src/remix.ts",
-  "types": "./dist/remix.d.cts",
+  "types": "./dist/index.d.cts",
   "files": [
     "dist",
     "package.json",
