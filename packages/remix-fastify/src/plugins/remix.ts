@@ -20,7 +20,7 @@ export const remixFastify = fp<RemixFastifyOptions>(
       "virtual:remix/server-build",
       createRemixRequestHandler,
     );
-    return plugin();
+    await plugin();
   },
   {
     // replaced with the package name during build
