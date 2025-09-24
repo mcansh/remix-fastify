@@ -88,12 +88,12 @@ export function createRequest<Server extends HttpServer>(
     signal: controller.signal,
   };
 
-  // Abort action/loaders once we can no longer write a response if we have
+    // Abort once we can no longer write a response if we have
   // not yet sent a response (i.e., `close` without `finish`)
   // `finish` -> done rendering the response
   // `close` -> response can no longer be written to
-  reply.raw.on("finish", () => (controller = null));
-  reply.raw.on("close", () => controller?.abort());
+  reply.raw.once('close', () => controller?.abort());
+  reply.raw.once('finish', () => (controller = null));
 
   if (request.method !== "GET" && request.method !== "HEAD") {
     init.body = createReadableStreamFromReadable(request.raw);
