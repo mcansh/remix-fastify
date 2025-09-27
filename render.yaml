@@ -3,12 +3,13 @@ services:
     name: remix-fastify
     plan: free
     runtime: node
+    rootDir: ./examples/playground
     buildFilter:
       paths:
         - ./examples/playground
         - ./packages/**/*
     buildCommand: npm i -g corepack@latest && corepack enable && pnpm i && pnpm run build
-    startCommand: cd examples/playground && pnpm run start
+    startCommand: pnpm run start
     envVars:
       - key: SESSION_SECRET
         generateValue: true
@@ -17,31 +18,34 @@ services:
     name: remix-fastify-basic
     plan: free
     runtime: node
+    rootDir: ./examples/basic
     buildFilter:
       paths:
         - ./examples/basic
         - ./packages/**/*
     buildCommand: npm i -g corepack@latest && corepack enable && pnpm i && pnpm run build
-    startCommand: cd examples/basic && pnpm run start
+    startCommand: pnpm run start
 
   - type: web
     name: remix-fastify-vite
     plan: free
     runtime: node
+    rootDir: ./examples/vite
     buildFilter:
       paths:
         - ./examples/vite
         - ./packages/**/*
     buildCommand: npm i -g corepack@latest && corepack enable && pnpm i && pnpm run build
-    startCommand: cd examples/vite && pnpm run start
+    startCommand: pnpm run start
 
   - type: web
     name: remix-fastify-react-router
     plan: free
     runtime: node
+    rootDir: ./examples/react-router
     buildFilter:
       paths:
         - ./examples/react-router
         - ./packages/**/*
     buildCommand: npm i -g corepack@latest && corepack enable && pnpm i && pnpm run build
-    startCommand: cd examples/react-router && pnpm run start
+    startCommand: pnpm run start
