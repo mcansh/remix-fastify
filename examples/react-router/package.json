@@ -15,7 +15,7 @@
     "@react-router/serve": "7.6.1",
     "chalk": "^5.4.1",
     "cross-env": "^7.0.3",
-    "fastify": "^5.3.3",
+    "fastify": "^5.6.1",
     "get-port": "^7.1.0",
     "isbot": "^5.1.28",
     "react": "^19.1.0",
