@@ -36,7 +36,7 @@
   "devDependencies": {
     "@fastify/middie": "^9.0.3",
     "@react-router/dev": "^7.6.1",
-    "@remix-run/eslint-config": "^2.16.8",
+    "@remix-run/eslint-config": "^2.17.1",
     "@tailwindcss/vite": "4.1.8",
     "@total-typescript/tsconfig": "^1.0.4",
     "@types/node": "^22.15.29",
