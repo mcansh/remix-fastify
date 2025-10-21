@@ -54,7 +54,7 @@
     "tailwindcss": "4.1.8",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.8.3",
-    "vite": "^6.3.6",
+    "vite": "^6.4.1",
     "vite-tsconfig-paths": "^5.1.4"
   },
   "overrides": {
