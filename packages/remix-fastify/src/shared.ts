@@ -115,14 +115,16 @@ export async function sendResponse<Server extends HttpServer>(
     if (!responseHeaders.has(key)) {
       responseHeaders.set(key, []);
     }
-    // Set-Cookie headers are kept separate by the Headers API, so we collect them as-is
-    // Other headers are combined with ", " so we split them back into separate values
-    // This allows proper merging with existing headers
+    // The Web Headers API treats Set-Cookie specially: each value appears as a separate
+    // entry when iterating. For all other headers, multiple values are combined with ", ".
+    // We split non-Set-Cookie headers on ", " to enable proper merging with existing headers.
+    // Note: This split is imperfect for headers that contain commas in their values
+    // (like some Cache-Control directives), but it's necessary because the Headers API
+    // has already combined them and provides no way to get the original separate values.
+    // The Link header (the primary use case from the issue) works correctly with this approach.
     if (key.toLowerCase() === "set-cookie") {
       responseHeaders.get(key)!.push(value);
     } else {
-      // For other headers, split on ", " to get individual values
-      // This handles headers like Link that can have multiple values
       let splitValues = value.split(", ");
       responseHeaders.get(key)!.push(...splitValues);
     }
@@ -141,11 +143,7 @@ export async function sendResponse<Server extends HttpServer>(
       reply.header(key, mergedValues);
     } else {
       // No existing header on reply - just set response headers
-      if (values.length === 1) {
-        reply.headers({ [key]: values[0] });
-      } else {
-        reply.header(key, values);
-      }
+      reply.header(key, values.length === 1 ? values[0] : values);
     }
   }
 
