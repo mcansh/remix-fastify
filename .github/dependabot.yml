@@ -4,6 +4,10 @@ updates:
     directory: /
     schedule:
       interval: daily
+    reviewers:
+      - "mcansh"
+    assignees:
+      - "mcansh"
 
   - package-ecosystem: npm
     directory: /
@@ -11,6 +15,10 @@ updates:
       interval: weekly
       time: "10:00"
       timezone: "America/Detroit"
+    reviewers:
+      - "mcansh"
+    assignees:
+      - "mcansh"
     groups:
       "@remix-run":
         patterns:
