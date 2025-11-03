@@ -206,6 +206,42 @@ function runTests(
           "third=three; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Path=/; HttpOnly; Secure; SameSite=Lax",
         ]);
       });
+
+      it(`[${name}] merges headers set by Fastify with headers from Remix`, async () => {
+        mockedHandler.mockImplementation(() => async () => {
+          let headers = new Headers();
+          headers.append("Link", "</remix-resource.css>; rel=preload; as=style");
+          headers.append("Link", "</remix-script.js>; rel=modulepreload");
+          return new Response(null, { headers });
+        });
+
+        let app = fastify();
+        app.all("*", async (request, reply) => {
+          // Simulate Fastify setting Link headers before Remix handler
+          reply.header("Link", "</fonts/my-font.woff2>; rel=preload; as=font; crossorigin");
+          
+          let handler = createRequestHandler({
+            // @ts-expect-error - We don't have a real app to test
+            build: undefined,
+          });
+          
+          return handler(request, reply);
+        });
+
+        let response = await app.inject("/");
+
+        expect(response.headers["link"]).toBeDefined();
+        
+        // Should contain both Fastify's header and Remix's headers
+        let linkHeaders = Array.isArray(response.headers["link"]) 
+          ? response.headers["link"] 
+          : [response.headers["link"]];
+        
+        expect(linkHeaders).toHaveLength(3);
+        expect(linkHeaders[0]).toBe("</fonts/my-font.woff2>; rel=preload; as=font; crossorigin");
+        expect(linkHeaders[1]).toBe("</remix-resource.css>; rel=preload; as=style");
+        expect(linkHeaders[2]).toBe("</remix-script.js>; rel=modulepreload");
+      });
     });
   });
 

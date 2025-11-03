@@ -109,8 +109,44 @@ export async function sendResponse<Server extends HttpServer>(
 ): Promise<void> {
   reply.status(nodeResponse.status);
 
-  for (let [key, values] of nodeResponse.headers.entries()) {
-    reply.headers({ [key]: values });
+  // Collect all headers from the response first
+  let responseHeaders = new Map<string, string[]>();
+  for (let [key, value] of nodeResponse.headers.entries()) {
+    if (!responseHeaders.has(key)) {
+      responseHeaders.set(key, []);
+    }
+    // Set-Cookie headers are kept separate by the Headers API, so we collect them as-is
+    // Other headers are combined with ", " so we split them back into separate values
+    // This allows proper merging with existing headers
+    if (key.toLowerCase() === "set-cookie") {
+      responseHeaders.get(key)!.push(value);
+    } else {
+      // For other headers, split on ", " to get individual values
+      // This handles headers like Link that can have multiple values
+      let splitValues = value.split(", ");
+      responseHeaders.get(key)!.push(...splitValues);
+    }
+  }
+
+  // Now set headers, merging with any existing headers on the reply
+  for (let [key, values] of responseHeaders.entries()) {
+    let existingHeader = reply.hasHeader(key) ? reply.getHeader(key) : undefined;
+    
+    if (existingHeader !== undefined) {
+      // Header exists on reply - merge with response headers
+      let existingValues = Array.isArray(existingHeader) 
+        ? existingHeader 
+        : [String(existingHeader)];
+      let mergedValues = [...existingValues, ...values];
+      reply.header(key, mergedValues);
+    } else {
+      // No existing header on reply - just set response headers
+      if (values.length === 1) {
+        reply.headers({ [key]: values[0] });
+      } else {
+        reply.header(key, values);
+      }
+    }
   }
 
   if (nodeResponse.body) {
