@@ -41,7 +41,7 @@
     "prettier-plugin-tailwindcss": "^0.6.12",
     "prompt-confirm": "^2.0.4",
     "publint": "^0.3.15",
-    "react": "^19.1.0",
+    "react": "^19.2.0",
     "semver": "^7.7.2",
     "tsdown": "^0.12.6",
     "type-fest": "^4.41.0",

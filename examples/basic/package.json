@@ -22,7 +22,7 @@
     "fastify": "^5.3.3",
     "get-port": "^7.1.0",
     "isbot": "^5.1.28",
-    "react": "^19.1.0",
+    "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "source-map-support": "^0.5.21"
   },
@@ -30,7 +30,7 @@
     "@remix-run/dev": "*",
     "@remix-run/eslint-config": "*",
     "@total-typescript/tsconfig": "^1.0.4",
-    "@types/react": "^19.1.6",
+    "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "chokidar": "^4.0.3",
     "eslint": "^8.57.0",
