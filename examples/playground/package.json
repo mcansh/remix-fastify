@@ -27,7 +27,7 @@
     "get-port": "^7.1.0",
     "isbot": "^5.1.28",
     "lucide-react": "^0.553.0",
-    "react": "19.1.0",
+    "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-router": "^7.9.5",
     "source-map-support": "^0.5.21",
