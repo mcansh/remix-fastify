@@ -35,7 +35,7 @@
     "eslint": "^9.28.0",
     "eslint-plugin-prefer-let": "^4.0.0",
     "glob": "^11.1.0",
-    "jsonfile": "^6.1.0",
+    "jsonfile": "^6.2.0",
     "pkg-pr-new": "^0.0.51",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.12",
