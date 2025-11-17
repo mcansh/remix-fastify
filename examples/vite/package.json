@@ -32,7 +32,7 @@
     "@remix-run/eslint-config": "*",
     "@total-typescript/tsconfig": "^1.0.4",
     "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.2",
+    "@types/react-dom": "^19.2.3",
     "@types/source-map-support": "^0.5.10",
     "eslint": "^8.57.0",
     "prettier": "^3.6.2",
