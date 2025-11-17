@@ -251,8 +251,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       dotenv:
-        specifier: ^16.5.0
-        version: 16.5.0
+        specifier: ^17.2.3
+        version: 17.2.3
       eslint:
         specifier: ^8.57.0
         version: 8.57.1
@@ -339,8 +339,8 @@ importers:
         specifier: ^19.2.2
         version: 19.2.2(@types/react@19.2.2)
       dotenv:
-        specifier: ^16.5.0
-        version: 16.5.0
+        specifier: ^17.2.3
+        version: 17.2.3
       tailwindcss:
         specifier: ^4.1.8
         version: 4.1.8
@@ -3405,6 +3405,10 @@ packages:
 
   dotenv@16.5.0:
     resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
+    engines: {node: '>=12'}
+
+  dotenv@17.2.3:
+    resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
     engines: {node: '>=12'}
 
   dotenv@8.6.0:
@@ -10164,6 +10168,8 @@ snapshots:
   dom-accessibility-api@0.5.16: {}
 
   dotenv@16.5.0: {}
+
+  dotenv@17.2.3: {}
 
   dotenv@8.6.0: {}
 

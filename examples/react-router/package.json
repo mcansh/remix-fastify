@@ -29,7 +29,7 @@
     "@total-typescript/tsconfig": "^1.0.4",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
-    "dotenv": "^16.5.0",
+    "dotenv": "^17.2.3",
     "tailwindcss": "^4.1.8",
     "typescript": "^5.8.3",
     "vite": "^6.4.1",
