@@ -3,7 +3,7 @@ import url from "node:url";
 
 import type { FastifyStaticOptions } from "@fastify/static";
 import fastifyStatic from "@fastify/static";
-import type { FastifyInstance } from "fastify";
+import type { FastifyInstance, RouteShorthandOptions } from "fastify";
 import { cacheHeader } from "pretty-cache-header";
 import type { InlineConfig, ViteDevServer } from "vite";
 
@@ -73,6 +73,8 @@ export type PluginOptions<
   productionServerBuild?:
     | ServerBuild
     | (() => ServerBuild | Promise<ServerBuild>);
+
+  childServerOptions?: RouteShorthandOptions<Server>;
 };
 
 export function createPlugin(
@@ -88,6 +90,7 @@ export function createPlugin(
     assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
     defaultCacheControl = { public: true, maxAge: "1 hour" },
     productionServerBuild,
+    childServerOptions,
   }: PluginOptions,
   virtualModule:
     | "virtual:remix/server-build"
@@ -170,9 +173,11 @@ export function createPlugin(
           done(null, payload);
         });
 
-        childServer.all("*", (request, reply) => {
-          handler(request, reply);
-        });
+        if (childServerOptions) {
+          childServer.all("*", childServerOptions, handler);
+        } else {
+          childServer.all("*", handler);
+        }
       },
       { prefix: basename },
     );

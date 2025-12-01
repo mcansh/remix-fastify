@@ -13,6 +13,7 @@ permissions:
   id-token: write
   pull-requests: write
   contents: write
+  issues: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -27,7 +28,7 @@ jobs:
       published: ${{ steps.changesets.outputs.published }}
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: ⎔ Enable corepack
         run: |
@@ -35,7 +36,7 @@ jobs:
           corepack enable
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: ".nvmrc"
           cache: "pnpm"
@@ -77,12 +78,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: 📝 Comment on issues
-        uses: remix-run/release-comment-action@v0.4.1
+        uses: remix-run/release-comment-action@v0.4.3
         with:
           DIRECTORY_TO_CHECK: "./packages"
           PACKAGE_NAME: "@mcansh/remix-fastify"

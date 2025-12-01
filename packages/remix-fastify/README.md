@@ -19,7 +19,7 @@ These are the currently available templates that you can get jump started with:
 
 Get started with an existing boilerplate that integrates React Router 7 & Fastify:
 
-* https://github.com/simonsmith/react-router-fastify
+- https://github.com/simonsmith/react-router-fastify
 
 ## Add to existing remix vite app
 

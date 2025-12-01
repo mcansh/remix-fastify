@@ -1,11 +1,15 @@
 import Fsp from "node:fs/promises";
-import { defineConfig } from "tsup";
-
-import pkg from "./package.json";
+import { defineConfig } from "tsdown";
+import pkg from "./package.json" with { type: "json" };
 
 export default defineConfig(() => {
   return {
-    entry: ["./src/index.ts", "./src/remix.ts", "./src/react-router.ts"],
+    entry: {
+      index: "./src/remix.ts",
+      "react-router": "./src/react-router.ts",
+      middleware: "./src/middleware.ts",
+    },
+    exports: true,
     sourcemap: true,
     tsconfig: "./tsconfig.json",
     dts: true,
@@ -24,19 +28,18 @@ export default defineConfig(() => {
       ),
     },
     async onSuccess() {
-      let subPaths = ["remix", "react-router"];
+      let subPaths = ["react-router", "middleware"];
 
       // generate root re-exports for each sub-path
       for (let subPath of subPaths) {
         let cjs = js`module.exports = require("./dist/${subPath}");`;
         let esm = js`export * from "./dist/${subPath}";`;
-        let dts = js`export type * from "./dist/${subPath}";`;
 
         await Promise.all([
           Fsp.writeFile(`${subPath}.cjs`, cjs),
           Fsp.writeFile(`${subPath}.js`, esm),
-          Fsp.writeFile(`${subPath}.d.ts`, dts),
-          Fsp.writeFile(`${subPath}.d.cts`, dts),
+          Fsp.writeFile(`${subPath}.d.ts`, esm),
+          Fsp.writeFile(`${subPath}.d.cts`, esm),
         ]);
       }
     },

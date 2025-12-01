@@ -20,7 +20,7 @@ export const reactRouterFastify = fp<ReactRouterFastifyOptions>(
       "virtual:react-router/server-build",
       createReactRouterRequestHandler,
     );
-    return plugin();
+    await plugin();
   },
   {
     // replaced with the package name during build

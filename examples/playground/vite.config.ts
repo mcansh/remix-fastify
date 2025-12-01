@@ -3,12 +3,6 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-declare module "react-router" {
-  interface Future {
-    unstable_middleware: true;
-  }
-}
-
 export default defineConfig(({ isSsrBuild }) => {
   return {
     build: {

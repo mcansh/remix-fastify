@@ -2,7 +2,6 @@ import { reactRouterFastify } from "@mcansh/remix-fastify/react-router";
 import chalk from "chalk";
 import { fastify } from "fastify";
 import getPort, { portNumbers } from "get-port";
-import { unstable_createContext } from "react-router";
 import sourceMapSupport from "source-map-support";
 
 sourceMapSupport.install();
