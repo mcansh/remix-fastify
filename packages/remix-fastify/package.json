@@ -29,19 +29,7 @@
     "dist",
     "package.json",
     "README.md",
-    "LICENSE",
-    "react-router.cjs",
-    "react-router.d.cts",
-    "react-router.d.ts",
-    "react-router.js",
-    "remix.cjs",
-    "remix.d.cts",
-    "remix.d.ts",
-    "remix.js",
-    "middleware.cjs",
-    "middleware.d.cts",
-    "middleware.d.ts",
-    "middleware.js"
+    "LICENSE"
   ],
   "scripts": {
     "prepublishOnly": "npm run build && cp ../../LICENSE LICENSE && publint && attw --pack",
