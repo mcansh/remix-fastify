@@ -1,7 +1,7 @@
 import type {
   AppLoadContext,
   UNSAFE_MiddlewareEnabled as MiddlewareEnabled,
-  unstable_InitialContext,
+  RouterContextProvider,
 } from "react-router";
 
 import type {
@@ -30,6 +30,6 @@ export type GetLoadContextFunction<Server extends HttpServer> =
   SharedGetLoadContextFunction<
     Server,
     MiddlewareEnabled extends true
-      ? MaybePromise<unstable_InitialContext>
+      ? MaybePromise<RouterContextProvider>
       : MaybePromise<AppLoadContext>
   >;
