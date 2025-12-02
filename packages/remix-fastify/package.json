@@ -22,7 +22,7 @@
   ],
   "type": "module",
   "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "source": "./src/remix.ts",
   "types": "./dist/index.d.cts",
   "files": [
@@ -91,5 +91,16 @@
   },
   "engines": {
     "node": ">=20.0.0"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./react-router": {
+      "import": "./dist/react-router.mjs",
+      "require": "./dist/react-router.cjs"
+    },
+    "./package.json": "./package.json"
   }
 }

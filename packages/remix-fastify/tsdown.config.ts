@@ -7,7 +7,6 @@ export default defineConfig(() => {
     entry: {
       index: "./src/remix.ts",
       "react-router": "./src/react-router.ts",
-      middleware: "./src/middleware.ts",
     },
     exports: true,
     sourcemap: true,
