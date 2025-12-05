@@ -1,5 +1,11 @@
 # @mcansh/remix-fastify
 
+## 4.1.2
+
+### Patch Changes
+
+- await promise in the plugin. hopefully resolves https://github.com/mcansh/remix-fastify/issues/543 ([`904223434c3020a46b1516122922631bf8bb5de9`](https://github.com/mcansh/remix-fastify/commit/904223434c3020a46b1516122922631bf8bb5de9))
+
 ## 4.1.1
 
 ### Patch Changes
