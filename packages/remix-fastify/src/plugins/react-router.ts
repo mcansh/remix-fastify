@@ -1,11 +1,11 @@
 import fp from "fastify-plugin";
 import type { AppLoadContext, ServerBuild } from "react-router";
 
-import { createReactRouterRequestHandler } from "./server.ts";
-import type { HttpServer } from "../shared-server.ts";
+import { createReactRouterRequestHandler } from "../servers/react-router";
+import type { HttpServer } from "../shared";
 
-import { createPlugin } from "../shared-plugin.ts";
-import type { PluginOptions } from "../shared-plugin.ts";
+import { createPlugin } from ".";
+import type { PluginOptions } from ".";
 
 export type ReactRouterFastifyOptions = Omit<
   PluginOptions<HttpServer, AppLoadContext, ServerBuild>,

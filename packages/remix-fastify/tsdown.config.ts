@@ -3,8 +3,8 @@ import pkg from "./package.json" with { type: "json" };
 
 export default defineConfig({
   entry: {
-    index: "./src/remix/index.ts",
-    "react-router": "./src/react-router/index.ts",
+    index: "./src/remix.ts",
+    "react-router": "./src/react-router.ts",
   },
   exports: true,
   sourcemap: true,

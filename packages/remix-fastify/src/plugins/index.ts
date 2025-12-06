@@ -7,9 +7,9 @@ import type { FastifyInstance, RouteShorthandOptions } from "fastify";
 import { cacheHeader } from "pretty-cache-header";
 import type { InlineConfig, ViteDevServer } from "vite";
 
-import type { CreateRequestHandlerFunction as RRCreateRequestHandlerFunction } from "./react-router/server.ts";
-import type { CreateRequestHandlerFunction as RemixCreateRequestHandlerFunction } from "./remix/server.ts";
-import type { GetLoadContextFunction, HttpServer } from "./shared-server.ts";
+import type { CreateRequestHandlerFunction as RRCreateRequestHandlerFunction } from "../servers/react-router";
+import type { CreateRequestHandlerFunction as RemixCreateRequestHandlerFunction } from "../servers/remix";
+import type { GetLoadContextFunction, HttpServer } from "../shared";
 
 export type PluginOptions<
   Server extends HttpServer = HttpServer,

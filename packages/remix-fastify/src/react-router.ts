@@ -7,14 +7,14 @@ import type {
 import type {
   HttpServer,
   GetLoadContextFunction as SharedGetLoadContextFunction,
-} from "../shared-server.ts";
-export type { RequestHandler } from "../shared-server.ts";
-export { createReactRouterRequestHandler } from "./server.ts";
+} from "./shared";
+export type { RequestHandler } from "./shared";
+export { createReactRouterRequestHandler } from "./servers/react-router";
 
 /** @deprecated this function has been renamed to createReactRouterRequestHandler */
-export { createReactRouterRequestHandler as createRequestHandler } from "./server.ts";
-export { reactRouterFastify } from "./plugin.ts";
-export type { ReactRouterFastifyOptions } from "./plugin.ts";
+export { createReactRouterRequestHandler as createRequestHandler } from "./servers/react-router";
+export { reactRouterFastify } from "./plugins/react-router";
+export type { ReactRouterFastifyOptions } from "./plugins/react-router";
 
 type MaybePromise<T> = T | Promise<T>;
 

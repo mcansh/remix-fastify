@@ -5,7 +5,6 @@
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
-    "rootDir": ".",
-    "allowImportingTsExtensions": true
+    "rootDir": "."
   }
 }
