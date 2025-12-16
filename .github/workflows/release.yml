@@ -83,7 +83,7 @@ jobs:
           fetch-depth: 0
 
       - name: 📝 Comment on issues
-        uses: remix-run/release-comment-action@v0.4.3
+        uses: remix-run/release-comment-action@v0.5.1
         with:
           DIRECTORY_TO_CHECK: "./packages"
           PACKAGE_NAME: "@mcansh/remix-fastify"
