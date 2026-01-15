@@ -1,0 +1,11 @@
+{
+  "version": "4.1.2",
+  "name": "@mcansh/remix-fastify",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts",
+    "./middleware": "./src/middleware.ts",
+    "./react-router": "./src/react-router.ts",
+    "./package.json": "./package.json"
+  }
+}
