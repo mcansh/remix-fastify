@@ -28,6 +28,7 @@
     "@npmcli/package-json": "^6.2.0",
     "@remix-run/changelog-github": "^0.0.5",
     "@remix-run/eslint-config": "2.17.2",
+    "@stephansama/multipublish": "^1.0.4",
     "@total-typescript/tsconfig": "^1.0.4",
     "@types/node": "^24.10.0",
     "@types/npmcli__package-json": "^4.0.4",
