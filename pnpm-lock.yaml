@@ -36,8 +36,8 @@ importers:
         specifier: latest
         version: 2.17.4(eslint@9.28.0(jiti@2.4.2))(react@19.2.0)(typescript@5.8.3)
       '@stephansama/multipublish':
-        specifier: ^0.0.0
-        version: 0.0.0(jsr@0.13.5)(typescript@5.8.3)
+        specifier: ^1.0.4
+        version: 1.0.4(jsr@0.13.5)(typescript@5.8.3)
       '@total-typescript/tsconfig':
         specifier: ^1.0.4
         version: 1.0.4
@@ -2174,8 +2174,8 @@ packages:
   '@standard-schema/spec@1.0.0':
     resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
 
-  '@stephansama/multipublish@0.0.0':
-    resolution: {integrity: sha512-vBODCLV5U9rNIWxJJN9/wN3qaZrS2N6vuDIkKE8R4vtgJWnpqS9nhDdpeFZXvLseC1r9Cieg1QCYh2lComYR8A==}
+  '@stephansama/multipublish@1.0.4':
+    resolution: {integrity: sha512-m6GJDn0TZCnnxaRokZTnOfvFqlfs+mxXgvVGgUkc5QTRvmppdDOPoYckSEG+lcmZOuC/F2u8S/T/Rf4IYc14ew==}
     hasBin: true
     peerDependencies:
       jsr: '>=0.10'
@@ -6965,11 +6965,6 @@ packages:
     resolution: {integrity: sha512-YgvUTfwqyc7UXVMrB+SImsVYSmTS8X/tSrtdNZMImM+n7+QTriRXyXim0mBrTXNeqzVF0KWGgHPeiyViFFrNDw==}
     engines: {node: '>=18'}
 
-  yaml@2.7.0:
-    resolution: {integrity: sha512-+hSoy/QHluxmC9kCIJyL/uyFmLmc+e5CFR5Wa+bpIhIj85LVb9ZH2nVnqrHoSvKogwODv0ClqZkmiSSaIH5LTA==}
-    engines: {node: '>= 14'}
-    hasBin: true
-
   yaml@2.8.2:
     resolution: {integrity: sha512-mplynKqc1C2hTVYxd0PU2xQAc22TI1vShAYGksCCfxbn/dFwnHTNi1bvYsBTkhdUNtGIf5xNOg938rrSSYvS9A==}
     engines: {node: '>= 14.6'}
@@ -7445,7 +7440,7 @@ snapshots:
 
   '@babel/template@7.25.9':
     dependencies:
-      '@babel/code-frame': 7.26.2
+      '@babel/code-frame': 7.27.1
       '@babel/parser': 7.28.5
       '@babel/types': 7.28.5
 
@@ -8904,7 +8899,7 @@ snapshots:
 
   '@standard-schema/spec@1.0.0': {}
 
-  '@stephansama/multipublish@0.0.0(jsr@0.13.5)(typescript@5.8.3)':
+  '@stephansama/multipublish@1.0.4(jsr@0.13.5)(typescript@5.8.3)':
     dependencies:
       '@manypkg/find-root': 3.1.0
       '@manypkg/get-packages': 3.1.0
@@ -9366,7 +9361,7 @@ snapshots:
       css-what: 6.1.0
       cssesc: 3.0.0
       csstype: 3.1.3
-      dedent: 1.7.0
+      dedent: 1.7.1
       deep-object-diff: 1.1.9
       deepmerge: 4.3.1
       lru-cache: 10.4.3
@@ -13032,7 +13027,7 @@ snapshots:
   postcss-load-config@4.0.2(postcss@8.5.4)(ts-node@10.9.2(@types/node@24.10.4)(typescript@5.8.3)):
     dependencies:
       lilconfig: 3.1.3
-      yaml: 2.7.0
+      yaml: 2.8.2
     optionalDependencies:
       postcss: 8.5.4
       ts-node: 10.9.2(@types/node@24.10.4)(typescript@5.8.3)
@@ -14666,8 +14661,6 @@ snapshots:
   yallist@4.0.0: {}
 
   yallist@5.0.0: {}
-
-  yaml@2.7.0: {}
 
   yaml@2.8.2: {}
 
