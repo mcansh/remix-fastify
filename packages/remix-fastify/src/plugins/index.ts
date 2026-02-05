@@ -73,6 +73,18 @@ export type PluginOptions<
   productionServerBuild?:
     | ServerBuild
     | (() => ServerBuild | Promise<ServerBuild>);
+  /**
+   * A function that imports the server build from a virtual module in development.
+   * This should be a function that returns a dynamic import of the virtual module.
+   * 
+   * @example
+   * // For Remix:
+   * serverBuildImport: () => import("virtual:remix/server-build")
+   * 
+   * // For React Router:
+   * serverBuildImport: () => import("virtual:react-router/server-build")
+   */
+  serverBuildImport?: () => Promise<ServerBuild>;
 
   childServerOptions?: RouteShorthandOptions<Server>;
 };
@@ -90,11 +102,9 @@ export function createPlugin(
     assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
     defaultCacheControl = { public: true, maxAge: "1 hour" },
     productionServerBuild,
+    serverBuildImport,
     childServerOptions,
   }: PluginOptions,
-  virtualModule:
-    | "virtual:remix/server-build"
-    | "virtual:react-router/server-build",
   // TODO: look if importing the function as a type requires the peer dependency
   createRequestHandler:
     | RemixCreateRequestHandlerFunction
@@ -130,7 +140,14 @@ export function createPlugin(
       // @ts-expect-error - fix this
       getLoadContext,
       build: vite
-        ? () => vite.ssrLoadModule(virtualModule)
+        ? () => {
+            if (!serverBuildImport) {
+              throw new Error(
+                "serverBuildImport is required when running in development mode with Vite",
+              );
+            }
+            return serverBuildImport();
+          }
         : (productionServerBuild ?? (await import(SERVER_BUILD_URL))),
     });
 

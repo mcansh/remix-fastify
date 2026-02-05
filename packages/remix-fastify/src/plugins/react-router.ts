@@ -7,17 +7,22 @@ import type { HttpServer } from "../shared";
 import { createPlugin } from ".";
 import type { PluginOptions } from ".";
 
-export type ReactRouterFastifyOptions = Omit<
-  PluginOptions<HttpServer, AppLoadContext, ServerBuild>,
-  "virtualModule"
+export type ReactRouterFastifyOptions = PluginOptions<
+  HttpServer,
+  AppLoadContext,
+  ServerBuild
 >;
 
 export const reactRouterFastify = fp<ReactRouterFastifyOptions>(
   async (fastify, options) => {
     let plugin = createPlugin(
       fastify,
-      options,
-      "virtual:react-router/server-build",
+      {
+        ...options,
+        serverBuildImport:
+          options.serverBuildImport ??
+          (() => import("virtual:react-router/server-build")),
+      },
       createReactRouterRequestHandler,
     );
     await plugin();
