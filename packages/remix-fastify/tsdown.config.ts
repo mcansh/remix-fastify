@@ -17,7 +17,7 @@ export default defineConfig(() => {
     format: ["cjs", "esm"],
     cjsInterop: true,
     splitting: false,
-    bundle: true,
+    unbundle: false,
     platform: "node",
     skipNodeModulesBundle: true,
     treeshake: true,

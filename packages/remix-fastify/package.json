@@ -23,21 +23,21 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
     "./middleware": {
-      "import": "./dist/middleware.js",
+      "import": "./dist/middleware.mjs",
       "require": "./dist/middleware.cjs"
     },
     "./react-router": {
-      "import": "./dist/react-router.js",
+      "import": "./dist/react-router.mjs",
       "require": "./dist/react-router.cjs"
     },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "source": "./src/remix.ts",
   "types": "./dist/index.d.cts",
   "files": [
