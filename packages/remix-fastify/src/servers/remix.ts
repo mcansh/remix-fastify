@@ -1,20 +1,20 @@
 import type { AppLoadContext, ServerBuild } from "@remix-run/node";
 import {
-  createRequestHandler,
-  createReadableStreamFromReadable,
+    createReadableStreamFromReadable,
+    createRequestHandler,
 } from "@remix-run/node";
 import type {
-  FastifyRequest,
-  FastifyReply,
-  RouteGenericInterface,
+    FastifyReply,
+    FastifyRequest,
+    RouteGenericInterface,
 } from "fastify";
 
-import { createRequest, sendResponse } from "../shared";
 import type {
-  GetLoadContextFunction as GenericGetLoadContextFunction,
-  HttpServer,
-  RequestHandler,
+    GetLoadContextFunction as GenericGetLoadContextFunction,
+    HttpServer,
+    RequestHandler,
 } from "../shared";
+import { createRequest, sendResponse } from "../shared";
 
 export type CreateRequestHandlerFunction = typeof createRemixRequestHandler;
 export type GetLoadContextFunction<Server extends HttpServer = HttpServer> =

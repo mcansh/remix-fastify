@@ -15,3 +15,6 @@ overrides:
   "@remix-run/node": "latest"
   "@remix-run/react": "latest"
   "@remix-run/server-runtime": "latest"
+  "@react-router/node": "latest"
+  "@react-router/dev": "latest"
+  "react-router": "latest"

@@ -1,5 +1,4 @@
 import path from "node:path";
-import url from "node:url";
 
 import type { FastifyStaticOptions } from "@fastify/static";
 import fastifyStatic from "@fastify/static";
@@ -65,15 +64,7 @@ export type PluginOptions<
    * @default { public: true, maxAge: '1 hour' }
    */
   defaultCacheControl?: Parameters<typeof cacheHeader>[0];
-  /**
-   * The Remix server build to use in production. Use this only if the default approach doesn't work for you.
-   *
-   * If not provided, it will be loaded using `import()` with the server build path provided in the options.
-   */
-  productionServerBuild?:
-    | ServerBuild
-    | (() => ServerBuild | Promise<ServerBuild>);
-
+  build: ((vite?: ViteDevServer) => ServerBuild | Promise<ServerBuild>);
   childServerOptions?: RouteShorthandOptions<Server>;
 };
 
@@ -82,20 +73,15 @@ export function createPlugin(
   {
     basename = "/",
     buildDirectory = "build",
-    serverBuildFile = "index.js",
     getLoadContext,
     mode = process.env.NODE_ENV,
     viteOptions,
     fastifyStaticOptions,
     assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
     defaultCacheControl = { public: true, maxAge: "1 hour" },
-    productionServerBuild,
+    build,
     childServerOptions,
   }: PluginOptions,
-  virtualModule:
-    | "virtual:remix/server-build"
-    | "virtual:react-router/server-build",
-  // TODO: look if importing the function as a type requires the peer dependency
   createRequestHandler:
     | RemixCreateRequestHandlerFunction
     | RRCreateRequestHandlerFunction,
@@ -118,20 +104,13 @@ export function createPlugin(
     }
 
     let resolvedBuildDirectory = path.resolve(cwd, buildDirectory);
-    let SERVER_BUILD = path.join(
-      resolvedBuildDirectory,
-      "server",
-      serverBuildFile,
-    );
-    let SERVER_BUILD_URL = url.pathToFileURL(SERVER_BUILD).href;
 
     let handler = createRequestHandler<HttpServer>({
       mode,
       // @ts-expect-error - fix this
       getLoadContext,
-      build: vite
-        ? () => vite.ssrLoadModule(virtualModule)
-        : (productionServerBuild ?? (await import(SERVER_BUILD_URL))),
+      // @ts-expect-error - passed in via generic
+      build
     });
 
     // handle asset requests

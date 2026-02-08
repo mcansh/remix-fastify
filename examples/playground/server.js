@@ -12,12 +12,18 @@ app.post("/api/echo", async (request, reply) => {
   reply.send(request.body);
 });
 
-await app.register(reactRouterFastify);
+await app.register(reactRouterFastify, {
+  build: async (vite) => {
+    let build = vite ? await vite.ssrLoadModule('virtual:react-router/server-build') : await import('./build/server/index.js');
+    return {
+      ...build,
+      allowedActionOrigins: ['http://localhost:3000']
+    }
+  }
+});
 
 const desiredPort = Number(process.env.PORT) || 3000;
-const portToUse = await getPort({
-  port: portNumbers(desiredPort, desiredPort + 100),
-});
+const portToUse = await getPort({ port: portNumbers(desiredPort, desiredPort + 100) });
 
 let address = await app.listen({ port: portToUse, host: "0.0.0.0" });
 
