@@ -12,7 +12,9 @@ app.post("/api/echo", async (request, reply) => {
   reply.send(request.body);
 });
 
-await app.register(reactRouterFastify);
+await app.register(reactRouterFastify, {
+  allowedActionOrigins: ["http://localhost:3000"],
+});
 
 const desiredPort = Number(process.env.PORT) || 3000;
 const portToUse = await getPort({

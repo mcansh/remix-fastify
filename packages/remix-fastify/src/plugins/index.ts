@@ -75,6 +75,8 @@ export type PluginOptions<
     | (() => ServerBuild | Promise<ServerBuild>);
 
   childServerOptions?: RouteShorthandOptions<Server>;
+
+  allowedActionOrigins?: Array<string>
 };
 
 export function createPlugin(
@@ -91,6 +93,7 @@ export function createPlugin(
     defaultCacheControl = { public: true, maxAge: "1 hour" },
     productionServerBuild,
     childServerOptions,
+    allowedActionOrigins,
   }: PluginOptions,
   virtualModule:
     | "virtual:remix/server-build"
@@ -129,9 +132,22 @@ export function createPlugin(
       mode,
       // @ts-expect-error - fix this
       getLoadContext,
-      build: vite
-        ? () => vite.ssrLoadModule(virtualModule)
-        : (productionServerBuild ?? (await import(SERVER_BUILD_URL))),
+      async build() {
+        let build
+
+        if (vite) {
+          build = await vite.ssrLoadModule(virtualModule);
+        } else if (productionServerBuild) {
+          build = productionServerBuild
+        } else {
+          build = await import(SERVER_BUILD_URL);
+        }
+
+        return {
+          ...build,
+          allowedActionOrigins,
+        }
+      }
     });
 
     // handle asset requests
