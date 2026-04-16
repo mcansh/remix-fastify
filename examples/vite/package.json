@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@fastify/middie": "^9.0.3",
-    "@fastify/static": "^8.2.0",
+    "@fastify/static": "^9.1.1",
     "@mcansh/remix-fastify": "4.1.2",
     "@remix-run/node": "*",
     "@remix-run/react": "*",

@@ -15,7 +15,7 @@
     "validate": "run-p lint format typecheck"
   },
   "dependencies": {
-    "@fastify/static": "^8.2.0",
+    "@fastify/static": "^9.1.1",
     "@mcansh/remix-fastify": "workspace:*",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.3",
