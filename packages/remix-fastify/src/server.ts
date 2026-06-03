@@ -1,7 +1,6 @@
 import type * as http from "node:http";
 import type * as http2 from "node:http2";
 import type * as https from "node:https";
-import { Readable } from "node:stream";
 
 import { createReadableStreamFromReadable } from "@react-router/node";
 import type {
@@ -136,42 +135,15 @@ export function createReactRouterRequest<Server extends HttpServer>(
   return new Request(url, init);
 }
 
+/**
+ * Hand the web `Response` to Fastify as-is. Fastify 5 natively reads its
+ * status, copies the headers (each `Set-Cookie` separately), and streams the
+ * web `ReadableStream` body — including the null-body, 204, and 304 cases — so
+ * there is nothing to translate by hand.
+ */
 export async function sendResponse<Server extends HttpServer>(
   reply: FastifyReply<RouteGenericInterface, Server>,
   nodeResponse: Response,
 ): Promise<void> {
-  reply.status(nodeResponse.status);
-
-  for (let [key, values] of nodeResponse.headers.entries()) {
-    reply.headers({ [key]: values });
-  }
-
-  if (nodeResponse.body) {
-    let stream = responseToReadable(nodeResponse);
-    return reply.send(stream);
-  }
-
-  return reply.send(await nodeResponse.text());
-}
-
-function responseToReadable(response: Response): Readable | null {
-  if (!response.body) return null;
-
-  let reader = response.body.getReader();
-  let readable = new Readable();
-  readable._read = async () => {
-    try {
-      let result = await reader.read();
-      if (!result.done) {
-        readable.push(Buffer.from(result.value));
-      } else {
-        readable.push(null);
-      }
-    } catch (error) {
-      readable.destroy(error as Error);
-      throw error;
-    }
-  };
-
-  return readable;
+  await reply.send(nodeResponse);
 }
