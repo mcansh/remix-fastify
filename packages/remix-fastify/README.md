@@ -89,12 +89,19 @@ Wire up your scripts to React Router's CLI for dev/build and run the server entr
 
 - `entry` — path to your server entry, relative to the project root. Default: `"./server.js"`.
 - `export` — the named export of the `createApp` factory. Default: `"createApp"`.
+- `buildDirectory` — your build output directory, used to locate the SSR server build when auto-externalizing shared modules (see below). Match `buildDirectory` in your React Router config. Default: `"build"`.
 
 ```ts
 fastifyDevServer({ entry: "./server/index.ts", export: "createApp" });
 ```
 
 The factory receives `{ viteDevServer }`; forward it to `reactRouterFastify` so the plugin renders through Vite (with HMR) in development. There is no global state — the dev server is passed explicitly.
+
+### Sharing modules between your server entry and your app
+
+Your server entry lives outside React Router's build graph, so any module it shares with your app — most commonly a `createContext` token module used by `getLoadContext` and your loaders — would be bundled a second time into the production server build. Because React Router matches context tokens by object identity, the two copies would never see each other's values.
+
+At build time the plugin scans your entry's relative imports, resolves each to a source file, and externalizes it from the SSR build so both sides load the same module instance. This is automatic; you don't need to configure `rollupOptions.external` yourself. It covers direct relative imports of the entry (e.g. `import { userContext } from "./app/context.ts"`); the matching app-side import resolves to the same file even through a tsconfig alias like `~/context`.
 
 ## Load context
 

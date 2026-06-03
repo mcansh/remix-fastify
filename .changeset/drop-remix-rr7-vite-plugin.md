@@ -17,5 +17,6 @@ Drop Remix support — target React Router v7 only
 - Added `fastifyDevServer`, a Vite plugin (`@mcansh/remix-fastify/vite`) that runs your own Fastify instance in development behind Vite's asset/HMR middleware, so dev and production share a single server entry.
 - Your server entry exports a `createApp({ viteDevServer })` factory. The dev plugin passes the Vite dev server explicitly (no global state), and production runs the entry directly — gate `app.listen()` with `process.argv[1] === fileURLToPath(import.meta.url)`.
 - `getLoadContext` now supports returning a `RouterContextProvider` when the `v8_middleware` future flag is enabled.
+- The dev plugin auto-externalizes modules shared between your server entry and your app (e.g. a `createContext` token module) from the production SSR build, so context tokens keep a single identity across both — no manual `rollupOptions.external` needed. Pass `buildDirectory` to match a non-default React Router build directory.
 
 The examples were consolidated to `playground` (migrated to the Vite dev plugin) and `react-router`, and the READMEs were rewritten for the new API.
