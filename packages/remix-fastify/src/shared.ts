@@ -3,8 +3,7 @@ import type * as http2 from "node:http2";
 import type * as https from "node:https";
 import { Readable } from "node:stream";
 
-import type { createReadableStreamFromReadable as RRCreateReadableStreamFromReadable } from "@react-router/node";
-import type { createReadableStreamFromReadable as RemixCreateReadableStreamFromReadable } from "@remix-run/node";
+import { createReadableStreamFromReadable } from "@react-router/node";
 import type {
   FastifyReply,
   FastifyRequest,
@@ -12,6 +11,14 @@ import type {
   RawRequestDefaultExpression,
   RouteGenericInterface,
 } from "fastify";
+import type {
+  AppLoadContext,
+  RouterContextProvider,
+  UNSAFE_MiddlewareEnabled as MiddlewareEnabled,
+} from "react-router";
+import type { ViteDevServer } from "vite";
+
+type MaybePromise<T> = T | Promise<T>;
 
 export type HttpServer =
   | http.Server
@@ -33,14 +40,16 @@ export type RequestHandler<Server extends HttpServer> = (
  *
  * You can think of this as an escape hatch that allows you to pass
  * environment/platform-specific values through to your loader/action.
+ *
+ * When the `v8_middleware` future flag is enabled this must return a
+ * `RouterContextProvider`; otherwise it returns your augmented `AppLoadContext`.
  */
-export type GetLoadContextFunction<
-  Server extends HttpServer,
-  AppLoadContext,
-> = (
+export type GetLoadContextFunction<Server extends HttpServer> = (
   request: FastifyRequest<RouteGenericInterface, Server>,
   reply: FastifyReply<RouteGenericInterface, Server>,
-) => Promise<AppLoadContext> | AppLoadContext;
+) => MiddlewareEnabled extends true
+  ? MaybePromise<RouterContextProvider>
+  : MaybePromise<AppLoadContext>;
 
 export function createHeaders(
   requestHeaders: FastifyRequest["headers"],
@@ -74,9 +83,6 @@ export function getUrl<Server extends HttpServer>(
 export function createRequest<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
   reply: FastifyReply<RouteGenericInterface, Server>,
-  createReadableStreamFromReadable:
-    | typeof RemixCreateReadableStreamFromReadable
-    | typeof RRCreateReadableStreamFromReadable,
 ): Request {
   let url = getUrl(request);
 
@@ -119,6 +125,32 @@ export async function sendResponse<Server extends HttpServer>(
   }
 
   return reply.send(await nodeResponse.text());
+}
+
+const DEV_SERVER_KEY = "__mcansh_remix_fastify_vite_dev_server__";
+
+/**
+ * Stashes the Vite dev server on `globalThis` so that {@link reactRouterFastify}
+ * (which runs inside your server entry, loaded via `ssrLoadModule`) can read it
+ * without a direct reference. Set by the `fastifyDevServer` Vite plugin.
+ */
+export function setDevServer(server: ViteDevServer): void {
+  (globalThis as Record<string, unknown>)[DEV_SERVER_KEY] = server;
+}
+
+/**
+ * Returns the Vite dev server when running under `fastifyDevServer`, otherwise
+ * `undefined`. Use this in your server entry to only call `app.listen()` in
+ * production:
+ *
+ * ```ts
+ * if (!getDevServer()) await app.listen({ port: 3000 });
+ * ```
+ */
+export function getDevServer(): ViteDevServer | undefined {
+  return (globalThis as Record<string, unknown>)[DEV_SERVER_KEY] as
+    | ViteDevServer
+    | undefined;
 }
 
 function responseToReadable(response: Response): Readable | null {

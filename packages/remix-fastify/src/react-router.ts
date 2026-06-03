@@ -1,10 +1,9 @@
-import type { AppLoadContext } from "react-router";
-
 import type {
   HttpServer,
   GetLoadContextFunction as SharedGetLoadContextFunction,
 } from "./shared";
 export type { RequestHandler } from "./shared";
+export { getDevServer } from "./shared";
 export { createReactRouterRequestHandler } from "./servers/react-router";
 
 /** @deprecated this function has been renamed to createReactRouterRequestHandler */
@@ -13,4 +12,4 @@ export { reactRouterFastify } from "./plugins/react-router";
 export type { ReactRouterFastifyOptions } from "./plugins/react-router";
 
 export type GetLoadContextFunction<Server extends HttpServer> =
-  SharedGetLoadContextFunction<Server, AppLoadContext>;
+  SharedGetLoadContextFunction<Server>;

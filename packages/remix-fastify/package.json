@@ -1,7 +1,7 @@
 {
   "name": "@mcansh/remix-fastify",
   "version": "4.1.2",
-  "description": "Fastify server request handler for Remix and React Router",
+  "description": "Fastify server request handler and Vite dev plugin for React Router v7",
   "repository": "mcansh/remix-fastify",
   "license": "MIT",
   "author": "Logan McAnsh <logan@mcan.sh> (https://mcan.sh)",
@@ -9,10 +9,9 @@
     "url": "https://github.com/mcansh/remix-fastify/issues"
   },
   "keywords": [
-    "remix",
-    "remix-run",
     "react-router",
-    "fastify"
+    "fastify",
+    "vite"
   ],
   "funding": [
     {
@@ -21,41 +20,14 @@
     }
   ],
   "type": "module",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
-    "./middleware": {
-      "import": "./dist/middleware.js",
-      "require": "./dist/middleware.cjs"
-    },
-    "./react-router": {
-      "import": "./dist/react-router.js",
-      "require": "./dist/react-router.cjs"
-    },
-    "./package.json": "./package.json"
-  },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "source": "./src/remix.ts",
-  "types": "./dist/index.d.cts",
   "files": [
     "dist",
     "package.json",
     "README.md",
-    "LICENSE",
-    "react-router.cjs",
-    "react-router.d.cts",
-    "react-router.d.ts",
-    "react-router.js",
-    "middleware.cjs",
-    "middleware.d.cts",
-    "middleware.d.ts",
-    "middleware.js"
+    "LICENSE"
   ],
   "scripts": {
-    "prepublishOnly": "npm run build && cp ../../LICENSE LICENSE && publint && attw --pack",
+    "prepublishOnly": "npm run build",
     "typecheck": "tsc",
     "dev": "tsdown --watch",
     "build": "tsdown",
@@ -63,38 +35,30 @@
     "validate": "run-p typecheck test"
   },
   "dependencies": {
-    "@fastify/middie": "^9.0.3",
-    "@fastify/static": "^8.2.0",
-    "fastify-plugin": "^5.0.1",
-    "pretty-cache-header": "^1.0.0"
+    "@fastify/middie": "^9.3.2",
+    "@fastify/static": "^8.3.0",
+    "@react-router/node": "latest",
+    "fastify-plugin": "^5.1.0",
+    "pretty-cache-header": "^1.0.0",
+    "react-router": "latest"
   },
   "devDependencies": {
-    "@react-router/node": "7.9.6",
-    "@remix-run/node": "^2.16.8",
-    "@types/node": "^24.10.0",
+    "@arethetypeswrong/core": "^0.18.3",
+    "@react-router/node": "latest",
+    "@types/node": "^24.12.4",
     "@typescript/lib-dom": "npm:@types/web@^0.0.237",
-    "fastify": "^5.3.3",
+    "fastify": "^5.8.5",
     "node-mocks-http": "^1.17.2",
-    "react-router": "^7.12.0",
-    "typescript": "^5.8.3",
-    "vite": "^6.4.1"
+    "publint": "^0.3.21",
+    "react-router": "latest",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.3"
   },
   "peerDependencies": {
-    "@remix-run/node": "^2.0.0",
+    "@react-router/node": "^7.0.0",
     "fastify": "^3.29.0 || ^4.0.0 || ^5.0.0",
-    "react-router": ">=7.0.0",
+    "react-router": "^7.0.0",
     "vite": "^5.0.0-0 || ^6.0.0-0 || ^7.0.0-0 || ^8.0.0-0"
-  },
-  "peerDependenciesMeta": {
-    "@remix-run/node": {
-      "optional": true
-    },
-    "react-router": {
-      "optional": true
-    },
-    "vite": {
-      "optional": true
-    }
   },
   "publishConfig": {
     "access": "public",
@@ -102,5 +66,12 @@
   },
   "engines": {
     "node": ">=20.0.0"
+  },
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./middleware": "./dist/middleware.mjs",
+    "./react-router": "./dist/react-router.mjs",
+    "./vite": "./dist/vite.mjs",
+    "./package.json": "./package.json"
   }
 }

@@ -1,7 +1,7 @@
 import type {
   AppLoadContext,
+  RouterContextProvider,
   UNSAFE_MiddlewareEnabled as MiddlewareEnabled,
-  unstable_InitialContext,
 } from "react-router";
 
 import type { FastifyReply, FastifyRequest } from "fastify";
@@ -20,5 +20,5 @@ export type GetLoadContextFunction = (
   req: FastifyRequest,
   res: FastifyReply,
 ) => MiddlewareEnabled extends true
-  ? MaybePromise<unstable_InitialContext>
+  ? MaybePromise<RouterContextProvider>
   : MaybePromise<AppLoadContext>;

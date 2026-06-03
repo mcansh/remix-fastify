@@ -1,4 +1,14 @@
 import { NavLink, Outlet } from "react-router";
+import { nameContext } from "~/context";
+import type { Route } from "./+types/_layout";
+
+export const middleware: Route.MiddlewareFunction[] = [
+  ({ request, context }, next) => {
+    let name = new URL(request.url).searchParams.get("name");
+    if (name) context.set(nameContext, name);
+    return next();
+  },
+];
 
 let LINKS = [
   { to: "/", label: "Home" },

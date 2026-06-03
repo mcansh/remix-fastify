@@ -1,10 +1,9 @@
-import { createReadableStreamFromReadable } from "@react-router/node";
 import type {
   FastifyRequest,
   FastifyReply,
   RouteGenericInterface,
 } from "fastify";
-import type { AppLoadContext, ServerBuild } from "react-router";
+import type { ServerBuild } from "react-router";
 import { createRequestHandler } from "react-router";
 
 import { createRequest, sendResponse } from "../shared";
@@ -17,7 +16,7 @@ import type {
 export type CreateRequestHandlerFunction =
   typeof createReactRouterRequestHandler;
 export type GetLoadContextFunction<Server extends HttpServer = HttpServer> =
-  GenericGetLoadContextFunction<Server, AppLoadContext>;
+  GenericGetLoadContextFunction<Server>;
 
 /**
  * Returns a request handler for Fastify that serves the response using Remix.
@@ -45,5 +44,5 @@ export function createReactRouterRequest<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
   reply: FastifyReply<RouteGenericInterface, Server>,
 ): Request {
-  return createRequest(request, reply, createReadableStreamFromReadable);
+  return createRequest(request, reply);
 }

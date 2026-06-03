@@ -9,9 +9,4 @@ onlyBuiltDependencies:
 
 overrides:
   "@mcansh/remix-fastify": "workspace:"
-  "@remix-run/css-bundle": "latest"
-  "@remix-run/dev": "latest"
   "@remix-run/eslint-config": "latest"
-  "@remix-run/node": "latest"
-  "@remix-run/react": "latest"
-  "@remix-run/server-runtime": "latest"

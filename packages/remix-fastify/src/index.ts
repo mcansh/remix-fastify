@@ -1,6 +1,11 @@
 export type {
   GetLoadContextFunction,
+  ReactRouterFastifyOptions,
   RequestHandler,
-  RemixFastifyOptions,
-} from "./remix";
-export { createRequestHandler, remixFastify } from "./remix";
+} from "./react-router";
+export {
+  createReactRouterRequestHandler,
+  createRequestHandler,
+  getDevServer,
+  reactRouterFastify,
+} from "./react-router";
