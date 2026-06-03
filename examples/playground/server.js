@@ -1,4 +1,5 @@
-import { getDevServer, reactRouterFastify } from "@mcansh/remix-fastify";
+import { fileURLToPath } from "node:url";
+import { reactRouterFastify } from "@mcansh/remix-fastify";
 import chalk from "chalk";
 import { fastify } from "fastify";
 import getPort, { portNumbers } from "get-port";
@@ -8,24 +9,38 @@ import { nameContext } from "./app/context.ts";
 
 sourceMapSupport.install();
 
-export const app = fastify();
+// The `fastifyDevServer` Vite plugin imports this module in development and
+// calls `createApp` with the Vite dev server. Production runs this file
+// directly (`node server.js`), where `createApp` is called with no dev server.
+/**
+ * @param {{ viteDevServer?: import("vite").ViteDevServer }} [options]
+ */
+export async function createApp({ viteDevServer } = {}) {
+  const app = fastify();
 
-app.post("/api/echo", async (request, reply) => {
-  reply.send(request.body);
-});
+  app.post("/api/echo", async (request, reply) => {
+    reply.send(request.body);
+  });
 
-await app.register(reactRouterFastify, {
-  getLoadContext() {
-    let context = new RouterContextProvider();
-    context.set(nameContext, "host-server");
-    return context;
-  },
-});
+  await app.register(
+    reactRouterFastify({
+      viteDevServer,
+      getLoadContext() {
+        let context = new RouterContextProvider();
+        context.set(nameContext, "host-server");
+        return context;
+      },
+    }),
+  );
 
-// In development the `fastifyDevServer` Vite plugin imports this module and
-// drives the app itself, so we only start listening when run directly (e.g.
-// `node server.js` in production).
-if (!getDevServer()) {
+  return app;
+}
+
+// Only start listening when run directly (production). Under the Vite dev
+// plugin this module is imported, so `import.meta.url` won't match argv[1].
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const app = await createApp();
+
   const desiredPort = Number(process.env.PORT) || 3000;
   const portToUse = await getPort({
     port: portNumbers(desiredPort, desiredPort + 100),

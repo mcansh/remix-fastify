@@ -8,10 +8,10 @@ import type { MockedFunction } from "vitest";
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
 import {
+  createHeaders,
   createReactRouterRequest,
   createReactRouterRequestHandler,
-} from "../src/servers/react-router";
-import { createHeaders } from "../src/shared";
+} from "../src/server";
 
 // We don't want to test that the React Router server works here, we just want
 // to test the fastify adapter.

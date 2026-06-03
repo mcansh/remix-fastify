@@ -7,8 +7,6 @@ const FASTIFY_VERSION = pkg.peerDependencies.fastify;
 export default defineConfig({
   entry: {
     "index": "./src/index.ts",
-    "react-router": "./src/react-router.ts",
-    "middleware": "./src/middleware.ts",
     "vite": "./src/vite.ts",
   },
   exports: true,

@@ -25,26 +25,33 @@ npm i -D vite
 
 ## Usage
 
-Create a server entry that builds and exports a Fastify instance, then registers the plugin. Export the app so the dev plugin can import it, and only call `listen()` when running outside of Vite:
+Create a server entry that exports a `createApp({ viteDevServer })` factory which builds a Fastify instance and registers the plugin. The dev plugin calls this factory with the Vite dev server; in production you call it yourself and `listen()`:
 
 ```ts
 // server.js
-import { getDevServer, reactRouterFastify } from "@mcansh/remix-fastify";
+import { fileURLToPath } from "node:url";
+import { reactRouterFastify } from "@mcansh/remix-fastify";
 import { fastify } from "fastify";
 
-export const app = fastify();
+export async function createApp({ viteDevServer } = {}) {
+  const app = fastify();
 
-app.post("/api/echo", async (request, reply) => {
-  reply.send(request.body);
-});
+  app.post("/api/echo", async (request, reply) => {
+    reply.send(request.body);
+  });
 
-await app.register(reactRouterFastify);
+  await app.register(reactRouterFastify({ viteDevServer }));
+
+  return app;
+}
 
 // In development the `fastifyDevServer` Vite plugin imports this module and
-// drives the app itself, so we only start listening when run directly (e.g.
-// `node server.js` in production).
-if (!getDevServer()) {
-  let address = await app.listen({ port: Number(process.env.PORT) || 3000 });
+// calls `createApp` with the Vite dev server. Only start listening when run
+// directly (e.g. `node server.js` in production), which is what this check
+// detects — under the dev plugin the module is imported, not executed.
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const app = await createApp();
+  const address = await app.listen({ port: Number(process.env.PORT) || 3000 });
   console.log(`app ready: ${address}`);
 }
 ```
@@ -78,28 +85,32 @@ Wire up your scripts to React Router's CLI for dev/build and run the server entr
 
 ## Development plugin
 
-`fastifyDevServer` loads your server entry via Vite's `ssrLoadModule` and forwards requests to its exported Fastify instance. It accepts:
+`fastifyDevServer` loads your server entry via Vite's `ssrLoadModule` and calls its exported factory with the Vite dev server, then forwards requests to the returned Fastify instance. It accepts:
 
 - `entry` — path to your server entry, relative to the project root. Default: `"./server.js"`.
-- `export` — the named export of the Fastify instance. Default: `"app"`.
+- `export` — the named export of the `createApp` factory. Default: `"createApp"`.
 
 ```ts
-fastifyDevServer({ entry: "./server/index.ts", export: "app" });
+fastifyDevServer({ entry: "./server/index.ts", export: "createApp" });
 ```
 
-Use `getDevServer()` in your server entry to detect whether you are running under the dev plugin (it returns the Vite dev server, otherwise `undefined`).
+The factory receives `{ viteDevServer }`; forward it to `reactRouterFastify` so the plugin renders through Vite (with HMR) in development. There is no global state — the dev server is passed explicitly.
 
 ## Load context
 
 Pass per-request values into your loaders and actions with `getLoadContext`:
 
 ```ts
-await app.register(reactRouterFastify, {
-  getLoadContext(request, reply) {
-    return { userId: request.headers["x-user-id"] };
-  },
-});
+await app.register(
+  reactRouterFastify({
+    getLoadContext(request, reply) {
+      return { userId: request.headers["x-user-id"] };
+    },
+  }),
+);
 ```
+
+`reactRouterFastify` is a plugin factory: call it with your options and register the result. `getLoadContext`'s `request`/`reply` are typed for `http.Server` by default; pass a type argument to target another server, e.g. `reactRouterFastify<Http2Server>({ ... })`.
 
 When the `v8_middleware` future flag is enabled, return a `RouterContextProvider` instead:
 
@@ -107,13 +118,15 @@ When the `v8_middleware` future flag is enabled, return a `RouterContextProvider
 import { RouterContextProvider } from "react-router";
 import { userContext } from "./app/context";
 
-await app.register(reactRouterFastify, {
-  getLoadContext() {
-    let context = new RouterContextProvider();
-    context.set(userContext, "host-server");
-    return context;
-  },
-});
+await app.register(
+  reactRouterFastify({
+    getLoadContext() {
+      let context = new RouterContextProvider();
+      context.set(userContext, "host-server");
+      return context;
+    },
+  }),
+);
 ```
 
 ## Options
@@ -124,7 +137,8 @@ await app.register(reactRouterFastify, {
 - `buildDirectory` — directory of the build output; match `buildDirectory` in your React Router config. Default: `"build"`.
 - `serverBuildFile` — server build filename; match `serverBuildFile` in your React Router config. Default: `"index.js"`.
 - `getLoadContext` — function returning the `context` passed to loaders and actions.
-- `mode` — the React Router mode; defaults to `"development"` under the dev plugin, otherwise `process.env.NODE_ENV`.
+- `mode` — the React Router mode; defaults to `"development"` when a `viteDevServer` is provided, otherwise `process.env.NODE_ENV`.
+- `viteDevServer` — the Vite dev server, forwarded from your `createApp` factory in development. When set, SSR runs through Vite and static asset serving is skipped (Vite serves assets/HMR). Leave unset in production.
 - `fastifyStaticOptions` — options forwarded to [`@fastify/static`](https://github.com/fastify/fastify-static) for serving compiled assets in production.
 - `assetCacheControl` — `Cache-Control` for hashed build assets, via [`pretty-cache-header`](https://github.com/cdimascio/pretty-cache-header). Default: `{ public: true, maxAge: "1 year", immutable: true }`.
 - `defaultCacheControl` — `Cache-Control` for other static files. Default: `{ public: true, maxAge: "1 hour" }`.

@@ -1,23 +1,31 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 
 import type { FastifyInstance } from "fastify";
-import type { Connect, Plugin } from "vite";
-
-import { setDevServer } from "./shared";
+import type { Connect, Plugin, ViteDevServer } from "vite";
 
 export interface FastifyDevServerOptions {
   /**
    * Path to your server entry, relative to the project root. The module must
-   * export a Fastify instance (see {@link FastifyDevServerOptions.export}).
+   * export a factory (see {@link FastifyDevServerOptions.export}) that builds
+   * and returns a Fastify instance.
    * @default "./server.js"
    */
   entry?: string;
   /**
-   * The named export of the Fastify instance in your server entry.
-   * @default "app"
+   * The named export of the factory in your server entry. The factory is
+   * called with `{ viteDevServer }` and must return a Fastify instance.
+   * @default "createApp"
    */
   export?: string;
 }
+
+/**
+ * The factory your server entry exports. The Vite plugin calls it with the
+ * dev server in development; production code calls it with no arguments.
+ */
+export type CreateApp = (options: {
+  viteDevServer?: ViteDevServer;
+}) => FastifyInstance | Promise<FastifyInstance>;
 
 /**
  * A Vite plugin that runs your Fastify server in development.
@@ -25,6 +33,10 @@ export interface FastifyDevServerOptions {
  * Add it alongside `reactRouter()` and run `react-router dev`. Vite serves
  * client assets and HMR, then forwards every other request to your Fastify
  * app, which renders with React Router via `reactRouterFastify`.
+ *
+ * Your server entry exports a `createApp({ viteDevServer })` factory. The
+ * plugin calls it with the Vite dev server so the app can render through Vite
+ * in development — no global state involved.
  *
  * ```ts
  * // vite.config.ts
@@ -38,7 +50,7 @@ export interface FastifyDevServerOptions {
  */
 export function fastifyDevServer(options: FastifyDevServerOptions = {}): Plugin {
   let entry = options.entry ?? "./server.js";
-  let exportName = options.export ?? "app";
+  let exportName = options.export ?? "createApp";
 
   return {
     name: "@mcansh/remix-fastify:dev-server",
@@ -49,9 +61,13 @@ export function fastifyDevServer(options: FastifyDevServerOptions = {}): Plugin 
     enforce: "pre",
     apply: "serve",
     configureServer(server) {
-      // Hand the dev server to `reactRouterFastify`, which runs inside the
-      // entry module we load below.
-      setDevServer(server);
+      // Build the app once per evaluation of the entry module, reusing it
+      // across requests. When Vite invalidates the entry (you edit it), the
+      // next `ssrLoadModule` returns a fresh factory function — a new identity —
+      // and we rebuild. Route changes flow through `reactRouterFastify`'s own
+      // `ssrLoadModule` of the server build, so they don't require a rebuild.
+      let cached: { factory: CreateApp; app: Promise<FastifyInstance> } | null =
+        null;
 
       // Returning a function registers our middleware as a "post" hook so
       // Vite's own middlewares (module/asset transforms, HMR) run first and
@@ -65,12 +81,28 @@ export function fastifyDevServer(options: FastifyDevServerOptions = {}): Plugin 
           ) => {
             try {
               let mod = await server.ssrLoadModule(entry);
-              let app = (await mod[exportName]) as FastifyInstance | undefined;
-              if (!app || typeof app.routing !== "function") {
+              let factory = mod[exportName] as CreateApp | undefined;
+              if (typeof factory !== "function") {
                 throw new Error(
-                  `[@mcansh/remix-fastify] expected "${entry}" to export a Fastify instance named "${exportName}".`,
+                  `[@mcansh/remix-fastify] expected "${entry}" to export a function named "${exportName}" that returns a Fastify instance.`,
                 );
               }
+
+              if (!cached || cached.factory !== factory) {
+                cached?.app.then((app) => app.close()).catch(() => {});
+                cached = {
+                  factory,
+                  app: Promise.resolve(factory({ viteDevServer: server })),
+                };
+              }
+
+              let app = await cached.app;
+              if (typeof app?.routing !== "function") {
+                throw new Error(
+                  `[@mcansh/remix-fastify] "${exportName}" in "${entry}" did not return a Fastify instance.`,
+                );
+              }
+
               await app.ready();
               app.routing(req, res);
             } catch (error) {

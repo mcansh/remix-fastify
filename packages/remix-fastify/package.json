@@ -69,8 +69,6 @@
   },
   "exports": {
     ".": "./dist/index.mjs",
-    "./middleware": "./dist/middleware.mjs",
-    "./react-router": "./dist/react-router.mjs",
     "./vite": "./dist/vite.mjs",
     "./package.json": "./package.json"
   }
