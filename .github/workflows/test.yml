@@ -41,9 +41,6 @@ jobs:
       - name: 🏗 Build
         run: pnpm run build
 
-      - name: 📦 Package
-        run: pnpm run attw
-
   test:
     name: "${{ matrix.os }} | ${{ matrix.node }}"
     strategy:
