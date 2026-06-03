@@ -40,7 +40,14 @@ export async function createApp({ viteDevServer } = {}) {
     reply.send(request.body);
   });
 
-  await app.register(reactRouterFastify({ viteDevServer }));
+  // You load the server build, not the plugin — so you can shape it first (e.g.
+  // set `allowedActionOrigins`). In development resolve it through Vite so route
+  // changes hot-reload; in production import the compiled build.
+  const build = viteDevServer
+    ? () => viteDevServer.ssrLoadModule("virtual:react-router/server-build")
+    : await import("./build/server/index.js");
+
+  await app.register(reactRouterFastify({ viteDevServer, build }));
 
   return app;
 }
@@ -95,7 +102,7 @@ Wire up your scripts to React Router's CLI for dev/build and run the server entr
 fastifyDevServer({ entry: "./server/index.ts", export: "createApp" });
 ```
 
-The factory receives `{ viteDevServer }`; forward it to `reactRouterFastify` so the plugin renders through Vite (with HMR) in development. There is no global state — the dev server is passed explicitly.
+The factory receives `{ viteDevServer }`. Use it to load the server build through Vite (`ssrLoadModule("virtual:react-router/server-build")`) so SSR runs through Vite with HMR, and forward `viteDevServer` to `reactRouterFastify` so it skips static asset serving (Vite serves assets/HMR ahead of Fastify). There is no global state — the dev server is passed explicitly.
 
 ### Sharing modules between your server entry and your app
 
@@ -138,18 +145,17 @@ await app.register(
 
 ## Options
 
-`reactRouterFastify` accepts the following options (all optional):
+`reactRouterFastify` requires `build`; the rest are optional:
 
+- `build` — the React Router server build, or a function that resolves it. You load it, not the plugin, so you can shape the build before handing it over (e.g. set `allowedActionOrigins`). In development resolve it through Vite (`() => viteDevServer.ssrLoadModule("virtual:react-router/server-build")`); in production import the compiled build (`await import("./build/server/index.js")`).
 - `basename` — base path for the app; match the `basename` in your React Router config. Default: `"/"`.
-- `buildDirectory` — directory of the build output; match `buildDirectory` in your React Router config. Default: `"build"`.
-- `serverBuildFile` — server build filename; match `serverBuildFile` in your React Router config. Default: `"index.js"`.
+- `buildDirectory` — directory of the build output, used to locate the compiled client assets (`<buildDirectory>/client`) served in production; match `buildDirectory` in your React Router config. Default: `"build"`.
 - `getLoadContext` — function returning the `context` passed to loaders and actions.
 - `mode` — the React Router mode; defaults to `"development"` when a `viteDevServer` is provided, otherwise `process.env.NODE_ENV`.
-- `viteDevServer` — the Vite dev server, forwarded from your `createApp` factory in development. When set, SSR runs through Vite and static asset serving is skipped (Vite serves assets/HMR). Leave unset in production.
+- `viteDevServer` — the Vite dev server, forwarded from your `createApp` factory in development. When set, static asset serving is skipped (Vite serves assets/HMR) and `mode` defaults to `"development"`. Leave unset in production.
 - `fastifyStaticOptions` — options forwarded to [`@fastify/static`](https://github.com/fastify/fastify-static) for serving compiled assets in production.
 - `assetCacheControl` — `Cache-Control` for hashed build assets, via [`pretty-cache-header`](https://github.com/cdimascio/pretty-cache-header). Default: `{ public: true, maxAge: "1 year", immutable: true }`.
 - `defaultCacheControl` — `Cache-Control` for other static files. Default: `{ public: true, maxAge: "1 hour" }`.
-- `productionServerBuild` — provide the server build directly instead of importing it from `buildDirectory`.
 - `childServerOptions` — Fastify [route options](https://fastify.dev/docs/latest/Reference/Routes/#routes-options) applied to the catch-all route.
 
 ## Examples

@@ -8,7 +8,11 @@ sourceMapSupport.install();
 
 let app = fastify();
 
-await app.register(reactRouterFastify());
+// We load the server build here (not the plugin), so we could shape it before
+// handing it over — e.g. set `allowedActionOrigins`.
+let build = await import("./build/server/index.js");
+
+await app.register(reactRouterFastify({ build }));
 
 const desiredPort = Number(process.env.PORT) || 3000;
 const portToUse = await getPort({

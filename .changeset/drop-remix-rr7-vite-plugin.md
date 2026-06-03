@@ -11,6 +11,7 @@ Drop Remix support — target React Router v7 only
 - The package is now ESM-only. The CommonJS (`.cjs`) builds and the prebuilt `react-router.*` / `middleware.*` subpath shim files have been removed.
 - Exports were restructured to two entry points: the plugin and helpers from `@mcansh/remix-fastify`, and the Vite plugin from `@mcansh/remix-fastify/vite`. The previous `/react-router` and `/middleware` subpaths and the `source`/`main`/`module`/`types` fields are gone in favor of the `exports` map.
 - `reactRouterFastify` is now a plugin factory: call it with your options and register the result — `app.register(reactRouterFastify({ ... }))` instead of `app.register(reactRouterFastify, { ... })`. This makes `getLoadContext` typed for your server (`reactRouterFastify<Http2Server>({ ... })` to target another).
+- You now load the server build and pass it as the required `build` option; the plugin no longer imports it. This lets you shape the build before handing it over (e.g. set `allowedActionOrigins`). In development pass `() => viteDevServer.ssrLoadModule("virtual:react-router/server-build")`; in production pass `await import("./build/server/index.js")`. The `productionServerBuild` and `serverBuildFile` options are removed (`buildDirectory` is kept, now only used to locate the compiled client assets served in production).
 
 **New features:**
 

@@ -22,9 +22,18 @@ export async function createApp({ viteDevServer } = {}) {
     reply.send(request.body);
   });
 
+  // We load the server build here (not the plugin), so we could shape it before
+  // handing it over — e.g. set `allowedActionOrigins`. In development we resolve
+  // it through Vite so route changes hot-reload; in production we import the
+  // compiled build.
+  const build = viteDevServer
+    ? () => viteDevServer.ssrLoadModule("virtual:react-router/server-build")
+    : await import("./build/server/index.js");
+
   await app.register(
     reactRouterFastify({
       viteDevServer,
+      build,
       getLoadContext() {
         let context = new RouterContextProvider();
         context.set(nameContext, "host-server");
