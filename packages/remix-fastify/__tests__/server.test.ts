@@ -201,6 +201,19 @@ describe("fastify createHeaders", () => {
         "__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax, __other=some_other_value; Path=/; Secure; HttpOnly; MaxAge=3600; SameSite=Lax",
       );
     });
+
+    it("skips HTTP/2 pseudo-headers", () => {
+      let headers = createHeaders({
+        ":method": "GET",
+        ":path": "/foo/bar",
+        ":authority": "localhost:3000",
+        ":scheme": "https",
+        "x-foo": "bar",
+      });
+
+      expect([...headers.keys()]).toEqual(["x-foo"]);
+      expect(headers.get("x-foo")).toBe("bar");
+    });
   });
 });
 

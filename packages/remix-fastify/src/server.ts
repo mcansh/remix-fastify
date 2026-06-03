@@ -83,6 +83,10 @@ export function createHeaders(
   let headers = new Headers();
 
   for (let [key, values] of Object.entries(requestHeaders)) {
+    // Skip HTTP/2 pseudo-headers (`:method`, `:path`, `:authority`, `:scheme`).
+    // Node exposes them on `request.headers`, but `:` is not a valid Fetch
+    // header name, so `Headers` would throw on them.
+    if (key[0] === ":") continue;
     if (values) {
       if (Array.isArray(values)) {
         for (let value of values) {
