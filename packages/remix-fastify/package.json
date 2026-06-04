@@ -2,30 +2,39 @@
   "name": "@mcansh/remix-fastify",
   "version": "4.1.2",
   "description": "Fastify server request handler and Vite dev plugin for React Router v7",
-  "repository": "mcansh/remix-fastify",
-  "license": "MIT",
-  "author": "Logan McAnsh <logan@mcan.sh> (https://mcan.sh)",
+  "keywords": [
+    "fastify",
+    "react-router",
+    "vite"
+  ],
   "bugs": {
     "url": "https://github.com/mcansh/remix-fastify/issues"
   },
-  "keywords": [
-    "react-router",
-    "fastify",
-    "vite"
-  ],
+  "license": "MIT",
+  "author": "Logan McAnsh <logan@mcan.sh> (https://mcan.sh)",
+  "repository": "mcansh/remix-fastify",
   "funding": [
     {
       "type": "github",
       "url": "https://github.com/sponsors/mcansh"
     }
   ],
-  "type": "module",
   "files": [
     "dist",
     "package.json",
     "README.md",
     "LICENSE"
   ],
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./vite": "./dist/vite.mjs",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "scripts": {
     "prepublishOnly": "npm run build",
     "typecheck": "tsc",
@@ -60,16 +69,7 @@
     "react-router": "^7.0.0",
     "vite": "^5.0.0-0 || ^6.0.0-0 || ^7.0.0-0 || ^8.0.0-0"
   },
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
-  },
   "engines": {
     "node": ">=20.0.0"
-  },
-  "exports": {
-    ".": "./dist/index.mjs",
-    "./vite": "./dist/vite.mjs",
-    "./package.json": "./package.json"
   }
 }

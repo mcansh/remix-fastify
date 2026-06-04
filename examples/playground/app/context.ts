@@ -1,3 +1,3 @@
-import { createContext } from "react-router";
+import { createContext } from "react-router"
 
-export const nameContext = createContext<string>("Anonymous");
+export const nameContext = createContext<string>("Anonymous")

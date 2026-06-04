@@ -1,38 +1,38 @@
-import type * as http from "node:http";
-import type * as http2 from "node:http2";
-import type * as https from "node:https";
+import type * as http from "node:http"
+import type * as http2 from "node:http2"
+import type * as https from "node:https"
 
-import { createReadableStreamFromReadable } from "@react-router/node";
+import { createReadableStreamFromReadable } from "@react-router/node"
 import type {
   FastifyReply,
   FastifyRequest,
   RawReplyDefaultExpression,
   RawRequestDefaultExpression,
   RouteGenericInterface,
-} from "fastify";
+} from "fastify"
 import type {
   AppLoadContext,
   RouterContextProvider,
   ServerBuild,
   UNSAFE_MiddlewareEnabled as MiddlewareEnabled,
-} from "react-router";
-import { createRequestHandler as createReactRouterRequestHandlerImpl } from "react-router";
+} from "react-router"
+import { createRequestHandler as createReactRouterRequestHandlerImpl } from "react-router"
 
-type MaybePromise<T> = T | Promise<T>;
+type MaybePromise<T> = T | Promise<T>
 
 export type HttpServer =
   | http.Server
   | https.Server
   | http2.Http2Server
-  | http2.Http2SecureServer;
+  | http2.Http2SecureServer
 
-export type HttpRequest = RawRequestDefaultExpression<HttpServer>;
-export type HttpResponse = RawReplyDefaultExpression<HttpServer>;
+export type HttpRequest = RawRequestDefaultExpression<HttpServer>
+export type HttpResponse = RawReplyDefaultExpression<HttpServer>
 
 export type RequestHandler<Server extends HttpServer = HttpServer> = (
   request: FastifyRequest<RouteGenericInterface, Server>,
   reply: FastifyReply<RouteGenericInterface, Server>,
-) => Promise<void>;
+) => Promise<void>
 
 /**
  * A function that returns the value to use as `context` in route `loader` and
@@ -50,11 +50,17 @@ export type GetLoadContextFunction<Server extends HttpServer = HttpServer> = (
   reply: FastifyReply<RouteGenericInterface, Server>,
 ) => MiddlewareEnabled extends true
   ? MaybePromise<RouterContextProvider>
-  : MaybePromise<AppLoadContext>;
+  : MaybePromise<AppLoadContext>
 
 /**
  * Returns a request handler for Fastify that serves the response using React
  * Router.
+ *
+ * @param options - Handler configuration.
+ * @param options.build - The React Router server build, or a function that resolves it.
+ * @param options.getLoadContext - Returns the `context` passed to loaders and actions.
+ * @param options.mode - The React Router mode. Defaults to `process.env.NODE_ENV`.
+ * @returns A Fastify request handler that renders with React Router.
  */
 export function createReactRouterRequestHandler<
   Server extends HttpServer = HttpServer,
@@ -63,80 +69,80 @@ export function createReactRouterRequestHandler<
   getLoadContext,
   mode = process.env.NODE_ENV,
 }: {
-  build: ServerBuild | (() => ServerBuild | Promise<ServerBuild>);
-  getLoadContext?: GetLoadContextFunction<Server>;
-  mode?: string;
+  build: ServerBuild | (() => ServerBuild | Promise<ServerBuild>)
+  getLoadContext?: GetLoadContextFunction<Server>
+  mode?: string
 }): RequestHandler<Server> {
-  let handleRequest = createReactRouterRequestHandlerImpl(build, mode);
+  let handleRequest = createReactRouterRequestHandlerImpl(build, mode)
 
   return async (request, reply) => {
-    let request_ = createReactRouterRequest(request, reply);
-    let loadContext = await getLoadContext?.(request, reply);
-    let response = await handleRequest(request_, loadContext);
-    return sendResponse(reply, response);
-  };
+    let request_ = createReactRouterRequest(request, reply)
+    let loadContext = await getLoadContext?.(request, reply)
+    let response = await handleRequest(request_, loadContext)
+    return sendResponse(reply, response)
+  }
 }
 
 export function createHeaders(
   requestHeaders: FastifyRequest["headers"],
 ): Headers {
-  let headers = new Headers();
+  let headers = new Headers()
 
   for (let [key, values] of Object.entries(requestHeaders)) {
     // Skip HTTP/2 pseudo-headers (`:method`, `:path`, `:authority`, `:scheme`).
     // Node exposes them on `request.headers`, but `:` is not a valid Fetch
     // header name, so `Headers` would throw on them.
-    if (key[0] === ":") continue;
+    if (key[0] === ":") continue
     if (values) {
       if (Array.isArray(values)) {
         for (let value of values) {
-          headers.append(key, value);
+          headers.append(key, value)
         }
       } else {
-        headers.set(key, values);
+        headers.set(key, values)
       }
     }
   }
 
-  return headers;
+  return headers
 }
 
 export function getUrl<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
 ): string {
-  let origin = `${request.protocol}://${request.host}`;
+  let origin = `${request.protocol}://${request.host}`
   // Use `request.originalUrl` so React Router is aware of the full path
-  let url = `${origin}${request.originalUrl}`;
-  return url;
+  let url = `${origin}${request.originalUrl}`
+  return url
 }
 
 export function createReactRouterRequest<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
   reply: FastifyReply<RouteGenericInterface, Server>,
 ): Request {
-  let url = getUrl(request);
+  let url = getUrl(request)
 
-  let controller: AbortController | null = new AbortController();
+  let controller: AbortController | null = new AbortController()
 
   let init: RequestInit = {
     method: request.method,
     headers: createHeaders(request.headers),
     signal: controller.signal,
-  };
+  }
 
   // Abort action/loaders once we can no longer write a response if we have
   // not yet sent a response (i.e., `close` without `finish`)
   // `finish` -> done rendering the response
   // `close` -> response can no longer be written to
-  reply.raw.on("finish", () => (controller = null));
-  reply.raw.on("close", () => controller?.abort());
+  reply.raw.on("finish", () => (controller = null))
+  reply.raw.on("close", () => controller?.abort())
 
   if (request.method !== "GET" && request.method !== "HEAD") {
-    init.body = createReadableStreamFromReadable(request.raw);
-    init.duplex = "half";
+    init.body = createReadableStreamFromReadable(request.raw)
+    init.duplex = "half"
   }
 
-  return new Request(url, init);
+  return new Request(url, init)
 }
 
 /**
@@ -144,10 +150,13 @@ export function createReactRouterRequest<Server extends HttpServer>(
  * status, copies the headers (each `Set-Cookie` separately), and streams the
  * web `ReadableStream` body — including the null-body, 204, and 304 cases — so
  * there is nothing to translate by hand.
+ *
+ * @param reply - The Fastify reply to send through.
+ * @param nodeResponse - The web `Response` produced by React Router.
  */
 export async function sendResponse<Server extends HttpServer>(
   reply: FastifyReply<RouteGenericInterface, Server>,
   nodeResponse: Response,
 ): Promise<void> {
-  await reply.send(nodeResponse);
+  await reply.send(nodeResponse)
 }

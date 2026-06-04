@@ -6,9 +6,11 @@
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "nodenext",
-    "module": "ESNext",
+    "module": "NodeNext",
     "noEmit": true,
     "strict": true,
-    "target": "ES2018"
+    "target": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "types": ["node"]
   }
 }

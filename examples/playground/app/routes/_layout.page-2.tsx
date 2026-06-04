@@ -1,16 +1,17 @@
-import * as React from "react";
-import { Await, useLoaderData } from "react-router";
-import { withDelay } from "~/utils";
+import * as React from "react"
+import { Await, useLoaderData } from "react-router"
+
+import { withDelay } from "~/utils.ts"
 
 export function loader() {
   return {
     message: "loader data from page 2",
     deferred: withDelay(2_000, "some text\n".repeat(2_000)),
-  };
+  }
 }
 
 export default function Page2() {
-  let data = useLoaderData<typeof loader>();
+  let data = useLoaderData<typeof loader>()
 
   return (
     <div>
@@ -26,5 +27,5 @@ export default function Page2() {
         </React.Suspense>
       </div>
     </div>
-  );
+  )
 }

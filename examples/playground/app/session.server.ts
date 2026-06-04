@@ -1,11 +1,11 @@
-import { createCookieSessionStorage } from "react-router";
+import { createCookieSessionStorage } from "react-router"
 
-let sessionSecret = process.env.SESSION_SECRET;
+const sessionSecret = process.env.SESSION_SECRET
 if (!sessionSecret) {
-  throw new Error("SESSION_SECRET must be set");
+  throw new Error("SESSION_SECRET must be set")
 }
 
-export let sessionStorage = createCookieSessionStorage({
+export const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: "__session",
     secrets: [sessionSecret],
@@ -14,4 +14,4 @@ export let sessionStorage = createCookieSessionStorage({
     maxAge: 60 * 60 * 24 * 30,
     httpOnly: true,
   },
-});
+})

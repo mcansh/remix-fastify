@@ -4,14 +4,14 @@ export {
   createReactRouterRequestHandler,
   getUrl,
   sendResponse,
-} from "./server";
+} from "./server.js"
 export type {
   GetLoadContextFunction,
   HttpRequest,
   HttpResponse,
   HttpServer,
   RequestHandler,
-} from "./server";
+} from "./server.js"
 
-export { reactRouterFastify } from "./plugin";
-export type { ReactRouterFastifyOptions } from "./plugin";
+export { reactRouterFastify } from "./plugin.js"
+export type { ReactRouterFastifyOptions } from "./plugin.js"

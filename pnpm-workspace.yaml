@@ -9,4 +9,3 @@ onlyBuiltDependencies:
 
 overrides:
   "@mcansh/remix-fastify": "workspace:"
-  "@remix-run/eslint-config": "latest"

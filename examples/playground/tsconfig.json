@@ -15,7 +15,6 @@
     "allowJs": true,
     "allowImportingTsExtensions": true,
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
     "paths": { "~/*": ["./app/*"] },
     "rootDirs": [".", "./.react-router/types"],
     "plugins": [{ "name": "@react-router/dev" }]

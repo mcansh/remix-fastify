@@ -5,46 +5,45 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "react-router";
-import type { Route } from "./+types/root";
-import "./styles/global.css";
-import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert";
+} from "react-router"
+
+import type { Route } from "./+types/root"
+
+import "./styles/global.css"
+import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert.tsx"
 
 export function loader() {
-  return data({ message: "Hello from the root loader" });
+  return data({ message: "Hello from the root loader" })
 }
 
 const clientLogger: Route.ClientMiddlewareFunction = async (
   { request },
   next,
 ) => {
-  let start = performance.now();
+  let start = performance.now()
 
   // Run the remaining middlewares and all route loaders
-  await next();
+  await next()
 
-  let duration = performance.now() - start;
-  console.log(`Navigated to ${request.url} (${duration}ms)`);
-};
+  let duration = performance.now() - start
+  console.log(`Navigated to ${request.url} (${duration}ms)`)
+}
 
-const serverLogger: Route.MiddlewareFunction = async (
-  { request },
-  next,
-) => {
-  let start = performance.now();
+const serverLogger: Route.MiddlewareFunction = async ({ request }, next) => {
+  let start = performance.now()
 
   // 👇 Grab the response here
-  let res = await next();
+  let res = await next()
 
-  let duration = performance.now() - start;
-  console.log(`Navigated to ${request.url} (${duration}ms)`);
+  let duration = performance.now() - start
+  console.log(`Navigated to ${request.url} (${duration}ms)`)
 
   // 👇 And return it here (optional if you don't modify the response)
-  return res;
-};
+  return res
+}
 
-export const middleware = [serverLogger];
-export const clientMiddleware = [clientLogger];
+export const middleware = [serverLogger]
+export const clientMiddleware = [clientLogger]
 
 export default function App({ loaderData }: Route.ComponentProps) {
   return (
@@ -69,5 +68,5 @@ export default function App({ loaderData }: Route.ComponentProps) {
         <ScrollRestoration />
       </body>
     </html>
-  );
+  )
 }

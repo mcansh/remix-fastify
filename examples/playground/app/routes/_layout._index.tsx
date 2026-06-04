@@ -1,57 +1,59 @@
-import * as React from "react";
-import { Await, Form, redirect, useAsyncValue } from "react-router";
-import { nameContext } from "~/context";
-import { sessionStorage } from "~/session.server";
-import { sleep } from "~/utils";
-import type { Route } from "./+types/_layout._index";
-import { Button } from "~/components/button";
-import { Label } from "~/components/ui/label";
-import { Input } from "~/components/ui/input";
+import * as React from "react"
+import { Await, Form, redirect, useAsyncValue } from "react-router"
+
+import { Button } from "~/components/button.tsx"
+import { Input } from "~/components/ui/input.tsx"
+import { Label } from "~/components/ui/label.tsx"
+import { nameContext } from "~/context.ts"
+import { sessionStorage } from "~/session.server.ts"
+import { sleep } from "~/utils.ts"
+
+import type { Route } from "./+types/_layout._index"
 
 export async function loader({ request, context }: Route.LoaderArgs) {
-  let cookie = request.headers.get("Cookie");
-  let session = await sessionStorage.getSession(cookie);
+  let cookie = request.headers.get("Cookie")
+  let session = await sessionStorage.getSession(cookie)
 
   return {
     name: sleep<string>(1_000, session.get("name") || "Anonymous"),
     loadContextName: context.get(nameContext),
-  };
+  }
 }
 
 export async function action({ request }: Route.ActionArgs) {
-  let cookie = request.headers.get("Cookie");
-  let session = await sessionStorage.getSession(cookie);
-  let formData = await request.formData();
+  let cookie = request.headers.get("Cookie")
+  let session = await sessionStorage.getSession(cookie)
+  let formData = await request.formData()
 
-  let intent = formData.get("intent");
+  let intent = formData.get("intent")
 
   switch (intent) {
     case "submit": {
-      let name = formData.get("name");
-      if (!name) throw new Response("Name is required", { status: 400 });
-      session.set("name", name);
+      let name = formData.get("name")
+      if (!name) throw new Response("Name is required", { status: 400 })
+      session.set("name", name)
       throw redirect("/", {
         headers: {
           "Set-Cookie": await sessionStorage.commitSession(session),
         },
-      });
+      })
     }
     case "reset": {
-      session.unset("name");
+      session.unset("name")
       throw redirect("/", {
         headers: {
           "Set-Cookie": await sessionStorage.commitSession(session),
         },
-      });
+      })
     }
     default: {
-      throw new Response("Invalid intent", { status: 400 });
+      throw new Response("Invalid intent", { status: 400 })
     }
   }
 }
 
 export default function Index({ loaderData }: Route.ComponentProps) {
-  const [echo, setEcho] = React.useState<string | null>(null);
+  let [echo, setEcho] = React.useState<string | null>(null)
 
   return (
     <>
@@ -87,15 +89,15 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         className="mx-auto mt-4 flex max-w-max flex-col justify-center gap-4"
         action="/api/echo"
         onSubmit={async (event) => {
-          event.preventDefault();
-          let formData = new FormData(event.currentTarget);
+          event.preventDefault()
+          let formData = new FormData(event.currentTarget)
           let response = await fetch(event.currentTarget.action, {
             method: event.currentTarget.method,
             body: JSON.stringify(Object.fromEntries(formData.entries())),
             headers: { "Content-Type": "application/json" },
-          });
-          let json = await response.json();
-          setEcho(json);
+          })
+          let json = await response.json()
+          setEcho(json)
         }}
       >
         <div className="flex gap-2">
@@ -110,15 +112,15 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         {echo ? <pre>{JSON.stringify(echo)}</pre> : null}
       </form>
     </>
-  );
+  )
 }
 
 function NameInput() {
-  let resolvedName = useAsyncValue();
-  let defaultValue: string | undefined = undefined;
+  let resolvedName = useAsyncValue()
+  let defaultValue: string | undefined = undefined
   if (typeof resolvedName === "string") {
     if (resolvedName !== "Anonymous") {
-      defaultValue = resolvedName;
+      defaultValue = resolvedName
     }
   }
 
@@ -129,9 +131,9 @@ function NameInput() {
       placeholder="Enter your name"
       defaultValue={defaultValue}
     />
-  );
+  )
 }
 
 function FallbackNameInput() {
-  return <Input type="text" name="name" title="Enter your name" />;
+  return <Input type="text" name="name" title="Enter your name" />
 }

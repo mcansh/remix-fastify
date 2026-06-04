@@ -115,13 +115,13 @@
   ```js vite.config.ts
   export default defineConfig({
     plugins: [remix({ serverFilename: "example.js" })],
-  });
+  })
   ```
 
   ```js server.js
   await app.register(remixFastify, {
     serverFilename: "example.js",
-  });
+  })
   ```
 
 ## 3.3.2
@@ -141,7 +141,7 @@
   await app.register(remixFastify, {
     assetCacheControl: {},
     defaultCacheControl: {},
-  });
+  })
   ```
 
 - a7fcb6d: fix cache control so that build assets are immutable and cached for 1 year instead of everything being cached for 1 hour
@@ -153,43 +153,43 @@
 - 597df2e: re-introduce plugin for easy configuration, we're still publicly exporting all the pieces, so you can still continue to configure your server as you do today.
 
   ```js
-  import { remixFastify } from "@mcansh/remix-fastify";
-  import { installGlobals } from "@remix-run/node";
-  import { fastify } from "fastify";
+  import { remixFastify } from "@mcansh/remix-fastify"
+  import { installGlobals } from "@remix-run/node"
+  import { fastify } from "fastify"
 
-  installGlobals();
+  installGlobals()
 
-  let app = fastify();
+  let app = fastify()
 
-  await app.register(remixFastify);
+  await app.register(remixFastify)
 
-  let port = Number(process.env.PORT) || 3000;
+  let port = Number(process.env.PORT) || 3000
 
-  let address = await app.listen({ port, host: "0.0.0.0" });
-  console.log(`✅ app ready: ${address}`);
+  let address = await app.listen({ port, host: "0.0.0.0" })
+  console.log(`✅ app ready: ${address}`)
   ```
 
   and if you need to configure loadContext, you can do so like this:
 
   ```js
-  import { remixFastify } from "@mcansh/remix-fastify";
-  import { installGlobals } from "@remix-run/node";
-  import { fastify } from "fastify";
+  import { remixFastify } from "@mcansh/remix-fastify"
+  import { installGlobals } from "@remix-run/node"
+  import { fastify } from "fastify"
 
-  installGlobals();
+  installGlobals()
 
-  let app = fastify();
+  let app = fastify()
 
   await app.register(remixFastify, {
     getLoadContext(request, reply) {
-      return {};
+      return {}
     },
-  });
+  })
 
-  let port = Number(process.env.PORT) || 3000;
+  let port = Number(process.env.PORT) || 3000
 
-  let address = await app.listen({ port, host: "0.0.0.0" });
-  console.log(`✅ app ready: ${address}`);
+  let address = await app.listen({ port, host: "0.0.0.0" })
+  console.log(`✅ app ready: ${address}`)
   ```
 
 ### Patch Changes

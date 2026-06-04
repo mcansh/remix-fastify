@@ -1,5 +1,5 @@
-import logoDark from "./logo-dark.svg";
-import logoLight from "./logo-light.svg";
+import logoDark from "./logo-dark.svg"
+import logoLight from "./logo-light.svg"
 
 export function Welcome() {
   return (
@@ -44,7 +44,7 @@ export function Welcome() {
         </nav>
       </div>
     </div>
-  );
+  )
 }
 
 const resources = [
@@ -87,4 +87,4 @@ const resources = [
       </svg>
     ),
   },
-];
+]

@@ -29,27 +29,27 @@ Create a server entry that exports a `createApp({ viteDevServer })` factory whic
 
 ```ts
 // server.js
-import { fileURLToPath } from "node:url";
-import { reactRouterFastify } from "@mcansh/remix-fastify";
-import { fastify } from "fastify";
+import { fileURLToPath } from "node:url"
+import { reactRouterFastify } from "@mcansh/remix-fastify"
+import { fastify } from "fastify"
 
 export async function createApp({ viteDevServer } = {}) {
-  const app = fastify();
+  const app = fastify()
 
   app.post("/api/echo", async (request, reply) => {
-    reply.send(request.body);
-  });
+    reply.send(request.body)
+  })
 
   // You load the server build, not the plugin — so you can shape it first (e.g.
   // set `allowedActionOrigins`). In development resolve it through Vite so route
   // changes hot-reload; in production import the compiled build.
   const build = viteDevServer
     ? () => viteDevServer.ssrLoadModule("virtual:react-router/server-build")
-    : await import("./build/server/index.js");
+    : await import("./build/server/index.js")
 
-  await app.register(reactRouterFastify({ viteDevServer, build }));
+  await app.register(reactRouterFastify({ viteDevServer, build }))
 
-  return app;
+  return app
 }
 
 // In development the `fastifyDevServer` Vite plugin imports this module and
@@ -57,9 +57,9 @@ export async function createApp({ viteDevServer } = {}) {
 // directly (e.g. `node server.js` in production), which is what this check
 // detects — under the dev plugin the module is imported, not executed.
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const app = await createApp();
-  const address = await app.listen({ port: Number(process.env.PORT) || 3000 });
-  console.log(`app ready: ${address}`);
+  const app = await createApp()
+  const address = await app.listen({ port: Number(process.env.PORT) || 3000 })
+  console.log(`app ready: ${address}`)
 }
 ```
 
@@ -67,13 +67,13 @@ Add the Vite plugin alongside `reactRouter()`:
 
 ```ts
 // vite.config.ts
-import { reactRouter } from "@react-router/dev/vite";
-import { fastifyDevServer } from "@mcansh/remix-fastify/vite";
-import { defineConfig } from "vite";
+import { reactRouter } from "@react-router/dev/vite"
+import { fastifyDevServer } from "@mcansh/remix-fastify/vite"
+import { defineConfig } from "vite"
 
 export default defineConfig({
   plugins: [reactRouter(), fastifyDevServer({ entry: "./server.js" })],
-});
+})
 ```
 
 Wire up your scripts to React Router's CLI for dev/build and run the server entry directly in production:
@@ -99,7 +99,7 @@ Wire up your scripts to React Router's CLI for dev/build and run the server entr
 - `buildDirectory` — your build output directory, used to locate the SSR server build when auto-externalizing shared modules (see below). Match `buildDirectory` in your React Router config. Default: `"build"`.
 
 ```ts
-fastifyDevServer({ entry: "./server/index.ts", export: "createApp" });
+fastifyDevServer({ entry: "./server/index.ts", export: "createApp" })
 ```
 
 The factory receives `{ viteDevServer }`. Use it to load the server build through Vite (`ssrLoadModule("virtual:react-router/server-build")`) so SSR runs through Vite with HMR, and forward `viteDevServer` to `reactRouterFastify` so it skips static asset serving (Vite serves assets/HMR ahead of Fastify). There is no global state — the dev server is passed explicitly.
@@ -118,10 +118,10 @@ Pass per-request values into your loaders and actions with `getLoadContext`:
 await app.register(
   reactRouterFastify({
     getLoadContext(request, reply) {
-      return { userId: request.headers["x-user-id"] };
+      return { userId: request.headers["x-user-id"] }
     },
   }),
-);
+)
 ```
 
 `reactRouterFastify` is a plugin factory: call it with your options and register the result. `getLoadContext`'s `request`/`reply` are typed for `http.Server` by default; pass a type argument to target another server, e.g. `reactRouterFastify<Http2Server>({ ... })`.
@@ -129,18 +129,18 @@ await app.register(
 When the `v8_middleware` future flag is enabled, return a `RouterContextProvider` instead:
 
 ```ts
-import { RouterContextProvider } from "react-router";
-import { userContext } from "./app/context";
+import { RouterContextProvider } from "react-router"
+import { userContext } from "./app/context"
 
 await app.register(
   reactRouterFastify({
     getLoadContext() {
-      let context = new RouterContextProvider();
-      context.set(userContext, "host-server");
-      return context;
+      let context = new RouterContextProvider()
+      context.set(userContext, "host-server")
+      return context
     },
   }),
-);
+)
 ```
 
 ## Options

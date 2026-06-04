@@ -3,7 +3,7 @@ import {
   layout,
   route,
   type RouteConfig,
-} from "@react-router/dev/routes";
+} from "@react-router/dev/routes"
 
 export default [
   layout("routes/_layout.tsx", [
@@ -14,4 +14,4 @@ export default [
     route("resource-route-error", "routes/_layout.resource-route-error.tsx"),
     route("route-error", "routes/_layout.route-error.tsx"),
   ]),
-] satisfies RouteConfig;
+] satisfies RouteConfig

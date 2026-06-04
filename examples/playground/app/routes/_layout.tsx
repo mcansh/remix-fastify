@@ -1,16 +1,18 @@
-import { NavLink, Outlet } from "react-router";
-import { nameContext } from "~/context";
-import type { Route } from "./+types/_layout";
+import { NavLink, Outlet } from "react-router"
+
+import { nameContext } from "~/context.ts"
+
+import type { Route } from "./+types/_layout"
 
 export const middleware: Route.MiddlewareFunction[] = [
   ({ request, context }, next) => {
-    let name = new URL(request.url).searchParams.get("name");
-    if (name) context.set(nameContext, name);
-    return next();
+    let name = new URL(request.url).searchParams.get("name")
+    if (name) context.set(nameContext, name)
+    return next()
   },
-];
+]
 
-let LINKS = [
+const LINKS = [
   { to: "/", label: "Home" },
   { to: "/page-2", label: "Page 2" },
   { to: "/fetcher", label: "Fetcher" },
@@ -21,7 +23,7 @@ let LINKS = [
     label: "Resource Route Loader Error",
     reloadDocument: true,
   },
-] as const;
+] as const
 
 export default function Layout() {
   return (
@@ -59,7 +61,7 @@ export default function Layout() {
                   className={({ isActive }) => {
                     return isActive
                       ? "text-red-500 underline underline-offset-2"
-                      : "text-blue-500";
+                      : "text-blue-500"
                   }}
                 >
                   {link.label}
@@ -74,5 +76,5 @@ export default function Layout() {
         <Outlet />
       </div>
     </div>
-  );
+  )
 }

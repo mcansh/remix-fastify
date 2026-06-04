@@ -1,67 +1,68 @@
-import { createReadableStreamFromReadable } from "@react-router/node";
-import { isbot } from "isbot";
-import { PassThrough } from "node:stream";
-import type { RenderToPipeableStreamOptions } from "react-dom/server";
-import { renderToPipeableStream } from "react-dom/server";
-import type { EntryContext, RouterContextProvider } from "react-router";
-import { ServerRouter } from "react-router";
+import { PassThrough } from "node:stream"
 
-export const streamTimeout = 5_000;
+import { createReadableStreamFromReadable } from "@react-router/node"
+import { isbot } from "isbot"
+import type { RenderToPipeableStreamOptions } from "react-dom/server"
+import { renderToPipeableStream } from "react-dom/server"
+import type { EntryContext, RouterContextProvider } from "react-router"
+import { ServerRouter } from "react-router"
+
+export const streamTimeout = 5_000
 
 export default function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   routerContext: EntryContext,
-  loadContext: RouterContextProvider,
+  _loadContext: RouterContextProvider,
 ) {
   return new Promise((resolve, reject) => {
-    let shellRendered = false;
-    let userAgent = request.headers.get("user-agent");
+    let shellRendered = false
+    let userAgent = request.headers.get("User-Agent")
 
     // Ensure requests from bots and SPA Mode renders wait for all content to load before responding
     // https://react.dev/reference/react-dom/server/renderToPipeableStream#waiting-for-all-content-to-load-for-crawlers-and-static-generation
     let readyOption: keyof RenderToPipeableStreamOptions =
       (userAgent && isbot(userAgent)) || routerContext.isSpaMode
         ? "onAllReady"
-        : "onShellReady";
+        : "onShellReady"
 
-    const { pipe, abort } = renderToPipeableStream(
+    let { pipe, abort } = renderToPipeableStream(
       <ServerRouter context={routerContext} url={request.url} />,
       {
         [readyOption]() {
-          shellRendered = true;
-          const body = new PassThrough();
-          const stream = createReadableStreamFromReadable(body);
+          shellRendered = true
+          let body = new PassThrough()
+          let stream = createReadableStreamFromReadable(body)
 
-          responseHeaders.set("Content-Type", "text/html");
+          responseHeaders.set("Content-Type", "text/html")
 
           resolve(
             new Response(stream, {
               headers: responseHeaders,
               status: responseStatusCode,
             }),
-          );
+          )
 
-          pipe(body);
+          pipe(body)
         },
         onShellError(error: unknown) {
-          reject(error);
+          reject(error)
         },
         onError(error: unknown) {
-          responseStatusCode = 500;
+          responseStatusCode = 500
           // Log streaming rendering errors from inside the shell.  Don't log
           // errors encountered during initial shell rendering since they'll
           // reject and get logged in handleDocumentRequest.
           if (shellRendered) {
-            console.error(error);
+            console.error(error)
           }
         },
       },
-    );
+    )
 
     // Abort the rendering stream after the `streamTimeout` so it has time to
     // flush down the rejected boundaries
-    setTimeout(abort, streamTimeout + 1000);
-  });
+    setTimeout(abort, streamTimeout + 1000)
+  })
 }

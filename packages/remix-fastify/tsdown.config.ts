@@ -1,13 +1,14 @@
-import { defineConfig } from "tsdown";
-import pkg from "./package.json" with { type: "json" };
+import { defineConfig } from "tsdown"
 
-const PACKAGE_NAME = pkg.name;
-const FASTIFY_VERSION = pkg.peerDependencies.fastify;
+import pkg from "./package.json" with { type: "json" }
+
+const PACKAGE_NAME = pkg.name
+const FASTIFY_VERSION = pkg.peerDependencies.fastify
 
 export default defineConfig({
   entry: {
-    "index": "./src/index.ts",
-    "vite": "./src/vite.ts",
+    index: "./src/index.ts",
+    vite: "./src/vite.ts",
   },
   exports: true,
   sourcemap: true,
@@ -27,4 +28,4 @@ export default defineConfig({
     "process.env.__PACKAGE_NAME__": JSON.stringify(PACKAGE_NAME),
     "process.env.__FASTIFY_VERSION__": JSON.stringify(FASTIFY_VERSION),
   },
-});
+})

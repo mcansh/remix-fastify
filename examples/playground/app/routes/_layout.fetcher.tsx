@@ -1,14 +1,16 @@
-import { data, useFetcher } from "react-router";
-import type { Route } from "./+types/_layout.fetcher";
-import { Button } from "~/components/button";
+import { data, useFetcher } from "react-router"
+
+import { Button } from "~/components/button.tsx"
+
+import type { Route } from "./+types/_layout.fetcher"
 
 export async function action({ request }: Route.ActionArgs) {
-  let response = await request.json();
-  return data(response);
+  let response = await request.json()
+  return data(response)
 }
 
 export default function Page() {
-  let fetcher = useFetcher<typeof action>();
+  let fetcher = useFetcher<typeof action>()
 
   return (
     <>
@@ -16,15 +18,14 @@ export default function Page() {
       <Button
         type="button"
         onClick={() => {
-          fetcher.submit(
+          void fetcher.submit(
             { foo: "bar" },
             { method: "POST", encType: "application/json" },
-          );
+          )
         }}
       >
         fetcher.submit
       </Button>
     </>
-  );
+  )
 }
-1;

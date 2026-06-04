@@ -1,10 +1,10 @@
-import { statSync } from "node:fs";
-import { readFile } from "node:fs/promises";
-import type { IncomingMessage, ServerResponse } from "node:http";
-import * as path from "node:path";
+import { statSync } from "node:fs"
+import { readFile } from "node:fs/promises"
+import type { IncomingMessage, ServerResponse } from "node:http"
+import * as path from "node:path"
 
-import type { FastifyInstance } from "fastify";
-import type { Connect, Plugin, ViteDevServer } from "vite";
+import type { FastifyInstance } from "fastify"
+import type { Connect, Plugin, ViteDevServer } from "vite"
 
 export interface FastifyDevServerOptions {
   /**
@@ -13,13 +13,13 @@ export interface FastifyDevServerOptions {
    * and returns a Fastify instance.
    * @default "./server.js"
    */
-  entry?: string;
+  entry?: string
   /**
    * The named export of the factory in your server entry. The factory is
    * called with `{ viteDevServer }` and must return a Fastify instance.
    * @default "createApp"
    */
-  export?: string;
+  export?: string
   /**
    * Directory of your build output. Used to locate the SSR server build
    * (`<buildDirectory>/server`) when auto-externalizing modules shared between
@@ -27,25 +27,25 @@ export interface FastifyDevServerOptions {
    * config.
    * @default "build"
    */
-  buildDirectory?: string;
+  buildDirectory?: string
 }
 
 // `from "spec"` (import/export ... from) and side-effect `import "spec"`.
 const FROM_IMPORT_RE =
-  /(?:^|[\s;])(?:import|export)\b[^;'"]*?\bfrom\s*['"]([^'"]+)['"]/g;
-const SIDE_EFFECT_IMPORT_RE = /(?:^|[\s;])import\s*['"]([^'"]+)['"]/g;
+  /(?:^|[\s;])(?:import|export)\b[^;'"]*?\bfrom\s*['"]([^'"]+)['"]/g
+const SIDE_EFFECT_IMPORT_RE = /(?:^|[\s;])import\s*['"]([^'"]+)['"]/g
 
 function isFile(filePath: string): boolean {
   try {
-    return statSync(filePath).isFile();
+    return statSync(filePath).isFile()
   } catch {
-    return false;
+    return false
   }
 }
 
 function toRelativeSpecifier(fromDir: string, toFile: string): string {
-  let relative = path.relative(fromDir, toFile).split(path.sep).join("/");
-  return relative.startsWith(".") ? relative : `./${relative}`;
+  let relative = path.relative(fromDir, toFile).split(path.sep).join("/")
+  return relative.startsWith(".") ? relative : `./${relative}`
 }
 
 /**
@@ -65,38 +65,45 @@ function toRelativeSpecifier(fromDir: string, toFile: string): string {
  * The entry runs directly under Node's ESM resolver, so every import specifier
  * already carries its real extension and points at a real file — no extension
  * or directory/index probing (Node ESM has neither).
+ *
+ * @param entryFile - Absolute path to the server entry to scan.
+ * @param ssrOutDir - Absolute path to the SSR build output (`<buildDirectory>/server`).
+ * @returns The modules to externalize and the `output.paths` rewrites for them.
  */
 async function detectSharedModules(
   entryFile: string,
   ssrOutDir: string,
 ): Promise<{ external: string[]; paths: Record<string, string> }> {
-  let code: string;
+  let code: string
   try {
-    code = await readFile(entryFile, "utf8");
+    code = await readFile(entryFile, "utf8")
   } catch {
-    return { external: [], paths: {} };
+    return { external: [], paths: {} }
   }
 
-  let entryDir = path.dirname(entryFile);
-  let specifiers = new Set<string>();
+  let entryDir = path.dirname(entryFile)
+  let specifiers = new Set<string>()
   for (let regexp of [FROM_IMPORT_RE, SIDE_EFFECT_IMPORT_RE]) {
     for (let match of code.matchAll(regexp)) {
-      let specifier = match[1];
-      if (specifier && (specifier.startsWith("./") || specifier.startsWith("../"))) {
-        specifiers.add(specifier);
+      let specifier = match[1]
+      if (
+        specifier &&
+        (specifier.startsWith("./") || specifier.startsWith("../"))
+      ) {
+        specifiers.add(specifier)
       }
     }
   }
 
-  let external: string[] = [];
-  let paths: Record<string, string> = {};
+  let external: string[] = []
+  let paths: Record<string, string> = {}
   for (let specifier of specifiers) {
-    let resolved = path.resolve(entryDir, specifier);
-    if (!isFile(resolved)) continue;
-    external.push(resolved);
-    paths[resolved] = toRelativeSpecifier(ssrOutDir, resolved);
+    let resolved = path.resolve(entryDir, specifier)
+    if (!isFile(resolved)) continue
+    external.push(resolved)
+    paths[resolved] = toRelativeSpecifier(ssrOutDir, resolved)
   }
-  return { external, paths };
+  return { external, paths }
 }
 
 /**
@@ -104,8 +111,8 @@ async function detectSharedModules(
  * dev server in development; production code calls it with no arguments.
  */
 export type CreateApp = (options: {
-  viteDevServer?: ViteDevServer;
-}) => FastifyInstance | Promise<FastifyInstance>;
+  viteDevServer?: ViteDevServer
+}) => FastifyInstance | Promise<FastifyInstance>
 
 /**
  * A Vite plugin that runs your Fastify server in development.
@@ -127,11 +134,16 @@ export type CreateApp = (options: {
  *   plugins: [reactRouter(), fastifyDevServer({ entry: "./server.js" })],
  * };
  * ```
+ *
+ * @param options - Plugin options. See {@link FastifyDevServerOptions}.
+ * @returns A Vite plugin that runs your Fastify server in development.
  */
-export function fastifyDevServer(options: FastifyDevServerOptions = {}): Plugin {
-  let entry = options.entry ?? "./server.js";
-  let exportName = options.export ?? "createApp";
-  let buildDirectory = options.buildDirectory ?? "build";
+export function fastifyDevServer(
+  options: FastifyDevServerOptions = {},
+): Plugin {
+  let entry = options.entry ?? "./server.js"
+  let exportName = options.export ?? "createApp"
+  let buildDirectory = options.buildDirectory ?? "build"
 
   return {
     name: "@mcansh/remix-fastify:dev-server",
@@ -145,16 +157,14 @@ export function fastifyDevServer(options: FastifyDevServerOptions = {}): Plugin 
     // between the server entry and the SSR build.
     enforce: "pre",
     async config(userConfig, env) {
-      if (env.command !== "build") return;
+      if (env.command !== "build") return
 
-      let root = userConfig.root
-        ? path.resolve(userConfig.root)
-        : process.cwd();
-      let entryFile = path.resolve(root, entry);
-      let ssrOutDir = path.resolve(root, buildDirectory, "server");
+      let root = userConfig.root ? path.resolve(userConfig.root) : process.cwd()
+      let entryFile = path.resolve(root, entry)
+      let ssrOutDir = path.resolve(root, buildDirectory, "server")
 
-      let { external, paths } = await detectSharedModules(entryFile, ssrOutDir);
-      if (external.length === 0) return;
+      let { external, paths } = await detectSharedModules(entryFile, ssrOutDir)
+      if (external.length === 0) return
 
       return {
         environments: {
@@ -162,7 +172,7 @@ export function fastifyDevServer(options: FastifyDevServerOptions = {}): Plugin 
             build: { rollupOptions: { external, output: { paths } } },
           },
         },
-      };
+      }
     },
     configureServer(server) {
       // Build the app once per evaluation of the entry module, reusing it
@@ -171,7 +181,7 @@ export function fastifyDevServer(options: FastifyDevServerOptions = {}): Plugin 
       // and we rebuild. Route changes flow through `reactRouterFastify`'s own
       // `ssrLoadModule` of the server build, so they don't require a rebuild.
       let cached: { factory: CreateApp; app: Promise<FastifyInstance> } | null =
-        null;
+        null
 
       // Returning a function registers our middleware as a "post" hook so
       // Vite's own middlewares (module/asset transforms, HMR) run first and
@@ -184,38 +194,38 @@ export function fastifyDevServer(options: FastifyDevServerOptions = {}): Plugin 
             next: Connect.NextFunction,
           ) => {
             try {
-              let mod = await server.ssrLoadModule(entry);
-              let factory = mod[exportName] as CreateApp | undefined;
+              let mod = await server.ssrLoadModule(entry)
+              let factory = mod[exportName] as CreateApp | undefined
               if (typeof factory !== "function") {
                 throw new Error(
                   `[@mcansh/remix-fastify] expected "${entry}" to export a function named "${exportName}" that returns a Fastify instance.`,
-                );
+                )
               }
 
               if (!cached || cached.factory !== factory) {
-                cached?.app.then((app) => app.close()).catch(() => {});
+                cached?.app.then((app) => app.close()).catch(() => {})
                 cached = {
                   factory,
                   app: Promise.resolve(factory({ viteDevServer: server })),
-                };
+                }
               }
 
-              let app = await cached.app;
+              let app = await cached.app
               if (typeof app?.routing !== "function") {
                 throw new Error(
                   `[@mcansh/remix-fastify] "${exportName}" in "${entry}" did not return a Fastify instance.`,
-                );
+                )
               }
 
-              await app.ready();
-              app.routing(req, res);
+              await app.ready()
+              app.routing(req, res)
             } catch (error) {
-              if (error instanceof Error) server.ssrFixStacktrace(error);
-              next(error);
+              if (error instanceof Error) server.ssrFixStacktrace(error)
+              next(error)
             }
           },
-        );
-      };
+        )
+      }
     },
-  };
+  }
 }
