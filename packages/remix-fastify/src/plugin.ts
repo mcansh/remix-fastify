@@ -1,15 +1,16 @@
-import path from "node:path"
+import path from "node:path";
 
-import type { FastifyStaticOptions } from "@fastify/static"
-import fastifyStatic from "@fastify/static"
-import type { FastifyPluginAsync, RouteShorthandOptions } from "fastify"
-import fp from "fastify-plugin"
-import { cacheHeader } from "pretty-cache-header"
-import type { ServerBuild } from "react-router"
-import type { ViteDevServer } from "vite"
+import type { FastifyStaticOptions } from "@fastify/static";
+import fastifyStatic from "@fastify/static";
+import type { CacheControlInit } from "@remix-run/headers";
+import { CacheControl } from "@remix-run/headers";
+import type { FastifyPluginAsync, RouteShorthandOptions } from "fastify";
+import fp from "fastify-plugin";
+import type { ServerBuild } from "react-router";
+import type { ViteDevServer } from "vite";
 
-import type { GetLoadContextFunction, HttpServer } from "./server.js"
-import { createReactRouterRequestHandler } from "./server.js"
+import type { GetLoadContextFunction, HttpServer } from "./server.js";
+import { createReactRouterRequestHandler } from "./server.js";
 
 export type ReactRouterFastifyOptions<Server extends HttpServer = HttpServer> =
   {
@@ -69,19 +70,22 @@ export type ReactRouterFastifyOptions<Server extends HttpServer = HttpServer> =
     fastifyStaticOptions?: FastifyStaticOptions
     /**
      * The cache control options to use for build assets in production.
-     * uses `pretty-cache-header` under the hood.
+     * uses `@remix-run/headers` under the hood.
      * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
      * @default { public: true, maxAge: '1 year', immutable: true }
      */
-    assetCacheControl?: Parameters<typeof cacheHeader>[0]
+    assetCacheControl?: CacheControlInit
     /**
      * The cache control options to use for other assets in production.
-     * uses `pretty-cache-header` under the hood.
+     * uses `@remix-run/headers` under the hood.
      * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
      * @default { public: true, maxAge: '1 hour' }
      */
-    defaultCacheControl?: Parameters<typeof cacheHeader>[0]
+    defaultCacheControl?: CacheControlInit
 
+    /**
+     *
+     */
     childServerOptions?: RouteShorthandOptions<Server>
   }
 
@@ -117,15 +121,15 @@ export function reactRouterFastify<Server extends HttpServer = HttpServer>(
     mode,
     viteDevServer,
     fastifyStaticOptions,
-    assetCacheControl = { public: true, maxAge: "1 year", immutable: true },
-    defaultCacheControl = { public: true, maxAge: "1 hour" },
-    childServerOptions,
+    assetCacheControl = { public: true, maxAge: 31_536_000, immutable: true },
+    defaultCacheControl = { public: true, maxAge: 3_600 },
+    childServerOptions = {},
   } = options as ReactRouterFastifyOptions
 
   return fp(
     async function reactRouterFastifyPlugin(fastify) {
-      let resolvedMode =
-        mode ?? (viteDevServer ? "development" : process.env.NODE_ENV)
+      let fallbackMode = viteDevServer ? "development" : process.env.NODE_ENV
+      let resolvedMode = mode ?? fallbackMode
 
       let handler = createReactRouterRequestHandler({
         mode: resolvedMode,
@@ -152,11 +156,10 @@ export function reactRouterFastify<Server extends HttpServer = HttpServer>(
           lastModified: true,
           setHeaders(res, filepath) {
             let isAsset = filepath.startsWith(assetDirectory)
+            let cacheControl = new CacheControl(isAsset ? assetCacheControl : defaultCacheControl)
             res.setHeader(
               "cache-control",
-              isAsset
-                ? cacheHeader(assetCacheControl)
-                : cacheHeader(defaultCacheControl),
+              cacheControl.toString(),
             )
           },
           ...fastifyStaticOptions,
@@ -172,11 +175,7 @@ export function reactRouterFastify<Server extends HttpServer = HttpServer>(
             done(null, payload)
           })
 
-          if (childServerOptions) {
-            childServer.all("*", childServerOptions, handler)
-          } else {
-            childServer.all("*", handler)
-          }
+          childServer.all("*", childServerOptions, handler)
         },
         { prefix: basename },
       )

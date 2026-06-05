@@ -32,7 +32,6 @@
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
-    "@fastify/middie": "^9.3.2",
     "@react-router/dev": "latest",
     "@tailwindcss/vite": "4.3.0",
     "@total-typescript/tsconfig": "^1.0.4",
