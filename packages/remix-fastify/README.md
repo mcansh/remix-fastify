@@ -1,69 +1,59 @@
 # remix-fastify
 
-Run a [React Router v7](https://reactrouter.com) (framework mode) app on [Fastify](https://fastify.io) — a request handler for production plus a Vite plugin that runs your Fastify server in development.
-
-> The package is named `@mcansh/remix-fastify` for continuity with its Remix origins, but it now targets React Router v7 only.
+`@mcansh/remix-fastify` runs a React Router framework app on Fastify in development and production. It provides a Fastify plugin for SSR/data requests and a Vite plugin so `react-router dev` can forward non-asset requests to your Fastify server.
 
 ## Features
 
-- `reactRouterFastify` — a Fastify plugin that serves your React Router app, handling SSR, data requests, and (in production) static assets.
-- `fastifyDevServer` — a Vite plugin that runs your own Fastify instance in development behind Vite's asset/HMR middleware, so dev and production share one server entry.
-- `getLoadContext` for passing per-request values from Fastify into your loaders and actions, including `RouterContextProvider` support when the `v8_middleware` future flag is enabled.
-- Configurable `Cache-Control` for build assets and other static files.
+- `reactRouterFastify` wires React Router request handling into Fastify.
+- `fastifyDevServer` keeps one Fastify server entry across dev and production.
+- `getLoadContext` passes request-scoped values into loaders/actions.
+- Production static asset serving with configurable `Cache-Control` policies.
+- Low-level adapters (`createReactRouterRequest`, `sendResponse`, etc.) for custom integrations.
 
 ## Installation
 
 ```sh
-npm i @mcansh/remix-fastify fastify react-router @react-router/node
-```
-
-`vite` is required to use the development plugin (it is already a dependency of any React Router framework app):
-
-```sh
-npm i -D vite
+npm i remix
+npm i @mcansh/remix-fastify fastify react-router @react-router/dev @react-router/node vite
 ```
 
 ## Usage
 
-Create a server entry that exports a `createApp({ viteDevServer })` factory which builds a Fastify instance and registers the plugin. The dev plugin calls this factory with the Vite dev server; in production you call it yourself and `listen()`:
+Use a single server entry that builds your Fastify app. In development, `fastifyDevServer` passes a Vite dev server so route changes hot-reload. In production, the same entry loads `build/server/index.js` and serves `build/client`.
 
 ```ts
-// server.js
+// server.ts
 import { fileURLToPath } from "node:url"
 import { reactRouterFastify } from "@mcansh/remix-fastify"
 import { fastify } from "fastify"
 
 export async function createApp({ viteDevServer } = {}) {
-  const app = fastify()
+  let app = fastify()
 
-  app.post("/api/echo", async (request, reply) => {
-    reply.send(request.body)
-  })
+  app.get("/api/health", async () => ({ ok: true }))
 
-  // You load the server build, not the plugin — so you can shape it first (e.g.
-  // set `allowedActionOrigins`). In development resolve it through Vite so route
-  // changes hot-reload; in production import the compiled build.
-  const build = viteDevServer
+  let build = viteDevServer
     ? () => viteDevServer.ssrLoadModule("virtual:react-router/server-build")
     : await import("./build/server/index.js")
 
-  await app.register(reactRouterFastify({ viteDevServer, build }))
+  await app.register(
+    reactRouterFastify({
+      build,
+      getLoadContext(request) {
+        return { requestId: request.id }
+      },
+    }),
+  )
 
   return app
 }
 
-// In development the `fastifyDevServer` Vite plugin imports this module and
-// calls `createApp` with the Vite dev server. Only start listening when run
-// directly (e.g. `node server.js` in production), which is what this check
-// detects — under the dev plugin the module is imported, not executed.
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const app = await createApp()
-  const address = await app.listen({ port: Number(process.env.PORT) || 3000 })
+  let app = await createApp()
+  let address = await app.listen({ port: Number(process.env.PORT) || 3000 })
   console.log(`app ready: ${address}`)
 }
 ```
-
-Add the Vite plugin alongside `reactRouter()`:
 
 ```ts
 // vite.config.ts
@@ -72,61 +62,52 @@ import { fastifyDevServer } from "@mcansh/remix-fastify/vite"
 import { defineConfig } from "vite"
 
 export default defineConfig({
-  plugins: [reactRouter(), fastifyDevServer({ entry: "./server.js" })],
+  plugins: [reactRouter(), fastifyDevServer({ entry: "./server.ts" })],
 })
 ```
-
-Wire up your scripts to React Router's CLI for dev/build and run the server entry directly in production:
 
 ```json
 {
   "scripts": {
     "dev": "react-router dev",
     "build": "react-router build",
-    "start": "cross-env NODE_ENV=production node ./server.js"
+    "start": "NODE_ENV=production node ./server.ts"
   }
 }
 ```
 
-`react-router dev` now serves client assets and HMR through Vite, then forwards every other request to your Fastify app.
+## Development with `fastifyDevServer`
 
-## Development plugin
-
-`fastifyDevServer` loads your server entry via Vite's `ssrLoadModule` and calls its exported factory with the Vite dev server, then forwards requests to the returned Fastify instance. It accepts:
-
-- `entry` — path to your server entry, relative to the project root. Default: `"./server.js"`.
-- `export` — the named export of the `createApp` factory. Default: `"createApp"`.
-- `buildDirectory` — your build output directory, used to locate the SSR server build when auto-externalizing shared modules (see below). Match `buildDirectory` in your React Router config. Default: `"build"`.
+Use `fastifyDevServer` when you want Vite to own assets/HMR while Fastify handles API routes and SSR.
 
 ```ts
-fastifyDevServer({ entry: "./server/index.ts", export: "createApp" })
+fastifyDevServer({
+  entry: "./server.ts",
+})
 ```
 
-The factory receives `{ viteDevServer }`. Use it to load the server build through Vite (`ssrLoadModule("virtual:react-router/server-build")`) so SSR runs through Vite with HMR, and forward `viteDevServer` to `reactRouterFastify` so it skips static asset serving (Vite serves assets/HMR ahead of Fastify). There is no global state — the dev server is passed explicitly.
+- `entry` is the path to your Fastify server entry.
+- `entry` defaults to `"./server.ts"`.
 
-### Sharing modules between your server entry and your app
+## Request Context with `getLoadContext`
 
-Your server entry lives outside React Router's build graph, so any module it shares with your app — most commonly a `createContext` token module used by `getLoadContext` and your loaders — would be bundled a second time into the production server build. Because React Router matches context tokens by object identity, the two copies would never see each other's values.
-
-At build time the plugin scans your entry's relative imports, resolves each to a source file, and externalizes it from the SSR build so both sides load the same module instance. This is automatic; you don't need to configure `rollupOptions.external` yourself. It covers direct relative imports of the entry (e.g. `import { userContext } from "./app/context.ts"`); the matching app-side import resolves to the same file even through a tsconfig alias like `~/context`.
-
-## Load context
-
-Pass per-request values into your loaders and actions with `getLoadContext`:
+Use `getLoadContext` to pass values from Fastify into route loaders/actions.
 
 ```ts
 await app.register(
   reactRouterFastify({
+    build,
     getLoadContext(request, reply) {
-      return { userId: request.headers["x-user-id"] }
+      return {
+        userId: request.headers["x-user-id"],
+        traceId: reply.getHeader("x-trace-id"),
+      }
     },
   }),
 )
 ```
 
-`reactRouterFastify` is a plugin factory: call it with your options and register the result. `getLoadContext`'s `request`/`reply` are typed for `http.Server` by default; pass a type argument to target another server, e.g. `reactRouterFastify<Http2Server>({ ... })`.
-
-When the `v8_middleware` future flag is enabled, return a `RouterContextProvider` instead:
+When React Router `v8_middleware` is enabled, return a `RouterContextProvider`:
 
 ```ts
 import { RouterContextProvider } from "react-router"
@@ -134,6 +115,7 @@ import { userContext } from "./app/context"
 
 await app.register(
   reactRouterFastify({
+    build,
     getLoadContext() {
       let context = new RouterContextProvider()
       context.set(userContext, "host-server")
@@ -143,31 +125,73 @@ await app.register(
 )
 ```
 
-## Options
+## Static Assets and Cache Headers
 
-`reactRouterFastify` requires `build`; the rest are optional:
+In production, `reactRouterFastify` serves `<buildDirectory>/client` with `@fastify/static`. Configure long-lived caching for hashed assets and a shorter policy for other files.
 
-- `build` — the React Router server build, or a function that resolves it. You load it, not the plugin, so you can shape the build before handing it over (e.g. set `allowedActionOrigins`). In development resolve it through Vite (`() => viteDevServer.ssrLoadModule("virtual:react-router/server-build")`); in production import the compiled build (`await import("./build/server/index.js")`).
-- `basename` — base path for the app; match the `basename` in your React Router config. Default: `"/"`.
-- `buildDirectory` — directory of the build output, used to locate the compiled client assets (`<buildDirectory>/client`) served in production; match `buildDirectory` in your React Router config. Default: `"build"`.
-- `getLoadContext` — function returning the `context` passed to loaders and actions.
-- `mode` — the React Router mode; defaults to `"development"` when a `viteDevServer` is provided, otherwise `process.env.NODE_ENV`.
-- `viteDevServer` — the Vite dev server, forwarded from your `createApp` factory in development. When set, static asset serving is skipped (Vite serves assets/HMR) and `mode` defaults to `"development"`. Leave unset in production.
-- `fastifyStaticOptions` — options forwarded to [`@fastify/static`](https://github.com/fastify/fastify-static) for serving compiled assets in production.
-- `assetCacheControl` — `Cache-Control` for hashed build assets, via [`pretty-cache-header`](https://github.com/cdimascio/pretty-cache-header). Default: `{ public: true, maxAge: "1 year", immutable: true }`.
-- `defaultCacheControl` — `Cache-Control` for other static files. Default: `{ public: true, maxAge: "1 hour" }`.
-- `childServerOptions` — Fastify [route options](https://fastify.dev/docs/latest/Reference/Routes/#routes-options) applied to the catch-all route.
+```ts
+await app.register(
+  reactRouterFastify({
+    build,
+    assetCacheControl: { public: true, maxAge: 31_536_000, immutable: true },
+    defaultCacheControl: { public: true, maxAge: 3_600 },
+  }),
+)
+```
 
-## Examples
+## Catch-All Route Options
 
-- [`examples/playground`](https://github.com/mcansh/remix-fastify/tree/main/examples/playground) — full app using the Vite dev plugin and `RouterContextProvider` load context.
-- [`examples/react-router`](https://github.com/mcansh/remix-fastify/tree/main/examples/react-router) — minimal React Router + Fastify setup.
+Use `childServerOptions` to apply Fastify route options to the plugin catch-all handler.
+
+```ts
+await app.register(
+  reactRouterFastify({
+    build,
+    childServerOptions: {
+      config: {
+        rateLimit: {
+          max: 200,
+          timeWindow: "1 minute",
+        },
+      },
+    },
+  }),
+)
+```
+
+## Low-Level Server Utilities
+
+If you need tighter control, the package also exports lower-level helpers to create `Request` objects, create handlers, and send `Response` objects.
+
+```ts
+import {
+  createReactRouterRequest,
+  sendResponse,
+} from "@mcansh/remix-fastify"
+import { createRequestHandler } from "react-router"
+
+let build = await import("./build/server/index.js")
+let handleRequest = createRequestHandler(build, process.env.NODE_ENV)
+
+app.all("*", async (request, reply) => {
+  let webRequest = createReactRouterRequest(request, reply)
+  let webResponse = await handleRequest(webRequest)
+  await sendResponse(reply, webResponse)
+})
+```
+
+## Related Packages
+
+- https://github.com/mcansh/remix-fastify/tree/main/packages/remix-fastify
+- https://github.com/mcansh/remix-fastify/tree/main/examples/playground
+- https://github.com/mcansh/remix-fastify/tree/main/examples/react-router
 
 ## Related Work
 
 - [React Router](https://reactrouter.com)
-- [Fastify](https://fastify.io)
-- [react-router-fastify](https://github.com/simonsmith/react-router-fastify) — an alternative React Router 7 + Fastify boilerplate.
+- [Fastify](https://fastify.dev)
+- [`@fastify/static`](https://github.com/fastify/fastify-static)
+- [HTTP Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)
 
 ## License
 

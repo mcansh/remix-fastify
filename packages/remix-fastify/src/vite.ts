@@ -1,33 +1,17 @@
-import { statSync } from "node:fs"
-import { readFile } from "node:fs/promises"
-import type { IncomingMessage, ServerResponse } from "node:http"
-import * as path from "node:path"
-
-import type { FastifyInstance } from "fastify"
-import type { Connect, Plugin, ViteDevServer } from "vite"
+import type { Config } from "@react-router/dev/config";
+import { statSync } from "node:fs";
+import { readFile } from "node:fs/promises";
+import * as path from "node:path";
+import type { Plugin } from "vite";
 
 export interface FastifyDevServerOptions {
   /**
    * Path to your server entry, relative to the project root. The module must
    * export a factory (see {@link FastifyDevServerOptions.export}) that builds
    * and returns a Fastify instance.
-   * @default "./server.js"
+   * @default "./server.ts"
    */
   entry?: string
-  /**
-   * The named export of the factory in your server entry. The factory is
-   * called with `{ viteDevServer }` and must return a Fastify instance.
-   * @default "createApp"
-   */
-  export?: string
-  /**
-   * Directory of your build output. Used to locate the SSR server build
-   * (`<buildDirectory>/server`) when auto-externalizing modules shared between
-   * your server entry and your app. Match `buildDirectory` in your React Router
-   * config.
-   * @default "build"
-   */
-  buildDirectory?: string
 }
 
 // `from "spec"` (import/export ... from) and side-effect `import "spec"`.
@@ -107,14 +91,6 @@ async function detectSharedModules(
 }
 
 /**
- * The factory your server entry exports. The Vite plugin calls it with the
- * dev server in development; production code calls it with no arguments.
- */
-export type CreateApp = (options: {
-  viteDevServer?: ViteDevServer
-}) => FastifyInstance | Promise<FastifyInstance>
-
-/**
  * A Vite plugin that runs your Fastify server in development.
  *
  * Add it alongside `reactRouter()` and run `react-router dev`. Vite serves
@@ -135,16 +111,10 @@ export type CreateApp = (options: {
  * };
  * ```
  *
- * @param options - Plugin options. See {@link FastifyDevServerOptions}.
+ * @param {FastifyDevServerOptions} options - Configuration options for the Fastify dev server.
  * @returns A Vite plugin that runs your Fastify server in development.
  */
-export function fastifyDevServer(
-  options: FastifyDevServerOptions = {},
-): Plugin {
-  let entry = options.entry ?? "./server.js"
-  let exportName = options.export ?? "createApp"
-  let buildDirectory = options.buildDirectory ?? "build"
-
+export function fastifyDevServer(options?: FastifyDevServerOptions): Plugin {
   return {
     name: "@mcansh/remix-fastify:dev-server",
     // `pre` so our returned post-hook runs before React Router's own dev
@@ -159,9 +129,20 @@ export function fastifyDevServer(
     async config(userConfig, env) {
       if (env.command !== "build") return
 
+      options ??= {}
+      options.entry ??= "./server.ts"
+
       let root = userConfig.root ? path.resolve(userConfig.root) : process.cwd()
-      let entryFile = path.resolve(root, entry)
-      let ssrOutDir = path.resolve(root, buildDirectory, "server")
+      let reactRouterConfig = await import(path.join(root, "./react-router.config.ts")) as {
+        default: Config
+      }
+      console.log({
+        reactRouterConfig
+      })
+      reactRouterConfig.default.buildDirectory ??= "build"
+
+      let entryFile = path.resolve(root, options.entry)
+      let ssrOutDir = path.resolve(root, reactRouterConfig.default.buildDirectory, "server")
 
       let { external, paths } = await detectSharedModules(entryFile, ssrOutDir)
       if (external.length === 0) return
@@ -169,62 +150,15 @@ export function fastifyDevServer(
       return {
         environments: {
           ssr: {
-            build: { rollupOptions: { external, output: { paths } } },
+            // build: { rollupOptions: { external, output: { paths } } },
+            build: {
+              rolldownOptions: {
+                input: entryFile,
+                output: { paths },
+              },
+            },
           },
         },
-      }
-    },
-    configureServer(server) {
-      // Build the app once per evaluation of the entry module, reusing it
-      // across requests. When Vite invalidates the entry (you edit it), the
-      // next `ssrLoadModule` returns a fresh factory function — a new identity —
-      // and we rebuild. Route changes flow through `reactRouterFastify`'s own
-      // `ssrLoadModule` of the server build, so they don't require a rebuild.
-      let cached: { factory: CreateApp; app: Promise<FastifyInstance> } | null =
-        null
-
-      // Returning a function registers our middleware as a "post" hook so
-      // Vite's own middlewares (module/asset transforms, HMR) run first and
-      // only document/data/API requests fall through to Fastify.
-      return () => {
-        server.middlewares.use(
-          async (
-            req: IncomingMessage,
-            res: ServerResponse,
-            next: Connect.NextFunction,
-          ) => {
-            try {
-              let mod = await server.ssrLoadModule(entry)
-              let factory = mod[exportName] as CreateApp | undefined
-              if (typeof factory !== "function") {
-                throw new Error(
-                  `[@mcansh/remix-fastify] expected "${entry}" to export a function named "${exportName}" that returns a Fastify instance.`,
-                )
-              }
-
-              if (!cached || cached.factory !== factory) {
-                cached?.app.then((app) => app.close()).catch(() => {})
-                cached = {
-                  factory,
-                  app: Promise.resolve(factory({ viteDevServer: server })),
-                }
-              }
-
-              let app = await cached.app
-              if (typeof app?.routing !== "function") {
-                throw new Error(
-                  `[@mcansh/remix-fastify] "${exportName}" in "${entry}" did not return a Fastify instance.`,
-                )
-              }
-
-              await app.ready()
-              app.routing(req, res)
-            } catch (error) {
-              if (error instanceof Error) server.ssrFixStacktrace(error)
-              next(error)
-            }
-          },
-        )
       }
     },
   }

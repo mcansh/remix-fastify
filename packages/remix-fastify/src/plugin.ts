@@ -7,8 +7,6 @@ import { CacheControl } from "@remix-run/headers";
 import type { FastifyPluginAsync, RouteShorthandOptions } from "fastify";
 import fp from "fastify-plugin";
 import type { ServerBuild } from "react-router";
-import type { ViteDevServer } from "vite";
-
 import type { GetLoadContextFunction, HttpServer } from "./server.js";
 import { createReactRouterRequestHandler } from "./server.js";
 
@@ -58,13 +56,6 @@ export type ReactRouterFastifyOptions<Server extends HttpServer = HttpServer> =
     getLoadContext?: GetLoadContextFunction<Server>
     mode?: string
     /**
-     * The Vite dev server, passed by the `fastifyDevServer` Vite plugin in
-     * development. When present, client assets/HMR are served by Vite ahead of
-     * Fastify, so the plugin skips static asset serving, and `mode` defaults to
-     * `"development"`. Leave unset in production.
-     */
-    viteDevServer?: ViteDevServer
-    /**
      * Options to pass to the `@fastify/static` plugin for serving compiled assets in production.
      */
     fastifyStaticOptions?: FastifyStaticOptions
@@ -82,10 +73,6 @@ export type ReactRouterFastifyOptions<Server extends HttpServer = HttpServer> =
      * @default { public: true, maxAge: '1 hour' }
      */
     defaultCacheControl?: CacheControlInit
-
-    /**
-     *
-     */
     childServerOptions?: RouteShorthandOptions<Server>
   }
 
@@ -111,15 +98,12 @@ export type ReactRouterFastifyOptions<Server extends HttpServer = HttpServer> =
 export function reactRouterFastify<Server extends HttpServer = HttpServer>(
   options: ReactRouterFastifyOptions<Server>,
 ): FastifyPluginAsync {
-  // The generic only shapes `getLoadContext`/`childServerOptions` for the
-  // caller. Internally we work against the default server type.
   let {
     build,
     basename = "/",
     buildDirectory = "build",
     getLoadContext,
     mode,
-    viteDevServer,
     fastifyStaticOptions,
     assetCacheControl = { public: true, maxAge: 31_536_000, immutable: true },
     defaultCacheControl = { public: true, maxAge: 3_600 },
@@ -128,19 +112,10 @@ export function reactRouterFastify<Server extends HttpServer = HttpServer>(
 
   return fp(
     async function reactRouterFastifyPlugin(fastify) {
-      let fallbackMode = viteDevServer ? "development" : process.env.NODE_ENV
-      let resolvedMode = mode ?? fallbackMode
-
-      let handler = createReactRouterRequestHandler({
-        mode: resolvedMode,
-        getLoadContext,
-        build,
-      })
-
       // In production Fastify serves the compiled client assets. In development
       // Vite already serves them ahead of our request handler, so there is
       // nothing to register here.
-      if (!viteDevServer) {
+      if (process.env.NODE_ENV === "production") {
         let cwd = process.env.REMIX_ROOT ?? process.cwd()
         let resolvedBuildDirectory = path.resolve(cwd, buildDirectory)
         let clientDirectory = path.join(resolvedBuildDirectory, "client")
@@ -156,15 +131,45 @@ export function reactRouterFastify<Server extends HttpServer = HttpServer>(
           lastModified: true,
           setHeaders(res, filepath) {
             let isAsset = filepath.startsWith(assetDirectory)
-            let cacheControl = new CacheControl(isAsset ? assetCacheControl : defaultCacheControl)
-            res.setHeader(
-              "cache-control",
-              cacheControl.toString(),
+            let cacheControl = new CacheControl(
+              isAsset ? assetCacheControl : defaultCacheControl,
             )
+            res.setHeader("cache-control", cacheControl.toString())
           },
           ...fastifyStaticOptions,
         })
+      } else {
+        let viteDevServer = await import("vite").then(vite => {
+          return vite.createServer({
+              server: {middlewareMode: true}
+          })
+        })
+
+        let middie = await import("@fastify/middie")
+
+        await fastify.register(middie.default)
+        fastify.use(viteDevServer.middlewares)
+
+        await fastify.register(async (request, reply, done) => {
+          try {
+            const source = await viteDevServer.ssrLoadModule("./server.ts")
+            return await source.app(request, reply)
+          } catch (error) {
+            if (typeof error === 'object' && error instanceof Error) {
+              viteDevServer.ssrFixStacktrace(error);
+              done(error)
+            }
+
+            return reply.send(error)
+          }
+        })
       }
+
+      let handler = createReactRouterRequestHandler({
+        mode: mode ?? process.env.NODE_ENV,
+        getLoadContext,
+        build,
+      })
 
       await fastify.register(
         async function reactRouterCatchAll(childServer) {
