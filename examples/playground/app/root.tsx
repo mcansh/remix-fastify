@@ -7,8 +7,8 @@ import {
   ScrollRestoration,
 } from "react-router";
 import type { Route } from "./+types/root";
-import "./styles/global.css";
 import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert";
+import "./styles/global.css";
 
 export function loader() {
   return data({ message: "Hello from the root loader" });

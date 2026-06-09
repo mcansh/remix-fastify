@@ -1,6 +1,6 @@
 import { data, useFetcher } from "react-router";
-import type { Route } from "./+types/_layout.fetcher";
 import { Button } from "~/components/button";
+import type { Route } from "./+types/_layout.fetcher";
 
 export async function action({ request }: Route.ActionArgs) {
   let response = await request.json();
