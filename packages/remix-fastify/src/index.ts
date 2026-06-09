@@ -1,6 +1,9 @@
+export { reactRouterFastify } from "./plugin";
+export type { ReactRouterFastifyOptions } from "./plugin";
+export { createRequestHandler } from "./server";
 export type {
   GetLoadContextFunction,
+  HttpServer,
+  ReactRouterLoadContext,
   RequestHandler,
-  RemixFastifyOptions,
-} from "./remix";
-export { createRequestHandler, remixFastify } from "./remix";
+} from "./server";

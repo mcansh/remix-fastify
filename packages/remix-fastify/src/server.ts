@@ -3,8 +3,7 @@ import type * as http2 from "node:http2";
 import type * as https from "node:https";
 import { Readable } from "node:stream";
 
-import type { createReadableStreamFromReadable as RRCreateReadableStreamFromReadable } from "@react-router/node";
-import type { createReadableStreamFromReadable as RemixCreateReadableStreamFromReadable } from "@remix-run/node";
+import { createReadableStreamFromReadable } from "@react-router/node";
 import type {
   FastifyReply,
   FastifyRequest,
@@ -12,6 +11,13 @@ import type {
   RawRequestDefaultExpression,
   RouteGenericInterface,
 } from "fastify";
+import type {
+  AppLoadContext,
+  RouterContextProvider,
+  ServerBuild,
+  UNSAFE_MiddlewareEnabled as MiddlewareEnabled,
+} from "react-router";
+import { createRequestHandler as createReactRouterRequestHandler } from "react-router";
 
 export type HttpServer =
   | http.Server
@@ -22,25 +28,31 @@ export type HttpServer =
 export type HttpRequest = RawRequestDefaultExpression<HttpServer>;
 export type HttpResponse = RawReplyDefaultExpression<HttpServer>;
 
-export type RequestHandler<Server extends HttpServer> = (
+export type RequestHandler<Server extends HttpServer = HttpServer> = (
   request: FastifyRequest<RouteGenericInterface, Server>,
   reply: FastifyReply<RouteGenericInterface, Server>,
 ) => Promise<void>;
+
+/**
+ * The value React Router passes to route `loader`/`action` functions as
+ * `context`. When middleware is enabled this is a `RouterContextProvider`
+ * instance, otherwise it is the (augmentable) `AppLoadContext`.
+ */
+export type ReactRouterLoadContext = MiddlewareEnabled extends true
+  ? RouterContextProvider
+  : AppLoadContext;
 
 /**
  * A function that returns the value to use as `context` in route `loader` and
  * `action` functions.
  *
  * You can think of this as an escape hatch that allows you to pass
- * environment/platform-specific values through to your loader/action.
+ * environment/platform-specific values through to your loaders/actions.
  */
-export type GetLoadContextFunction<
-  Server extends HttpServer,
-  AppLoadContext,
-> = (
+export type GetLoadContextFunction<Server extends HttpServer = HttpServer> = (
   request: FastifyRequest<RouteGenericInterface, Server>,
   reply: FastifyReply<RouteGenericInterface, Server>,
-) => Promise<AppLoadContext> | AppLoadContext;
+) => Promise<ReactRouterLoadContext> | ReactRouterLoadContext;
 
 export function createHeaders(
   requestHeaders: FastifyRequest["headers"],
@@ -66,17 +78,13 @@ export function getUrl<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
 ): string {
   let origin = `${request.protocol}://${request.host}`;
-  // Use `request.originalUrl` so Remix and React Router are aware of the full path
-  let url = `${origin}${request.originalUrl}`;
-  return url;
+  // Use `request.originalUrl` so React Router is aware of the full path
+  return `${origin}${request.originalUrl}`;
 }
 
 export function createRequest<Server extends HttpServer>(
   request: FastifyRequest<RouteGenericInterface, Server>,
   reply: FastifyReply<RouteGenericInterface, Server>,
-  createReadableStreamFromReadable:
-    | typeof RemixCreateReadableStreamFromReadable
-    | typeof RRCreateReadableStreamFromReadable,
 ): Request {
   let url = getUrl(request);
 
@@ -141,4 +149,26 @@ function responseToReadable(response: Response): Readable | null {
   };
 
   return readable;
+}
+
+/**
+ * Returns a Fastify route handler that serves the response using React Router.
+ */
+export function createRequestHandler<Server extends HttpServer = HttpServer>({
+  build,
+  getLoadContext,
+  mode = process.env.NODE_ENV,
+}: {
+  build: ServerBuild | (() => ServerBuild | Promise<ServerBuild>);
+  getLoadContext?: GetLoadContextFunction<Server>;
+  mode?: string;
+}): RequestHandler<Server> {
+  let handleRequest = createReactRouterRequestHandler(build, mode);
+
+  return async (request, reply) => {
+    let request_ = createRequest(request, reply);
+    let loadContext = await getLoadContext?.(request, reply);
+    let response = await handleRequest(request_, loadContext);
+    return sendResponse(reply, response);
+  };
 }
