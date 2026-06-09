@@ -38,6 +38,7 @@
     "jsonfile": "^6.1.0",
     "pkg-pr-new": "^0.0.51",
     "prettier": "^3.6.2",
+    "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-tailwindcss": "^0.6.12",
     "prompt-confirm": "^2.0.4",
     "publint": "^0.3.15",
