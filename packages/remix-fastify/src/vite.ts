@@ -48,15 +48,25 @@ export function fastifyDevServer(
     configureServer(server) {
       let entryPath = path.resolve(server.config.root, serverEntry);
 
+      let appPromise: Promise<FastifyInstance> | undefined;
+
       // Invalidate the cached Fastify instance when the server entry changes so
-      // edits to your server setup are picked up without a manual restart.
-      server.watcher.on("change", (file) => {
-        if (path.resolve(file) === entryPath) {
-          appPromise = undefined;
+      // edits to your server setup are picked up without a manual restart. Close
+      // the previous instance first so plugins it registered (DB connections,
+      // timers, watchers) are torn down instead of leaking across edits.
+      server.watcher.on("change", async (file) => {
+        if (path.resolve(file) !== entryPath) return;
+        let previous = appPromise;
+        appPromise = undefined;
+        if (!previous) return;
+        try {
+          let app = await previous;
+          await app.close();
+        } catch {
+          // The previous build may have failed to resolve; nothing to close.
         }
       });
 
-      let appPromise: Promise<FastifyInstance> | undefined;
       function getApp(): Promise<FastifyInstance> {
         if (!appPromise) {
           appPromise = (async () => {
