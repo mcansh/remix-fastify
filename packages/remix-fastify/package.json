@@ -27,7 +27,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "prepublishOnly": "npm run build && cp ../../LICENSE LICENSE && publint && attw --pack",
+    "prepublishOnly": "npm run build",
     "typecheck": "tsc",
     "dev": "tsdown --watch",
     "build": "tsdown",
@@ -40,11 +40,13 @@
     "pretty-cache-header": "^1.0.0"
   },
   "devDependencies": {
+    "@arethetypeswrong/core": "^0.18.3",
     "@react-router/node": "7.12.0",
     "@types/node": "^24.10.0",
     "@typescript/lib-dom": "npm:@types/web@^0.0.237",
     "fastify": "^5.3.3",
     "node-mocks-http": "^1.17.2",
+    "publint": "^0.3.21",
     "react-router": "^7.12.0",
     "typescript": "^5.8.3",
     "vite": "^6.4.1"

@@ -17,6 +17,10 @@ export default defineConfig(() => {
     bundle: true,
     platform: "node",
     skipNodeModulesBundle: true,
+    attw: {
+      profile: "esm-only"
+    },
+    publint: true,
     treeshake: true,
     define: {
       "process.env.__PACKAGE_NAME__": JSON.stringify(pkg.name),
