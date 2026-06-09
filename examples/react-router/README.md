@@ -1,40 +1,22 @@
-# Welcome to React Router!
+# react-router
 
-- 📖 [React Router docs](https://reactrouter.com/dev)
+A minimal React Router v7 app served through Fastify with [`@mcansh/remix-fastify`](https://github.com/mcansh/remix-fastify). Development runs through `react-router dev` with `fastifyDevServer` booting the Fastify app from [`server.js`](./server.js).
 
 ## Development
 
-Run the dev server:
-
-```shellscript
+```sh
 npm run dev
 ```
 
-## Deployment
+`react-router dev` loads `server.js` through Vite, and `fastifyDevServer` (configured in [`vite.config.ts`](./vite.config.ts)) mounts the Fastify instance as the SSR catch-all while Vite handles HMR and assets.
 
-First, build your app for production:
+## Production
+
+Build, then run the same `server.js` directly:
 
 ```sh
 npm run build
-```
-
-Then run the app in production mode:
-
-```sh
 npm start
 ```
 
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-- `build/server`
-- `build/client`
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+The build output lives in `build/server` and `build/client`.

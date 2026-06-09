@@ -4,7 +4,7 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development node --require dotenv/config --watch-path ./server.js ./server.js",
+    "dev": "react-router dev",
     "build": "react-router build",
     "start": "cross-env NODE_ENV=production node ./server.js",
     "typecheck": "react-router typegen && tsc"
