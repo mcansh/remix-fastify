@@ -18,7 +18,7 @@ export default defineConfig(() => {
     platform: "node",
     skipNodeModulesBundle: true,
     attw: {
-      profile: "esm-only"
+      profile: "esm-only",
     },
     publint: true,
     treeshake: true,

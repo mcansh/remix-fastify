@@ -57,7 +57,9 @@ async function incrementVersion(nextVersion) {
   // Commit and tag
   execSync(`git commit --all --message="Version ${nextVersion}"`);
   execSync(`git tag -a -m "Version ${nextVersion}" v${nextVersion}`);
-  console.log(styleText('green', `  Committed and tagged version ${nextVersion}`));
+  console.log(
+    styleText("green", `  Committed and tagged version ${nextVersion}`),
+  );
 }
 
 /**
@@ -106,9 +108,11 @@ async function updateVersion(packageName, nextVersion, successMessage) {
   });
   let logName = `@mcansh/${packageName.slice(6)}`;
   console.log(
-    styleText('green', `  ${
+    styleText(
+      "green",
+      `  ${
         successMessage ||
-        `Updated ${styleText('bold', logName)} to version ${styleText('bold', nextVersion)}`
+        `Updated ${styleText("bold", logName)} to version ${styleText("bold", nextVersion)}`
       }`,
     ),
   );
