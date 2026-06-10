@@ -14,7 +14,7 @@ export function loader() {
   return data({ message: "Hello from the root loader" });
 }
 
-const clientLogger: Route.unstable_ClientMiddlewareFunction = async (
+const clientLogger: Route.ClientMiddlewareFunction = async (
   { request },
   next,
 ) => {
@@ -27,7 +27,7 @@ const clientLogger: Route.unstable_ClientMiddlewareFunction = async (
   console.log(`Navigated to ${request.url} (${duration}ms)`);
 };
 
-const serverLogger: Route.unstable_MiddlewareFunction = async (
+const serverLogger: Route.MiddlewareFunction = async (
   { request },
   next,
 ) => {
@@ -43,8 +43,8 @@ const serverLogger: Route.unstable_MiddlewareFunction = async (
   return res;
 };
 
-export const unstable_middleware = [serverLogger];
-export const unstable_clientMiddleware = [clientLogger];
+export const middleware = [serverLogger];
+export const clientMiddleware = [clientLogger];
 
 export default function App({ loaderData }: Route.ComponentProps) {
   return (

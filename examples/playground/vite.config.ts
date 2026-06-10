@@ -9,6 +9,9 @@ export default defineConfig({
     reactRouter(),
     tsconfigPaths(),
     tailwindcss(),
-    fastifyDevServer({ serverEntry: "./server.js" }),
+    fastifyDevServer({
+      serverEntry: "./server.ts",
+      external: ["./app/context.ts"],
+    }),
   ],
 });

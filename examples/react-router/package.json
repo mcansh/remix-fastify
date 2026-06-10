@@ -24,14 +24,14 @@
   },
   "devDependencies": {
     "@react-router/dev": "7.9.6",
-    "@tailwindcss/vite": "4.1.8",
+    "@tailwindcss/vite": "^4.3.0",
     "@total-typescript/tsconfig": "^1.0.4",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "dotenv": "^16.5.0",
-    "tailwindcss": "^4.1.8",
+    "tailwindcss": "^4.3.0",
     "typescript": "^5.8.3",
-    "vite": "^6.4.1",
+    "vite": "^7.0.0",
     "vite-tsconfig-paths": "^5.1.4"
   },
   "engines": {

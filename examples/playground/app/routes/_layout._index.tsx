@@ -3,16 +3,18 @@ import { Await, Form, redirect, useAsyncValue } from "react-router";
 import { Button } from "~/components/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { nameContext } from "~/context";
 import { sessionStorage } from "~/session.server";
 import { sleep } from "~/utils";
 import type { Route } from "./+types/_layout._index";
 
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader({ context, request }: Route.LoaderArgs) {
   let cookie = request.headers.get("Cookie");
   let session = await sessionStorage.getSession(cookie);
 
   return {
     name: sleep<string>(1_000, session.get("name") || "Anonymous"),
+    loadContextName: context.get(nameContext),
   };
 }
 
