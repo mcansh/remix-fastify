@@ -9,6 +9,7 @@ import { cacheHeader } from "pretty-cache-header";
 import type { ServerBuild } from "react-router";
 import type { ViteDevServer } from "vite";
 
+import { loadSsrModule } from "./dev-ssr";
 import type { GetLoadContextFunction, HttpServer } from "./server";
 import { createRequestHandler } from "./server";
 
@@ -103,7 +104,7 @@ async function plugin(
   let build: ServerBuild | (() => ServerBuild | Promise<ServerBuild>);
   if (vite) {
     build = () =>
-      vite.ssrLoadModule(SERVER_BUILD_MODULE) as Promise<ServerBuild>;
+      loadSsrModule(vite, SERVER_BUILD_MODULE) as unknown as Promise<ServerBuild>;
   } else if (productionServerBuild) {
     build = productionServerBuild;
   } else {
