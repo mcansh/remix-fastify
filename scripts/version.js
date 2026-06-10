@@ -1,10 +1,9 @@
-import path from "node:path";
-import { execSync } from "node:child_process";
-import semver from "semver";
 import jsonfile from "jsonfile";
-import chalk from "chalk";
+import { execSync } from "node:child_process";
+import path from "node:path";
+import { styleText } from "node:util";
 import Confirm from "prompt-confirm";
-
+import semver from "semver";
 let packages = ["remix-fastify"];
 
 let rootDir = path.join(import.meta.dirname, "..");
@@ -58,7 +57,7 @@ async function incrementVersion(nextVersion) {
   // Commit and tag
   execSync(`git commit --all --message="Version ${nextVersion}"`);
   execSync(`git tag -a -m "Version ${nextVersion}" v${nextVersion}`);
-  console.log(chalk.green(`  Committed and tagged version ${nextVersion}`));
+  console.log(styleText('green', `  Committed and tagged version ${nextVersion}`));
 }
 
 /**
@@ -107,10 +106,9 @@ async function updateVersion(packageName, nextVersion, successMessage) {
   });
   let logName = `@mcansh/${packageName.slice(6)}`;
   console.log(
-    chalk.green(
-      `  ${
+    styleText('green', `  ${
         successMessage ||
-        `Updated ${chalk.bold(logName)} to version ${chalk.bold(nextVersion)}`
+        `Updated ${styleText('bold', logName)} to version ${styleText('bold', nextVersion)}`
       }`,
     ),
   );

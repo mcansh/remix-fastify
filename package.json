@@ -29,7 +29,6 @@
     "@total-typescript/tsconfig": "^1.0.4",
     "@types/node": "^24.10.0",
     "@types/npmcli__package-json": "^4.0.4",
-    "chalk": "^5.4.1",
     "eslint": "^9.28.0",
     "eslint-plugin-prefer-let": "^4.0.0",
     "glob": "^11.1.0",

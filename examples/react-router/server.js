@@ -1,10 +1,9 @@
-import { pathToFileURL } from "node:url";
-import chalk from "chalk";
 import { reactRouterFastify } from "@mcansh/remix-fastify";
 import { fastify } from "fastify";
 import getPort, { portNumbers } from "get-port";
+import { pathToFileURL } from "node:url";
+import { styleText } from "node:util";
 import sourceMapSupport from "source-map-support";
-
 sourceMapSupport.install();
 
 /**
@@ -34,11 +33,12 @@ if (isMain) {
 
   if (portToUse !== desiredPort) {
     console.warn(
-      chalk.yellow(
+      styleText(
+        "yellow",
         `⚠️  Port ${desiredPort} is not available, using ${portToUse} instead.`,
       ),
     );
   }
 
-  console.log(chalk.green(`✅ app ready: ${address}`));
+  console.log(styleText("green", `✅ app ready: ${address}`));
 }

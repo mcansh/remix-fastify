@@ -1,12 +1,12 @@
 import { reactRouterFastify } from "@mcansh/remix-fastify";
-import chalk from "chalk";
 import "dotenv/config";
 import { fastify } from "fastify";
 import getPort, { portNumbers } from "get-port";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
+import { styleText } from "node:util";
 import sourceMapSupport from "source-map-support";
-
 sourceMapSupport.install();
+
 
 /**
  * Build the Fastify app. In development `fastifyDevServer` imports this and
@@ -28,7 +28,7 @@ export async function app(vite) {
 
 // Only start listening when run directly (`node ./server.js`), not when the
 // Vite dev server imports this module.
-let isMain = import.meta.url === pathToFileURL(process.argv[1]).href;
+let isMain = fileURLToPath(import.meta.url) === process.argv[1];
 if (isMain) {
   let server = await app();
 
@@ -41,11 +41,12 @@ if (isMain) {
 
   if (portToUse !== desiredPort) {
     console.warn(
-      chalk.yellow(
+      styleText(
+        "yellow",
         `⚠️ Port ${desiredPort} is not available, using ${portToUse} instead.`,
       ),
     );
   }
 
-  console.log(chalk.green(`✅ app ready: ${address}`));
+  console.log(styleText("green", `✅ app ready: ${address}`));
 }
