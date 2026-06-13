@@ -135,9 +135,11 @@ async function plugin(
       wildcard: false,
       // required because we set custom cache-control headers in `setHeaders`
       cacheControl: false,
-      dotfiles: "allow",
+      // Don't serve hidden files (e.g. `.vite/`) from the client build. Override
+      // via `fastifyStaticOptions` if you intentionally serve dotfiles.
+      dotfiles: "ignore",
       etag: true,
-      serveDotFiles: true,
+      serveDotFiles: false,
       lastModified: true,
       setHeaders(res, filepath) {
         let isAsset = filepath.startsWith(assetsDirectory);

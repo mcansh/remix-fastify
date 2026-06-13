@@ -94,7 +94,10 @@ export function fastifyDevServer(
                   // instead of an absolute path so the build is portable.
                   paths: (id) => {
                     if (!isExternalId(id, externalIds)) return id;
-                    let rel = path.relative(serverBuildDir, id.split("?")[0]!);
+                    let rel = path.relative(
+                      serverBuildDir,
+                      id.split("?")[0] ?? id,
+                    );
                     return rel.startsWith(".") ? rel : `./${rel}`;
                   },
                 },

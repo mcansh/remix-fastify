@@ -21,7 +21,9 @@ export const app = createApp(async (vite) => {
 
 // Only start listening when run directly (`node ./server.js`), not when the
 // Vite dev server imports this module.
-let isMain = import.meta.url === pathToFileURL(process.argv[1]).href;
+let isMain =
+  typeof process.argv[1] === "string" &&
+  import.meta.url === pathToFileURL(process.argv[1]).href;
 if (isMain) {
   let server = await app();
 

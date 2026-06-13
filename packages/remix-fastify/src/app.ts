@@ -2,7 +2,8 @@ import type { FastifyInstance } from "fastify";
 import type { ViteDevServer } from "vite";
 
 /**
- * A factory that builds your Fastify app from a {@link FastifyAppContext}.
+ * A factory that builds your Fastify app. `fastifyDevServer` calls it with the
+ * Vite dev server in development; in production you call it yourself.
  */
 export type FastifyAppFactory = (
   vite?: ViteDevServer | undefined,
@@ -13,7 +14,7 @@ export type FastifyAppFactory = (
  * JSDoc. Export the result as your server entry's `app`:
  *
  * ```ts
- * export const app = createApp(async ({ vite }) => {
+ * export const app = createApp(async (vite) => {
  *   const app = fastify();
  *   await app.register(reactRouterFastify, { vite });
  *   return app;
@@ -21,7 +22,7 @@ export type FastifyAppFactory = (
  * ```
  *
  * `fastifyDevServer` calls it with the Vite dev server in development; in
- * production you call it yourself (`await app({})`) before `listen`.
+ * production you call it yourself (`await app()`) before `listen`.
  */
 export function createApp(factory: FastifyAppFactory): FastifyAppFactory {
   return factory;
