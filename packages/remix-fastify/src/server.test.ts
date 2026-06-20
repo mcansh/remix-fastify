@@ -3,27 +3,26 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 import fastify from "fastify";
 import { createRequest as createMockRequest } from "node-mocks-http";
 import { Readable } from "node:stream";
+import type * as ReactRouter from "react-router";
 import { createRequestHandler as createReactRouterRequestHandlerImpl } from "react-router";
 import type { MockedFunction } from "vitest";
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
-import { createHeaders, createRequest, createRequestHandler } from "./server";
+import { createHeaders, createRequest, createRequestHandler } from "./server.ts";
 
 // We don't want to test that React Router works here (that's what the e2e tests
 // do), we just want to test the fastify adapter
 vi.mock("react-router", async () => {
-  let original =
-    await vi.importActual<typeof import("react-router")>("react-router");
+  let original = await vi.importActual<typeof ReactRouter>("react-router");
   return {
     ...original,
     createRequestHandler: vi.fn(),
   };
 });
 
-let mockedCreateRequestHandler =
-  createReactRouterRequestHandlerImpl as MockedFunction<
-    typeof createReactRouterRequestHandlerImpl
-  >;
+const mockedCreateRequestHandler = createReactRouterRequestHandlerImpl as MockedFunction<
+  typeof createReactRouterRequestHandlerImpl
+>;
 
 function createApp() {
   let app = fastify();
@@ -51,9 +50,9 @@ describe("fastify createRequestHandler", () => {
   });
 
   it("handles requests", async () => {
-    mockedCreateRequestHandler.mockImplementation(() => async (req) => {
-      return new Response(`URL: ${new URL(req.url).pathname}`);
-    });
+    mockedCreateRequestHandler.mockImplementation(
+      () => async (req) => new Response(`URL: ${new URL(req.url).pathname}`),
+    );
 
     let app = createApp();
     let response = await app.inject("/foo/bar");
@@ -63,9 +62,9 @@ describe("fastify createRequestHandler", () => {
   });
 
   it("handles root // URLs", async () => {
-    mockedCreateRequestHandler.mockImplementation(() => async (req) => {
-      return new Response(`URL: ${new URL(req.url).pathname}`);
-    });
+    mockedCreateRequestHandler.mockImplementation(
+      () => async (req) => new Response(`URL: ${new URL(req.url).pathname}`),
+    );
 
     let app = createApp();
     let response = await app.inject("//");
@@ -75,9 +74,9 @@ describe("fastify createRequestHandler", () => {
   });
 
   it("handles nested // URLs", async () => {
-    mockedCreateRequestHandler.mockImplementation(() => async (req) => {
-      return new Response(`URL: ${new URL(req.url).pathname}`);
-    });
+    mockedCreateRequestHandler.mockImplementation(
+      () => async (req) => new Response(`URL: ${new URL(req.url).pathname}`),
+    );
 
     let app = createApp();
     let response = await app.inject("//foo//bar");
@@ -87,9 +86,7 @@ describe("fastify createRequestHandler", () => {
   });
 
   it("handles null body", async () => {
-    mockedCreateRequestHandler.mockImplementation(() => async () => {
-      return new Response(null);
-    });
+    mockedCreateRequestHandler.mockImplementation(() => async () => new Response(null));
 
     let app = createApp();
     let response = await app.inject("/");
@@ -113,9 +110,9 @@ describe("fastify createRequestHandler", () => {
   });
 
   it("handles status codes", async () => {
-    mockedCreateRequestHandler.mockImplementation(() => async () => {
-      return new Response(null, { status: 204 });
-    });
+    mockedCreateRequestHandler.mockImplementation(
+      () => async () => new Response(null, { status: 204 }),
+    );
 
     let app = createApp();
     let response = await app.inject("/");
@@ -126,10 +123,7 @@ describe("fastify createRequestHandler", () => {
   it("sets headers", async () => {
     mockedCreateRequestHandler.mockImplementation(() => async () => {
       let headers = new Headers({ "X-Time-Of-Year": "most wonderful" });
-      headers.append(
-        "Set-Cookie",
-        "first=one; Expires=0; Path=/; HttpOnly; Secure; SameSite=Lax",
-      );
+      headers.append("Set-Cookie", "first=one; Expires=0; Path=/; HttpOnly; Secure; SameSite=Lax");
       headers.append(
         "Set-Cookie",
         "second=two; MaxAge=1209600; Path=/; HttpOnly; Secure; SameSite=Lax",
@@ -161,23 +155,23 @@ describe("fastify createHeaders", () => {
 
   it("handles simple headers", () => {
     let headers = createHeaders({ "x-foo": "bar" });
-    expect(headers.get("x-foo")).toBe("bar");
+    expect(headers.get("X-Foo")).toBe("bar");
   });
 
   it("handles multiple headers", () => {
     let headers = createHeaders({ "x-foo": "bar", "x-bar": "baz" });
-    expect(headers.get("x-foo")).toBe("bar");
+    expect(headers.get("X-Foo")).toBe("bar");
   });
 
   it("handles headers with multiple values", () => {
     let headers = createHeaders({ "x-foo": "bar, baz" });
-    expect(headers.get("x-foo")).toBe("bar, baz");
+    expect(headers.get("X-Foo")).toBe("bar, baz");
   });
 
   it("handles headers with multiple values and multiple headers", () => {
     let headers = createHeaders({ "x-foo": "bar, baz", "x-bar": "baz" });
-    expect(headers.get("x-foo")).toBe("bar, baz");
-    expect(headers.get("x-bar")).toBe("baz");
+    expect(headers.get("X-Foo")).toBe("bar, baz");
+    expect(headers.get("X-Bar")).toBe("baz");
   });
 
   it("handles multiple set-cookie headers", () => {
@@ -188,7 +182,7 @@ describe("fastify createHeaders", () => {
       ],
     });
 
-    expect(headers.get("set-cookie")).toBe(
+    expect(headers.get("Set-Cookie")).toBe(
       "__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax, __other=some_other_value; Path=/; Secure; HttpOnly; MaxAge=3600; SameSite=Lax",
     );
   });
@@ -211,9 +205,7 @@ describe("fastify createRequest", () => {
 
     let request = createRequest(fastifyRequest, fastifyReply);
 
-    expect(request.headers.get("cache-control")).toBe(
-      "max-age=300, s-maxage=3600",
-    );
-    expect(request.headers.get("host")).toBe("localhost:3000");
+    expect(request.headers.get("Cache-Control")).toBe("max-age=300, s-maxage=3600");
+    expect(request.headers.get("Host")).toBe("localhost:3000");
   });
 });

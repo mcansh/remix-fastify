@@ -1,22 +1,20 @@
 {
   "private": true,
-  "repository": "mcansh/remix-fastify",
   "license": "MIT",
+  "repository": "mcansh/remix-fastify",
   "type": "module",
-  "engines": {
-    "node": ">=20.19.0"
-  },
   "scripts": {
     "dev": "pnpm run --filter remix-fastify --filter playground --recursive --parallel dev",
-    "dev:vite": "pnpm run --filter remix-fastify --filter vite-remix --recursive --parallel dev",
+    "dev:react-router": "pnpm run --filter remix-fastify --filter react-router-example-template --recursive --parallel dev",
     "build:packages": "pnpm run --recursive --parallel --filter \"./packages/**\" build",
-    "build:apps": "pnpm run --recursive --parallel --filter \"./apps/**\" build",
+    "build:examples": "pnpm run --recursive --parallel --filter \"./examples/**\" build",
     "build": "pnpm run --sequential \"/^build:.*/\"",
     "test": "pnpm run --recursive test",
     "publish": "./scripts/publish.js",
-    "lint": "eslint --ignore-path .gitignore --no-error-on-unmatched-pattern --cache --cache-location node_modules/.cache/eslint --fix .",
-    "format": "prettier --ignore-path .prettierignore --ignore-path .gitignore --ignore-unknown --cache --cache-location node_modules/.cache/prettiercache --write .",
-    "validate": "pnpm run --parallel lint format publint typecheck",
+    "publint": "pnpm --filter @mcansh/remix-fastify exec publint",
+    "lint": "oxlint",
+    "format": "oxfmt",
+    "validate": "pnpm run lint && pnpm run format && pnpm run publint && pnpm run typecheck",
     "typecheck": "pnpm run --recursive typecheck",
     "changeset": "changeset",
     "changeset:version": "changeset version && node ./scripts/remove-prerelease-changelogs.js && node ./scripts/post-changeset.js",
@@ -27,19 +25,17 @@
     "@changesets/cli": "^2.29.4",
     "@manypkg/get-packages": "^3.1.0",
     "@npmcli/package-json": "^6.2.0",
+    "@oxlint/plugins": "^1.70.0",
     "@remix-run/changelog-github": "^0.0.5",
-    "@remix-run/eslint-config": "2.17.2",
     "@total-typescript/tsconfig": "^1.0.4",
     "@types/node": "^24.10.0",
     "@types/npmcli__package-json": "^4.0.4",
-    "eslint": "^9.28.0",
-    "eslint-plugin-prefer-let": "^4.0.0",
     "glob": "^11.1.0",
     "jsonfile": "^6.1.0",
+    "oxfmt": "^0.55.0",
+    "oxlint": "^1.70.0",
+    "oxlint-tsgolint": "^0.23.0",
     "pkg-pr-new": "^0.0.51",
-    "prettier": "^3.6.2",
-    "prettier-plugin-organize-imports": "^4.3.0",
-    "prettier-plugin-tailwindcss": "^0.6.12",
     "prompt-confirm": "^2.0.4",
     "publint": "^0.3.15",
     "react": "^19.2.0",
@@ -48,6 +44,9 @@
     "type-fest": "^4.41.0",
     "typescript": "^5.8.3",
     "vitest": "^4.0.6"
+  },
+  "engines": {
+    "node": ">=20.19.0"
   },
   "packageManager": "pnpm@10.14.0+sha512.ad27a79641b49c3e481a16a805baa71817a04bbe06a38d17e60e2eaee83f6a146c6a688125f5792e48dd5ba30e7da52a5cda4c3992b9ccf333f9ce223af84748"
 }

@@ -1,5 +1,5 @@
 import { data, useFetcher } from "react-router";
-import { Button } from "~/components/button";
+import { Button } from "~/components/button.tsx";
 import type { Route } from "./+types/_layout.fetcher";
 
 export async function action({ request }: Route.ActionArgs) {
@@ -16,10 +16,7 @@ export default function Page() {
       <Button
         type="button"
         onClick={() => {
-          fetcher.submit(
-            { foo: "bar" },
-            { method: "POST", encType: "application/json" },
-          );
+          fetcher.submit({ foo: "bar" }, { method: "POST", encType: "application/json" });
         }}
       >
         fetcher.submit

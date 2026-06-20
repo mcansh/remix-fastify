@@ -1,12 +1,7 @@
 {
   "extends": "@total-typescript/tsconfig/bundler/dom/app",
   "exclude": ["node_modules", "build"],
-  "include": [
-    "**/*",
-    "**/.server/**/*",
-    "**/.client/**/*",
-    ".react-router/types/**/*"
-  ],
+  "include": ["**/*", "**/.server/**/*", "**/.client/**/*", ".react-router/types/**/*"],
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "types": ["node", "vite/client"],
@@ -15,7 +10,6 @@
     "checkJs": true,
     "allowJs": true,
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
     "paths": { "~/*": ["./app/*"] },
     "rootDirs": [".", "./.react-router/types"],
     "plugins": [{ "name": "@react-router/dev" }]

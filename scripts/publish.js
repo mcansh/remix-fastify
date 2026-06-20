@@ -4,7 +4,7 @@ import { execSync } from "node:child_process";
 import semver from "semver";
 import { globSync } from "glob";
 
-let packages = globSync("packages/*", { absolute: true });
+const packages = globSync("packages/*", { absolute: true });
 
 function getTaggedVersion() {
   let output = execSync("git tag --list --points-at HEAD").toString().trim();

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Await, useLoaderData } from "react-router";
-import { withDelay } from "~/utils";
+import { withDelay } from "~/utils.ts";
 
 export function loader() {
   return {

@@ -10,22 +10,12 @@ export function Welcome() {
             Welcome to <span className="sr-only">React Router</span>
           </h1>
           <div className="w-[500px] max-w-[100vw] p-4">
-            <img
-              src={logoLight}
-              alt="React Router"
-              className="block w-full dark:hidden"
-            />
-            <img
-              src={logoDark}
-              alt="React Router"
-              className="hidden w-full dark:block"
-            />
+            <img src={logoLight} alt="React Router" className="block w-full dark:hidden" />
+            <img src={logoDark} alt="React Router" className="hidden w-full dark:block" />
           </div>
         </header>
         <nav className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-gray-200 p-6 dark:border-gray-700">
-          <p className="leading-6 text-gray-700 dark:text-gray-200">
-            What&apos;s next?
-          </p>
+          <p className="leading-6 text-gray-700 dark:text-gray-200">What&apos;s next?</p>
           <ul>
             {resources.map(({ href, text, icon }) => (
               <li key={href}>

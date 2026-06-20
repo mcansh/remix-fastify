@@ -1,11 +1,11 @@
 import * as React from "react";
 import { Await, Form, redirect, useAsyncValue } from "react-router";
-import { Button } from "~/components/button";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { nameContext } from "~/context";
-import { sessionStorage } from "~/session.server";
-import { sleep } from "~/utils";
+import { Button } from "~/components/button.tsx";
+import { Input } from "~/components/ui/input.tsx";
+import { Label } from "~/components/ui/label.tsx";
+import { nameContext } from "~/context.ts";
+import { sessionStorage } from "~/session.server.ts";
+import { sleep } from "~/utils.ts";
 import type { Route } from "./+types/_layout._index";
 
 export async function loader({ context, request }: Route.LoaderArgs) {
@@ -51,7 +51,7 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 export default function Index({ loaderData }: Route.ComponentProps) {
-  const [echo, setEcho] = React.useState<string | null>(null);
+  let [echo, setEcho] = React.useState<string | null>(null);
 
   return (
     <>
@@ -61,9 +61,7 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         </Await>
       </React.Suspense>
 
-      <h2 className="text-3xl font-bold tracking-tight">
-        Context: {loaderData.loadContextName}
-      </h2>
+      <h2 className="text-3xl font-bold tracking-tight">Context: {loaderData.loadContextName}</h2>
 
       <Form method="post" className="flex justify-center gap-2">
         <Label>
@@ -123,12 +121,7 @@ function NameInput() {
   }
 
   return (
-    <Input
-      type="text"
-      name="name"
-      placeholder="Enter your name"
-      defaultValue={defaultValue}
-    />
+    <Input type="text" name="name" placeholder="Enter your name" defaultValue={defaultValue} />
   );
 }
 

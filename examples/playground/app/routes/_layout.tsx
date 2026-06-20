@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from "react-router";
 
-let LINKS = [
+const LINKS = [
   { to: "/", label: "Home" },
   { to: "/page-2", label: "Page 2" },
   { to: "/fetcher", label: "Fetcher" },
@@ -43,14 +43,10 @@ export default function Layout() {
               <li key={link.to}>
                 <NavLink
                   to={link.to}
-                  reloadDocument={
-                    "reloadDocument" in link ? link.reloadDocument : false
+                  reloadDocument={"reloadDocument" in link ? link.reloadDocument : false}
+                  className={({ isActive }) =>
+                    isActive ? "text-red-500 underline underline-offset-2" : "text-blue-500"
                   }
-                  className={({ isActive }) => {
-                    return isActive
-                      ? "text-red-500 underline underline-offset-2"
-                      : "text-blue-500";
-                  }}
                 >
                   {link.label}
                 </NavLink>

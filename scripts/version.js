@@ -4,9 +4,9 @@ import path from "node:path";
 import { styleText } from "node:util";
 import Confirm from "prompt-confirm";
 import semver from "semver";
-let packages = ["remix-fastify"];
+const packages = ["remix-fastify"];
 
-let rootDir = path.join(import.meta.dirname, "..");
+const rootDir = path.join(import.meta.dirname, "..");
 
 run(process.argv.slice(2)).then(
   () => {
@@ -57,9 +57,7 @@ async function incrementVersion(nextVersion) {
   // Commit and tag
   execSync(`git commit --all --message="Version ${nextVersion}"`);
   execSync(`git tag -a -m "Version ${nextVersion}" v${nextVersion}`);
-  console.log(
-    styleText("green", `  Committed and tagged version ${nextVersion}`),
-  );
+  console.log(styleText("green", `  Committed and tagged version ${nextVersion}`));
 }
 
 /**
@@ -98,11 +96,8 @@ async function updateVersion(packageName, nextVersion, successMessage) {
         config.devDependencies[fullPackageName] = nextVersion;
       }
       if (config.peerDependencies?.[fullPackageName]) {
-        let isRelaxedPeerDep =
-          config.peerDependencies[fullPackageName]?.startsWith("^");
-        config.peerDependencies[fullPackageName] = `${
-          isRelaxedPeerDep ? "^" : ""
-        }${nextVersion}`;
+        let isRelaxedPeerDep = config.peerDependencies[fullPackageName]?.startsWith("^");
+        config.peerDependencies[fullPackageName] = `${isRelaxedPeerDep ? "^" : ""}${nextVersion}`;
       }
     }
   });
@@ -154,9 +149,7 @@ function ensureCleanWorkingDirectory() {
   let status = execSync(`git status --porcelain`).toString().trim();
   let lines = status.split("\n");
   if (!lines.every((line) => line === "" || line.startsWith("?"))) {
-    console.error(
-      "Working directory is not clean. Please commit or stash your changes.",
-    );
+    console.error("Working directory is not clean. Please commit or stash your changes.");
     process.exit(1);
   }
 }

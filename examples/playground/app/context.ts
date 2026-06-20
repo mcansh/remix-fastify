@@ -6,5 +6,3 @@ import { createContext } from "react-router";
  * Shared between `server.js` and the app so both reference the same token.
  */
 export const nameContext = createContext<string>();
-
-

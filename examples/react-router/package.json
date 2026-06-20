@@ -1,8 +1,8 @@
 {
   "name": "react-router-example-template",
   "private": true,
-  "sideEffects": false,
   "type": "module",
+  "sideEffects": false,
   "scripts": {
     "dev": "react-router dev",
     "build": "react-router build",
@@ -26,6 +26,7 @@
     "@react-router/dev": "7.9.6",
     "@tailwindcss/vite": "^4.3.0",
     "@total-typescript/tsconfig": "^1.0.4",
+    "@types/node": "24.10.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "dotenv": "^16.5.0",

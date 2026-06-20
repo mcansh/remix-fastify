@@ -36,24 +36,18 @@ async function removePreReleaseChangelogs() {
     let changelogFileContents = fs.readFileSync(changelogPath, "utf-8");
     processes.push(
       (async () => {
-        let preReleaseHeadingIndex = findHeadingLineIndex(
-          changelogFileContents,
-          {
-            level: 2,
-            startAtIndex: 0,
-            matcher: PRE_RELEASE_HEADING_REGEXP,
-          },
-        );
+        let preReleaseHeadingIndex = findHeadingLineIndex(changelogFileContents, {
+          level: 2,
+          startAtIndex: 0,
+          matcher: PRE_RELEASE_HEADING_REGEXP,
+        });
 
         while (preReleaseHeadingIndex !== -1) {
-          let nextStableHeadingIndex = findHeadingLineIndex(
-            changelogFileContents,
-            {
-              level: 2,
-              startAtIndex: preReleaseHeadingIndex + 1,
-              matcher: STABLE_HEADING_REGEXP,
-            },
-          );
+          let nextStableHeadingIndex = findHeadingLineIndex(changelogFileContents, {
+            level: 2,
+            startAtIndex: preReleaseHeadingIndex + 1,
+            matcher: STABLE_HEADING_REGEXP,
+          });
 
           // remove all lines between the pre-release heading and the next stable
           // heading
@@ -73,11 +67,7 @@ async function removePreReleaseChangelogs() {
         if (DRY_RUN) {
           console.log("FILE CONTENTS:\n\n" + changelogFileContents);
         } else {
-          await fs.promises.writeFile(
-            changelogPath,
-            changelogFileContents,
-            "utf-8",
-          );
+          await fs.promises.writeFile(changelogPath, changelogFileContents, "utf-8");
         }
       })(),
     );
@@ -98,13 +88,9 @@ function isPrereleaseMode() {
  * @param {string} markdownContents
  * @param {{ level: number; startAtIndex: number; matcher: RegExp }} opts
  */
-function findHeadingLineIndex(
-  markdownContents,
-  { level, startAtIndex, matcher },
-) {
+function findHeadingLineIndex(markdownContents, { level, startAtIndex, matcher }) {
   let index = markdownContents.split("\n").findIndex((line, i) => {
-    if (i < startAtIndex || !line.startsWith(`${"#".repeat(level)} `))
-      return false;
+    if (i < startAtIndex || !line.startsWith(`${"#".repeat(level)} `)) return false;
     let headingContents = line.slice(level + 1).trim();
     return matcher.test(headingContents);
   });

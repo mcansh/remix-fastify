@@ -13,7 +13,7 @@
     "types": ["@react-router/node", "vite/client"],
     "jsx": "react-jsx",
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+    "allowImportingTsExtensions": true,
     "paths": {
       "~/*": ["./app/*"]
     },

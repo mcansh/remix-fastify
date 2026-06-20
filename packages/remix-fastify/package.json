@@ -2,37 +2,50 @@
   "name": "@mcansh/remix-fastify",
   "version": "4.1.2",
   "description": "Fastify plugin and Vite dev server plugin for React Router v7 framework mode",
-  "repository": "mcansh/remix-fastify",
-  "license": "MIT",
-  "author": "Logan McAnsh <logan@mcan.sh> (https://mcan.sh)",
+  "keywords": [
+    "fastify",
+    "react-router",
+    "vite"
+  ],
   "bugs": {
     "url": "https://github.com/mcansh/remix-fastify/issues"
   },
-  "keywords": [
-    "react-router",
-    "fastify",
-    "vite"
-  ],
+  "license": "MIT",
+  "author": "Logan McAnsh <logan@mcan.sh> (https://mcan.sh)",
+  "repository": "mcansh/remix-fastify",
   "funding": [
     {
       "type": "github",
       "url": "https://github.com/sponsors/mcansh"
     }
   ],
-  "type": "module",
   "files": [
     "dist",
     "package.json",
     "README.md",
     "LICENSE"
   ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./vite": "./dist/vite.js",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "scripts": {
     "prepublishOnly": "npm run build",
     "typecheck": "tsc",
     "dev": "tsdown --watch",
     "build": "tsdown",
     "test": "vitest",
-    "validate": "run-p typecheck test"
+    "validate": "pnpm run typecheck && pnpm run test"
   },
   "dependencies": {
     "@fastify/static": "^8.2.0",
@@ -62,19 +75,7 @@
       "optional": true
     }
   },
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
-  },
   "engines": {
     "node": ">=20.0.0"
-  },
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": "./dist/index.js",
-    "./vite": "./dist/vite.js",
-    "./package.json": "./package.json"
   }
 }

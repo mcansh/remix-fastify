@@ -41,10 +41,7 @@ export const app = createApp(async (vite) => {
 
     if (portToUse !== desiredPort) {
       console.warn(
-        styleText(
-          "yellow",
-          `⚠️ Port ${desiredPort} is not available, using ${portToUse} instead.`,
-        ),
+        styleText("yellow", `⚠️ Port ${desiredPort} is not available, using ${portToUse} instead.`),
       );
     }
 

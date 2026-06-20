@@ -21,14 +21,13 @@ export const app = createApp(async (vite) => {
 
 // Only start listening when run directly (`node ./server.js`), not when the
 // Vite dev server imports this module.
-let isMain =
-  typeof process.argv[1] === "string" &&
-  import.meta.url === pathToFileURL(process.argv[1]).href;
+const isMain =
+  typeof process.argv[1] === "string" && import.meta.url === pathToFileURL(process.argv[1]).href;
 if (isMain) {
   let server = await app();
 
-  const desiredPort = Number(process.env.PORT) || 3000;
-  const portToUse = await getPort({
+  let desiredPort = Number(process.env.PORT) || 3000;
+  let portToUse = await getPort({
     port: portNumbers(desiredPort, desiredPort + 100),
   });
 
@@ -36,10 +35,7 @@ if (isMain) {
 
   if (portToUse !== desiredPort) {
     console.warn(
-      styleText(
-        "yellow",
-        `⚠️  Port ${desiredPort} is not available, using ${portToUse} instead.`,
-      ),
+      styleText("yellow", `⚠️  Port ${desiredPort} is not available, using ${portToUse} instead.`),
     );
   }
 

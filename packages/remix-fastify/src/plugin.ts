@@ -9,81 +9,78 @@ import { cacheHeader } from "pretty-cache-header";
 import type { ServerBuild } from "react-router";
 import type { ViteDevServer } from "vite";
 
-import { loadSsrModule } from "./dev-ssr";
+import { loadSsrModule } from "./dev-ssr.ts";
 import type { GetLoadContextFunction, HttpServer } from "./server";
-import { createRequestHandler } from "./server";
+import { createRequestHandler } from "./server.ts";
 
 const SERVER_BUILD_MODULE = "virtual:react-router/server-build";
 
-export type ReactRouterFastifyOptions<Server extends HttpServer = HttpServer> =
-  {
-    /**
-     * A Vite dev server. When provided, the plugin runs in development mode: the
-     * server build is loaded through `vite.ssrLoadModule` and static asset serving
-     * is left to Vite's middleware. Supplied automatically by `fastifyDevServer`.
-     */
-    vite?: ViteDevServer;
-    /**
-     * The base path for the app. Should match the `basename` in your Vite config.
-     * @default "/"
-     */
-    basename?: string;
-    /**
-     * The directory where the app is built. Should match the `buildDirectory` in
-     * your React Router config.
-     * @default "build"
-     */
-    buildDirectory?: string;
-    /**
-     * The server build output filename. Should match the `serverBuildFile` in your
-     * React Router config.
-     * @default "index.js"
-     */
-    serverBuildFile?: string;
-    /**
-     * @default process.env.NODE_ENV
-     */
-    mode?: string;
-    /**
-     * A function that returns the value to use as `context` in route `loader` and
-     * `action` functions. When middleware is enabled, return a
-     * `RouterContextProvider` instance.
-     */
-    getLoadContext?: GetLoadContextFunction<Server>;
-    /**
-     * The cache control options to use for fingerprinted build assets in
-     * production. Uses `pretty-cache-header` under the hood.
-     * @default { public: true, maxAge: "1 year", immutable: true }
-     */
-    assetCacheControl?: Parameters<typeof cacheHeader>[0];
-    /**
-     * The cache control options to use for other static files in production.
-     * Uses `pretty-cache-header` under the hood.
-     * @default { public: true, maxAge: "1 hour" }
-     */
-    defaultCacheControl?: Parameters<typeof cacheHeader>[0];
-    /**
-     * Options to pass to the `@fastify/static` plugin for serving compiled assets
-     * in production.
-     */
-    fastifyStaticOptions?: FastifyStaticOptions;
-    /**
-     * The server build to use in production. Use this only if the default
-     * `import()` of the built server file doesn't work for you.
-     */
-    productionServerBuild?:
-      | ServerBuild
-      | (() => ServerBuild | Promise<ServerBuild>);
-    /**
-     * Route options applied to the React Router catch-all route.
-     */
-    childServerOptions?: RouteShorthandOptions<Server>;
-  };
+/**
+ * Options for registering the React Router Fastify plugin.
+ */
+export type ReactRouterFastifyOptions<Server extends HttpServer = HttpServer> = {
+  /**
+   * Vite dev server used in development mode.
+   *
+   * When set, the server build is loaded through Vite and client asset serving
+   * is left to Vite middleware. `fastifyDevServer` supplies this automatically.
+   */
+  vite?: ViteDevServer;
+  /**
+   * The base path for the app. Should match the `basename` in your Vite config.
+   * (defaults to `/`).
+   */
+  basename?: string;
+  /**
+   * The directory where the app is built. Should match the `buildDirectory` in
+   * your React Router config. (defaults to `build`).
+   */
+  buildDirectory?: string;
+  /**
+   * The server build output filename. Should match the `serverBuildFile` in your
+   * React Router config. (defaults to `index.js`).
+   */
+  serverBuildFile?: string;
+  /**
+   * Runtime mode passed to React Router's request handler. (defaults to
+   * `process.env.NODE_ENV`).
+   */
+  mode?: string;
+  /**
+   * A function that returns the value to use as `context` in route `loader` and
+   * `action` functions. When middleware is enabled, return a
+   * `RouterContextProvider` instance.
+   */
+  getLoadContext?: GetLoadContextFunction<Server>;
+  /**
+   * The cache control options to use for fingerprinted build assets in
+   * production. Uses `pretty-cache-header` under the hood. (defaults to
+   * `{ public: true, maxAge: "1 year", immutable: true }`).
+   */
+  assetCacheControl?: Parameters<typeof cacheHeader>[0];
+  /**
+   * The cache control options to use for other static files in production.
+   * Uses `pretty-cache-header` under the hood. (defaults to
+   * `{ public: true, maxAge: "1 hour" }`).
+   */
+  defaultCacheControl?: Parameters<typeof cacheHeader>[0];
+  /**
+   * Options to pass to the `@fastify/static` plugin for serving compiled assets
+   * in production.
+   */
+  fastifyStaticOptions?: FastifyStaticOptions;
+  /**
+   * The server build to use in production. Use this only if the default
+   * `import()` of the built server file doesn't work for you.
+   */
+  productionServerBuild?: ServerBuild | (() => ServerBuild | Promise<ServerBuild>);
+  /**
+   * Route options applied to the React Router catch-all route.
+   */
+  childServerOptions?: RouteShorthandOptions<Server>;
+};
 
-async function plugin(
-  fastify: FastifyInstance,
-  options: ReactRouterFastifyOptions,
-): Promise<void> {
+async function plugin(fastify: FastifyInstance, options: ReactRouterFastifyOptions): Promise<void> {
   let {
     vite,
     basename = "/",
@@ -103,19 +100,12 @@ async function plugin(
 
   let build: ServerBuild | (() => ServerBuild | Promise<ServerBuild>);
   if (vite) {
-    build = () =>
-      loadSsrModule(vite, SERVER_BUILD_MODULE) as unknown as Promise<ServerBuild>;
+    build = () => loadSsrModule(vite, SERVER_BUILD_MODULE) as unknown as Promise<ServerBuild>;
   } else if (productionServerBuild) {
     build = productionServerBuild;
   } else {
-    let serverBuildPath = path.join(
-      resolvedBuildDirectory,
-      "server",
-      serverBuildFile,
-    );
-    build = (await import(
-      url.pathToFileURL(serverBuildPath).href
-    )) as ServerBuild;
+    let serverBuildPath = path.join(resolvedBuildDirectory, "server", serverBuildFile);
+    build = (await import(url.pathToFileURL(serverBuildPath).href)) as ServerBuild;
   }
 
   let handler = createRequestHandler<HttpServer>({
@@ -171,6 +161,9 @@ async function plugin(
   );
 }
 
+/**
+ * Fastify plugin that serves a React Router app in development or production.
+ */
 export const reactRouterFastify = fp<ReactRouterFastifyOptions>(plugin, {
   // replaced with the package name during build
   name: process.env.__PACKAGE_NAME__,

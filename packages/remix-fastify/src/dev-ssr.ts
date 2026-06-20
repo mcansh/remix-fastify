@@ -1,4 +1,4 @@
-import type { ViteDevServer, } from "vite";
+import type { ViteDevServer } from "vite";
 
 // A minimal view of a runnable SSR environment (Vite's Environment API).
 interface RunnableSsrEnvironment {
@@ -22,11 +22,12 @@ export interface SsrModuleNode {
  * `context.get(...)` with "No value found for context".
  *
  * Requires Vite 7+, where the SSR environment is runnable in middleware mode.
+ *
+ * @param {ViteDevServer} vite - The Vite development server instance.
+ * @returns {RunnableSsrEnvironment} The SSR environment instance.
  */
 export function getSsrEnvironment(vite: ViteDevServer): RunnableSsrEnvironment {
-  let ssr = vite.environments.ssr as unknown as
-    | Partial<RunnableSsrEnvironment>
-    | undefined;
+  let ssr = vite.environments.ssr as unknown as Partial<RunnableSsrEnvironment> | undefined;
   if (!ssr || typeof ssr.runner?.import !== "function" || !ssr.moduleGraph) {
     throw new Error(
       "[fastify-dev-server] Vite's SSR environment runner is unavailable. " +
@@ -39,10 +40,11 @@ export function getSsrEnvironment(vite: ViteDevServer): RunnableSsrEnvironment {
 /**
  * Load an SSR module through the Environment API runner so it shares a module
  * graph with the rest of the SSR build.
+ *
+ * @param {ViteDevServer} vite - The Vite development server instance.
+ * @param {string} id - The module ID to load.
+ * @returns {Promise<Record<string, unknown>>} A promise that resolves to the loaded module.
  */
-export function loadSsrModule(
-  vite: ViteDevServer,
-  id: string,
-): Promise<Record<string, unknown>> {
+export function loadSsrModule(vite: ViteDevServer, id: string): Promise<Record<string, unknown>> {
   return getSsrEnvironment(vite).runner.import(id);
 }

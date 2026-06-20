@@ -13,21 +13,27 @@ import type {
 } from "fastify";
 import type {
   AppLoadContext,
+  UNSAFE_MiddlewareEnabled as MiddlewareEnabled,
   RouterContextProvider,
   ServerBuild,
-  UNSAFE_MiddlewareEnabled as MiddlewareEnabled,
 } from "react-router";
 import { createRequestHandler as createReactRouterRequestHandler } from "react-router";
 
-export type HttpServer =
-  | http.Server
-  | https.Server
-  | http2.Http2Server
-  | http2.Http2SecureServer;
+/**
+ * Node HTTP server types supported by this Fastify adapter.
+ */
+export type HttpServer = http.Server | https.Server | http2.Http2Server | http2.Http2SecureServer;
 
 export type HttpRequest = RawRequestDefaultExpression<HttpServer>;
 export type HttpResponse = RawReplyDefaultExpression<HttpServer>;
 
+/**
+ * Handles a Fastify request by sending the React Router response.
+ *
+ * @param request Fastify request to adapt into a Web Fetch `Request`.
+ * @param reply Fastify reply used to send the React Router `Response`.
+ * @returns A promise that settles after the response has been sent.
+ */
 export type RequestHandler<Server extends HttpServer = HttpServer> = (
   request: FastifyRequest<RouteGenericInterface, Server>,
   reply: FastifyReply<RouteGenericInterface, Server>,
@@ -48,15 +54,17 @@ export type ReactRouterLoadContext = MiddlewareEnabled extends true
  *
  * You can think of this as an escape hatch that allows you to pass
  * environment/platform-specific values through to your loaders/actions.
+ *
+ * @param request Fastify request for the current navigation or data request.
+ * @param reply Fastify reply for the current navigation or data request.
+ * @returns The context value passed to React Router loaders and actions.
  */
 export type GetLoadContextFunction<Server extends HttpServer = HttpServer> = (
   request: FastifyRequest<RouteGenericInterface, Server>,
   reply: FastifyReply<RouteGenericInterface, Server>,
 ) => Promise<ReactRouterLoadContext> | ReactRouterLoadContext;
 
-export function createHeaders(
-  requestHeaders: FastifyRequest["headers"],
-): Headers {
+export function createHeaders(requestHeaders: FastifyRequest["headers"]): Headers {
   let headers = new Headers();
 
   for (let [key, values] of Object.entries(requestHeaders)) {
@@ -153,16 +161,26 @@ function responseToReadable(response: Response): Readable | null {
 
 /**
  * Returns a Fastify route handler that serves the response using React Router.
+ *
+ * @param options React Router request handler options.
+ * @returns A Fastify route handler for React Router requests.
  */
-export function createRequestHandler<Server extends HttpServer = HttpServer>({
-  build,
-  getLoadContext,
-  mode = process.env.NODE_ENV,
-}: {
+export function createRequestHandler<Server extends HttpServer = HttpServer>(options: {
+  /**
+   * React Router server build or a function that loads it.
+   */
   build: ServerBuild | (() => ServerBuild | Promise<ServerBuild>);
+  /**
+   * Function that provides loader and action context for each request.
+   */
   getLoadContext?: GetLoadContextFunction<Server>;
+  /**
+   * Runtime mode passed to React Router's request handler. (defaults to
+   * `process.env.NODE_ENV`).
+   */
   mode?: string;
 }): RequestHandler<Server> {
+  let { build, getLoadContext, mode = process.env.NODE_ENV } = options;
   let handleRequest = createReactRouterRequestHandler(build, mode);
 
   return async (request, reply) => {

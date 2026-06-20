@@ -4,7 +4,7 @@ import type { FastifyInstance } from "fastify";
 import type { Plugin, UserConfig } from "vite";
 
 import type { FastifyAppFactory } from "./app";
-import { getSsrEnvironment, loadSsrModule } from "./dev-ssr";
+import { getSsrEnvironment, loadSsrModule } from "./dev-ssr.ts";
 
 export type { FastifyAppFactory } from "./app";
 
@@ -14,18 +14,19 @@ function isExternalId(id: string, externalIds: Set<string>): boolean {
   return externalIds.has(id.split("?")[0] ?? id);
 }
 
+/**
+ * Options for the Fastify Vite development server plugin.
+ */
 export type FastifyDevServerOptions = {
   /**
    * Path to your server entry module, relative to the Vite root. The module must
    * export a factory function (see {@link FastifyAppFactory}) that returns a
-   * configured Fastify instance.
-   * @default "./server.ts"
+   * configured Fastify instance. (defaults to `./server.ts`).
    */
   serverEntry?: string;
   /**
    * The named export of the factory function in your server entry. Falls back to
-   * the module's default export.
-   * @default "app"
+   * the module's default export. (defaults to `app`).
    */
   exportName?: string;
   /**
@@ -35,14 +36,12 @@ export type FastifyDevServerOptions = {
    * external to the React Router server build so the built routes and your
    * `node`-run server entry import the same file (and therefore the same token
    * instance) instead of two bundled copies.
-   * @example ["./app/context.ts"]
    */
   external?: string[];
   /**
    * Your React Router `buildDirectory`, used to emit relative specifiers for
    * {@link FastifyDevServerOptions.external} modules. Should match the
-   * `buildDirectory` in your React Router config.
-   * @default "build"
+   * `buildDirectory` in your React Router config. (defaults to `build`).
    */
   buildDirectory?: string;
 };
@@ -51,10 +50,11 @@ export type FastifyDevServerOptions = {
  * Vite plugin that boots your Fastify server in development so `react-router dev`
  * serves requests through it. Vite's own middleware handles module, HMR, and
  * asset requests; Fastify is mounted as the SSR catch-all.
+ *
+ * @param options Server entry and SSR build options. (defaults to `{}`).
+ * @returns A Vite plugin that mounts Fastify as the development SSR handler.
  */
-export function fastifyDevServer(
-  options: FastifyDevServerOptions = {},
-): Plugin {
+export function fastifyDevServer(options: FastifyDevServerOptions = {}): Plugin {
   let {
     serverEntry = "./server.ts",
     exportName = "app",
@@ -94,10 +94,7 @@ export function fastifyDevServer(
                   // instead of an absolute path so the build is portable.
                   paths: (id) => {
                     if (!isExternalId(id, externalIds)) return id;
-                    let rel = path.relative(
-                      serverBuildDir,
-                      id.split("?")[0] ?? id,
-                    );
+                    let rel = path.relative(serverBuildDir, id.split("?")[0] ?? id);
                     return rel.startsWith(".") ? rel : `./${rel}`;
                   },
                 },
@@ -109,17 +106,18 @@ export function fastifyDevServer(
       return config;
     },
     configResolved(config) {
-      externalIds = new Set(
-        external.map((id) => path.resolve(config.root, id)),
-      );
+      externalIds = new Set(external.map((id) => path.resolve(config.root, id)));
       serverBuildDir = path.join(config.root, buildDirectory, "server");
     },
     // Normalize imports of the shared modules (e.g. via the `~/` alias, which
     // resolves without an extension) to their absolute `.ts` path so Rollup's
     // `external` matcher recognizes them and emits a resolvable specifier.
-    async resolveId(source, importer) {
+    async resolveId(source, importer, options) {
       if (!isBuild || externalIds.size === 0 || !importer) return null;
-      let resolved = await this.resolve(source, importer, { skipSelf: true });
+      let resolved = await this.resolve(source, importer, {
+        ...options,
+        skipSelf: true,
+      });
       if (resolved && isExternalId(resolved.id, externalIds)) {
         return { id: resolved.id };
       }
@@ -142,9 +140,7 @@ export function fastifyDevServer(
       // and `context.get(...)` throws "No value found for context".
       function collectServerDeps(): Set<string> {
         let files = new Set<string>([entryPath]);
-        let roots = getSsrEnvironment(server).moduleGraph.getModulesByFile(
-          entryPath,
-        );
+        let roots = getSsrEnvironment(server).moduleGraph.getModulesByFile(entryPath);
         if (!roots) return files;
         let queue = [...roots];
         let seen = new Set(queue);
@@ -189,9 +185,7 @@ export function fastifyDevServer(
         if (!appPromise) {
           appPromise = (async () => {
             let mod = await loadSsrModule(server, serverEntry);
-            let factory = (mod[exportName] ?? mod.default) as
-              | FastifyAppFactory
-              | undefined;
+            let factory = (mod[exportName] ?? mod.default) as FastifyAppFactory | undefined;
             if (typeof factory !== "function") {
               throw new Error(
                 `[fastify-dev-server] Expected "${serverEntry}" to export a "${exportName}" (or default) function that returns a Fastify instance.`,

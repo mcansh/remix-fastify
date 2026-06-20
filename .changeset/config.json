@@ -1,9 +1,6 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@2.2.0/schema.json",
-  "changelog": [
-    "@remix-run/changelog-github",
-    { "repo": "mcansh/remix-fastify" }
-  ],
+  "changelog": ["@remix-run/changelog-github", { "repo": "mcansh/remix-fastify" }],
   "commit": false,
   "fixed": [],
   "linked": [],

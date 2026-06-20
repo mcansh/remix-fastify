@@ -1,23 +1,13 @@
-import {
-  data,
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "react-router";
+import { data, Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import type { Route } from "./+types/root";
-import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert.tsx";
 import "./styles/global.css";
 
 export function loader() {
   return data({ message: "Hello from the root loader" });
 }
 
-const clientLogger: Route.ClientMiddlewareFunction = async (
-  { request },
-  next,
-) => {
+const clientLogger: Route.ClientMiddlewareFunction = async ({ request }, next) => {
   let start = performance.now();
 
   // Run the remaining middlewares and all route loaders
@@ -27,10 +17,7 @@ const clientLogger: Route.ClientMiddlewareFunction = async (
   console.log(`Navigated to ${request.url} (${duration}ms)`);
 };
 
-const serverLogger: Route.MiddlewareFunction = async (
-  { request },
-  next,
-) => {
+const serverLogger: Route.MiddlewareFunction = async ({ request }, next) => {
   let start = performance.now();
 
   // 👇 Grab the response here
