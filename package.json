@@ -21,6 +21,7 @@
     "lint": "oxlint"
   },
   "dependencies": {
+    "@changesets/cli": "^2.31.0",
     "@manypkg/get-packages": "^3.1.0",
     "@npmcli/package-json": "^6.2.0",
     "@oxlint/plugins": "^1.70.0",
