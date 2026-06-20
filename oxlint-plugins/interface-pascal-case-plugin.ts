@@ -1,7 +1,7 @@
-import type { Context, ESTree } from "@oxlint/plugins";
-import { definePlugin, defineRule } from "@oxlint/plugins";
+import type { Context, ESTree } from "@oxlint/plugins"
+import { definePlugin, defineRule } from "@oxlint/plugins"
 
-const pascalCasePattern = /^[A-Z][A-Za-z0-9]*$/;
+const pascalCasePattern = /^[A-Z][A-Za-z0-9]*$/
 
 const interfacePascalCaseRule = defineRule({
   meta: {
@@ -11,17 +11,17 @@ const interfacePascalCaseRule = defineRule({
     return {
       TSInterfaceDeclaration(node: ESTree.TSInterfaceDeclaration) {
         if (pascalCasePattern.test(node.id.name)) {
-          return;
+          return
         }
 
         context.report({
           node: node.id,
           message: "Interface names must use PascalCase.",
-        });
+        })
       },
-    };
+    }
   },
-});
+})
 
 /**
  * Enforces the repo convention that TypeScript interface names use PascalCase.
@@ -35,4 +35,4 @@ export default definePlugin({
   rules: {
     "interface-pascal-case": interfacePascalCaseRule,
   },
-});
+})

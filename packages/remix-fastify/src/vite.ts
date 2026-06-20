@@ -1,219 +1,258 @@
-import path from "node:path";
+import fs from "node:fs"
+import path from "node:path"
+import { fileURLToPath } from "node:url"
 
-import type { FastifyInstance } from "fastify";
-import type { Plugin, UserConfig } from "vite";
+import type { FastifyInstance } from "fastify"
+import type { Plugin, ViteDevServer } from "vite"
 
-import type { FastifyAppFactory } from "./app";
-import { getSsrEnvironment, loadSsrModule } from "./dev-ssr.ts";
+import { importSsrModule } from "./vite-runtime.ts"
 
-export type { FastifyAppFactory } from "./app";
+export type FastifyAppFactory = (
+  vite: ViteDevServer,
+) => FastifyInstance | Promise<FastifyInstance>
 
-// Match a fully-resolved module id (which may carry a `?query`) against the set
-// of absolute paths configured as external.
-function isExternalId(id: string, externalIds: Set<string>): boolean {
-  return externalIds.has(id.split("?")[0] ?? id);
+export interface FastifyReactRouterDevOptions {
+  /** Server module loaded by Vite during `react-router dev`. */
+  entry?: string
+  /** Named export that creates the Fastify app. Falls back to `default`. */
+  exportName?: string
+  /**
+   * Keeps local modules imported by the Fastify server entry external in the
+   * React Router SSR build. This preserves singleton module identity for shared
+   * values such as React Router context tokens.
+   *
+   * Pass an array to externalize explicit import specifiers instead.
+   */
+  externalizeServerEntryImports?: boolean | string[]
 }
 
 /**
- * Options for the Fastify Vite development server plugin.
- */
-export type FastifyDevServerOptions = {
-  /**
-   * Path to your server entry module, relative to the Vite root. The module must
-   * export a factory function (see {@link FastifyAppFactory}) that returns a
-   * configured Fastify instance. (defaults to `./server.ts`).
-   */
-  serverEntry?: string;
-  /**
-   * The named export of the factory function in your server entry. Falls back to
-   * the module's default export. (defaults to `app`).
-   */
-  exportName?: string;
-  /**
-   * Modules (paths relative to the Vite root) that your server entry imports
-   * *and* your app also imports — typically a file holding a shared
-   * `RouterContext` token used by `getLoadContext`. In production these are kept
-   * external to the React Router server build so the built routes and your
-   * `node`-run server entry import the same file (and therefore the same token
-   * instance) instead of two bundled copies.
-   */
-  external?: string[];
-  /**
-   * Your React Router `buildDirectory`, used to emit relative specifiers for
-   * {@link FastifyDevServerOptions.external} modules. Should match the
-   * `buildDirectory` in your React Router config. (defaults to `build`).
-   */
-  buildDirectory?: string;
-};
-
-/**
- * Vite plugin that boots your Fastify server in development so `react-router dev`
- * serves requests through it. Vite's own middleware handles module, HMR, and
- * asset requests; Fastify is mounted as the SSR catch-all.
+ * Vite plugin that lets `react-router dev` serve through a Fastify app.
  *
- * @param options Server entry and SSR build options. (defaults to `{}`).
- * @returns A Vite plugin that mounts Fastify as the development SSR handler.
+ * Vite continues to handle its internal client/HMR/module middleware first.
+ * Fastify receives the remaining requests, including the React Router catch-all
+ * installed by `fastifyReactRouter`.
+ *
+ * @param options Development server entry options.
+ * @returns Vite plugin.
  */
-export function fastifyDevServer(options: FastifyDevServerOptions = {}): Plugin {
+export function fastifyReactRouterDev(
+  options: FastifyReactRouterDevOptions = {},
+): Plugin {
   let {
-    serverEntry = "./server.ts",
-    exportName = "app",
-    external = [],
-    buildDirectory = "build",
-  } = options;
-
-  // Absolute paths of the modules to keep external from the production server
-  // build, resolved once the Vite config is known.
-  let externalIds = new Set<string>();
-  // Directory the server build is written to, used to relativize external
-  // specifiers so the output is portable across machines.
-  let serverBuildDir = "";
-  let isBuild = false;
+    entry = "./server.ts",
+    exportName = "createServer",
+    externalizeServerEntryImports = true,
+  } = options
+  let command: "build" | "serve" = "serve"
+  let root = process.cwd()
+  let serverEntryImportSpecifiers = new Set<string>()
+  let serverEntryImportFiles = new Set<string>()
 
   return {
-    name: "fastify-dev-server",
-    // Run before the React Router plugin so Fastify owns the request lifecycle
-    // (custom routes + SSR). Otherwise React Router's own dev SSR middleware
-    // intercepts every request and Fastify routes never run.
+    name: "fastify-react-router-dev",
     enforce: "pre",
-    config(_, env) {
-      isBuild = env.command === "build";
-      // Keep the shared modules external from the SSR build (Rollup level, so
-      // Vite's SSR "bundle all app code" behavior doesn't re-inline them). The
-      // built routes then import the same file your `node`-run server entry
-      // does, preserving `RouterContext` token identity across the boundary.
-      if (env.command !== "build" || external.length === 0) return;
-      let config: UserConfig = {
-        environments: {
-          ssr: {
-            build: {
-              rollupOptions: {
-                external: (id) => isExternalId(id, externalIds),
-                output: {
-                  // Emit a relative specifier (e.g. `../../app/context.ts`)
-                  // instead of an absolute path so the build is portable.
-                  paths: (id) => {
-                    if (!isExternalId(id, externalIds)) return id;
-                    let rel = path.relative(serverBuildDir, id.split("?")[0] ?? id);
-                    return rel.startsWith(".") ? rel : `./${rel}`;
-                  },
-                },
-              },
-            },
-          },
-        },
-      };
-      return config;
-    },
     configResolved(config) {
-      externalIds = new Set(external.map((id) => path.resolve(config.root, id)));
-      serverBuildDir = path.join(config.root, buildDirectory, "server");
+      command = config.command
+      root = config.root
+
+      let resolvedEntry = path.resolve(root, entry)
+      let externals = collectServerEntryExternals(
+        resolvedEntry,
+        externalizeServerEntryImports,
+      )
+      serverEntryImportSpecifiers = externals.specifiers
+      serverEntryImportFiles = externals.files
     },
-    // Normalize imports of the shared modules (e.g. via the `~/` alias, which
-    // resolves without an extension) to their absolute `.ts` path so Rollup's
-    // `external` matcher recognizes them and emits a resolvable specifier.
-    async resolveId(source, importer, options) {
-      if (!isBuild || externalIds.size === 0 || !importer) return null;
+    async resolveId(source, importer, resolveOptions) {
+      if (command !== "build" || !resolveOptions.ssr) return null
+      if (shouldExternalizeSpecifier(source) === false) return null
+
+      if (serverEntryImportSpecifiers.has(source)) {
+        return { id: source, external: true }
+      }
+
+      if (importer == null) return null
+
       let resolved = await this.resolve(source, importer, {
-        ...options,
+        ...resolveOptions,
         skipSelf: true,
-      });
-      if (resolved && isExternalId(resolved.id, externalIds)) {
-        return { id: resolved.id };
+      })
+      if (resolved == null) return null
+
+      let filePath = toFilePath(resolved.id)
+      if (filePath == null || serverEntryImportFiles.has(filePath) === false)
+        return null
+
+      return {
+        id: source.startsWith("#") ? source : filePath,
+        external: true,
       }
-      return null;
     },
-    configureServer(server) {
-      let entryPath = path.resolve(server.config.root, serverEntry);
+    configureServer(vite) {
+      let resolvedEntry = path.resolve(vite.config.root, entry)
+      let appPromise: Promise<FastifyInstance> | undefined
 
-      let appPromise: Promise<FastifyInstance> | undefined;
-      // Absolute paths of every module the server entry imports on the server,
-      // collected after each build. A change to any of them rebuilds the app.
-      let serverDeps = new Set<string>([entryPath]);
+      async function closeApp(): Promise<void> {
+        let current = appPromise
+        appPromise = undefined
+        if (current == null) return
 
-      // Walk the SSR module graph from the server entry to collect the files it
-      // depends on. The route modules are re-evaluated by Vite on every request
-      // (`vite.ssrLoadModule`), so any module the server entry *also* imports —
-      // e.g. an `app/context.ts` holding a `RouterContext` token shared with
-      // `getLoadContext` — must rebuild the cached app when it changes.
-      // Otherwise the app keeps a stale token while routes resolve a fresh one,
-      // and `context.get(...)` throws "No value found for context".
-      function collectServerDeps(): Set<string> {
-        let files = new Set<string>([entryPath]);
-        let roots = getSsrEnvironment(server).moduleGraph.getModulesByFile(entryPath);
-        if (!roots) return files;
-        let queue = [...roots];
-        let seen = new Set(queue);
-        while (queue.length) {
-          let mod = queue.shift()!;
-          if (mod.file) files.add(mod.file);
-          for (let dep of mod.importedModules) {
-            if (!seen.has(dep)) {
-              seen.add(dep);
-              queue.push(dep);
-            }
-          }
-        }
-        return files;
-      }
-
-      // Close the previous instance first so plugins it registered (DB
-      // connections, timers, watchers) are torn down instead of leaking.
-      async function invalidateApp(): Promise<void> {
-        let previous = appPromise;
-        appPromise = undefined;
-        if (!previous) return;
         try {
-          let app = await previous;
-          await app.close();
+          let app = await current
+          await app.close()
         } catch {
-          // The previous build may have failed to resolve; nothing to close.
+          // The app may have failed while loading; there is nothing to close.
         }
       }
 
-      // Rebuild the cached Fastify app when the server entry or any module it
-      // imports on the server changes, so server-side edits are picked up
-      // without a manual restart and build-time captured values stay in sync
-      // with the route modules.
-      server.watcher.on("change", (file) => {
-        let resolved = path.resolve(file);
-        if (resolved !== entryPath && !serverDeps.has(resolved)) return;
-        void invalidateApp();
-      });
-
-      function getApp(): Promise<FastifyInstance> {
-        if (!appPromise) {
+      async function loadApp(): Promise<FastifyInstance> {
+        if (appPromise == null) {
           appPromise = (async () => {
-            let mod = await loadSsrModule(server, serverEntry);
-            let factory = (mod[exportName] ?? mod.default) as FastifyAppFactory | undefined;
+            let module = await importSsrModule(vite, resolvedEntry)
+            let factory = module[exportName] ?? module.default
+
             if (typeof factory !== "function") {
               throw new Error(
-                `[fastify-dev-server] Expected "${serverEntry}" to export a "${exportName}" (or default) function that returns a Fastify instance.`,
-              );
+                `[fastify-react-router-dev] Expected ${entry} to export "${exportName}" or a default Fastify app factory.`,
+              )
             }
-            let app = await factory(server);
-            await app.ready();
-            serverDeps = collectServerDeps();
-            return app;
-          })();
+
+            let app = await (factory as FastifyAppFactory)(vite)
+            await app.ready()
+            return app
+          })()
         }
-        return appPromise;
+
+        return appPromise
       }
 
-      // Returning a function defers our middleware until after Vite's internal
-      // middlewares are installed, so they win for module/HMR/asset requests.
+      vite.watcher.on("change", () => {
+        void closeApp()
+      })
+      vite.watcher.on("unlink", () => {
+        void closeApp()
+      })
+      vite.httpServer?.once("close", () => {
+        void closeApp()
+      })
+
       return () => {
-        server.middlewares.use(async (req, res, next) => {
+        vite.middlewares.use(async (request, response, next) => {
           try {
-            let app = await getApp();
-            app.routing(req, res);
+            let app = await loadApp()
+            app.routing(request, response)
           } catch (error) {
-            // surface SSR load errors with Vite's stack-trace fixup
-            if (error instanceof Error) server.ssrFixStacktrace(error);
-            next(error);
+            if (error instanceof Error) vite.ssrFixStacktrace(error)
+            next(error)
           }
-        });
-      };
+        })
+      }
     },
-  };
+  }
+}
+
+function collectServerEntryExternals(
+  entryPath: string,
+  externalizeServerEntryImports: boolean | string[],
+): {
+  specifiers: Set<string>
+  files: Set<string>
+} {
+  let specifiers = new Set<string>()
+  let files = new Set<string>()
+
+  if (externalizeServerEntryImports === false) {
+    return { specifiers, files }
+  }
+
+  let imports = Array.isArray(externalizeServerEntryImports)
+    ? externalizeServerEntryImports
+    : readImportSpecifiers(entryPath)
+
+  for (let specifier of imports) {
+    if (shouldExternalizeSpecifier(specifier) === false) continue
+
+    specifiers.add(specifier)
+
+    if (isLocalSpecifier(specifier)) {
+      let file = resolveLocalImport(entryPath, specifier)
+      if (file) files.add(file)
+    }
+  }
+
+  return { specifiers, files }
+}
+
+function readImportSpecifiers(filePath: string): string[] {
+  if (fs.existsSync(filePath) === false) return []
+
+  let source = fs.readFileSync(filePath, "utf8")
+  let specifiers = new Set<string>()
+  let importPattern =
+    /\b(?:import|export)\s+(?:[^'"]*?\s+from\s*)?["']([^"']+)["']|import\s*\(\s*["']([^"']+)["']\s*\)/g
+
+  for (let match of source.matchAll(importPattern)) {
+    specifiers.add(match[1] ?? match[2])
+  }
+
+  return [...specifiers]
+}
+
+function shouldExternalizeSpecifier(specifier: string): boolean {
+  return specifier.startsWith("#") || isLocalSpecifier(specifier)
+}
+
+function isLocalSpecifier(specifier: string): boolean {
+  return specifier.startsWith(".") || specifier.startsWith("/")
+}
+
+function resolveLocalImport(
+  importer: string,
+  specifier: string,
+): string | undefined {
+  let resolved = path.resolve(path.dirname(importer), specifier)
+  return resolveExistingFile(resolved)
+}
+
+function resolveExistingFile(filePath: string): string | undefined {
+  if (isFile(filePath)) return normalizePath(filePath)
+
+  for (let extension of [".ts", ".tsx", ".mts", ".mjs", ".js", ".jsx"]) {
+    let candidate = `${filePath}${extension}`
+    if (isFile(candidate)) return normalizePath(candidate)
+  }
+
+  for (let extension of [".ts", ".tsx", ".mts", ".mjs", ".js", ".jsx"]) {
+    let candidate = path.join(filePath, `index${extension}`)
+    if (isFile(candidate)) return normalizePath(candidate)
+  }
+
+  return undefined
+}
+
+function isFile(filePath: string): boolean {
+  try {
+    return fs.statSync(filePath).isFile()
+  } catch {
+    return false
+  }
+}
+
+function toFilePath(id: string): string | undefined {
+  let withoutQuery = id.replace(/[?#].*$/, "")
+
+  if (withoutQuery.startsWith("file://")) {
+    return normalizePath(fileURLToPath(withoutQuery))
+  }
+
+  if (path.isAbsolute(withoutQuery)) {
+    return normalizePath(withoutQuery)
+  }
+
+  return undefined
+}
+
+function normalizePath(filePath: string): string {
+  return filePath.split(path.sep).join("/")
 }

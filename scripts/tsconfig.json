@@ -9,6 +9,6 @@
     "module": "NodeNext",
     "noEmit": true,
     "strict": true,
-    "target": "ES2018"
+    "target": "esnext"
   }
 }
