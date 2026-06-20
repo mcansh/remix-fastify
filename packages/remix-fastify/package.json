@@ -49,13 +49,13 @@
     "validate": "pnpm run typecheck && pnpm run build"
   },
   "dependencies": {
-    "@mcansh/react-router-fastify": "workspace:^"
+    "@mcansh/react-router-fastify": "workspace:"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.3",
     "publint": "^0.3.21",
     "tsdown": "^0.22.3",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "peerDependencies": {
     "@react-router/node": "^8.0.0",

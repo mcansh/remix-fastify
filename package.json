@@ -23,15 +23,15 @@
   "dependencies": {
     "@changesets/cli": "^2.31.0",
     "@manypkg/get-packages": "^3.1.0",
-    "@npmcli/package-json": "^6.2.0",
+    "@npmcli/package-json": "^8.0.0",
     "@oxlint/plugins": "^1.70.0",
-    "@types/node": "^24.13.2",
+    "@types/node": "^26.0.0",
     "@types/npmcli__package-json": "^4.0.4",
     "oxfmt": "^0.55.0",
     "oxlint": "^1.70.0",
     "oxlint-tsgolint": "^0.23.0",
-    "pkg-pr-new": "^0.0.51",
-    "typescript": "^5.9.3"
+    "pkg-pr-new": "^0.0.75",
+    "typescript": "^6.0.3"
   },
   "engines": {
     "node": ">=22"
