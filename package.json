@@ -15,7 +15,7 @@
     "typecheck": "pnpm --filter @mcansh/remix-fastify run typecheck",
     "validate": "pnpm run typecheck && pnpm run test && pnpm run build && pnpm run example:typecheck && pnpm run example:build",
     "changeset": "changeset",
-    "changeset:version": "changeset version && node ./scripts/remove-prerelease-changelogs.js && node ./scripts/post-changeset.js",
+    "changeset:version": "changeset version && node ./scripts/remove-prerelease-changelogs.ts && node ./scripts/post-changeset.ts",
     "changeset:release": "pnpm run build && pnpm publish -r",
     "format": "oxfmt",
     "lint": "oxlint"
