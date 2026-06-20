@@ -1,5 +1,5 @@
 ---
-"@mcansh/remix-fastify": major
+"@mcansh/react-router-fastify": major
 ---
 
 Replace the old server integration with a Web Fetch request/response adapter for React Router.

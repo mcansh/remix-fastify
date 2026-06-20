@@ -1,5 +1,5 @@
 ---
-"@mcansh/remix-fastify": major
+"@mcansh/react-router-fastify": major
 ---
 
 Refresh the docs, example app, tests, and build tooling around the React Router rewrite.

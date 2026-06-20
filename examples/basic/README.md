@@ -1,6 +1,6 @@
 # Basic Example
 
-This app uses `@mcansh/remix-fastify` with React Router framework mode
+This app uses `@mcansh/react-router-fastify` with React Router framework mode
 and a custom Fastify server.
 
 From the repository root:

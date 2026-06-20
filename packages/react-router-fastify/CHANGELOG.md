@@ -1,4 +1,4 @@
-# @mcansh/remix-fastify
+# @mcansh/react-router-fastify
 
 ## 4.1.2
 

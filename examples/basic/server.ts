@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto"
 import { pathToFileURL } from "node:url"
 
-import { fastifyReactRouter } from "@mcansh/remix-fastify"
+import { fastifyReactRouter } from "@mcansh/react-router-fastify"
 import { fastify } from "fastify"
 import { RouterContextProvider, type ServerBuild } from "react-router"
 import type { ViteDevServer } from "vite"

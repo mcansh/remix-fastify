@@ -1,4 +1,4 @@
-import { fastifyReactRouterDev } from "@mcansh/remix-fastify/vite"
+import { fastifyReactRouterDev } from "@mcansh/react-router-fastify/vite"
 import { reactRouter } from "@react-router/dev/vite"
 import tailwindcss from "@tailwindcss/vite"
 import { defineConfig } from "vite"

@@ -9,7 +9,7 @@ export function meta() {
     { title: "React Router Fastify Example" },
     {
       name: "description",
-      content: "Example app for @mcansh/remix-fastify",
+      content: "Example app for @mcansh/react-router-fastify",
     },
   ]
 }

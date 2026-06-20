@@ -6,6 +6,7 @@ minimumReleaseAgeExclude:
   - nanoid@3.3.14
 
 overrides:
+  "@mcansh/react-router-fastify": "workspace:"
   "@mcansh/remix-fastify": "workspace:"
 
 minimumReleaseAgeStrict: true

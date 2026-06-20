@@ -11,13 +11,7 @@
     "erasableSyntaxOnly": true,
     "isolatedModules": true,
     "skipLibCheck": true,
-    "types": ["node"],
-    "paths": {
-      "@mcansh/react-router-fastify": ["../react-router-fastify/src/index.ts"],
-      "@mcansh/react-router-fastify/vite": [
-        "../react-router-fastify/src/vite.ts"
-      ]
-    }
+    "types": ["node", "vitest"]
   },
   "include": ["src", "*.config.ts"]
 }
