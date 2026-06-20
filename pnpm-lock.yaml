@@ -232,6 +232,9 @@ importers:
       '@types/react-dom':
         specifier: ^19.2.2
         version: 19.2.2(@types/react@19.2.2)
+      '@types/source-map-support':
+        specifier: ^0.5.10
+        version: 0.5.10
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0
