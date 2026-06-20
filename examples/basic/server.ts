@@ -3,7 +3,7 @@ import { pathToFileURL } from "node:url"
 
 import { fastifyReactRouter } from "@mcansh/remix-fastify"
 import { fastify } from "fastify"
-import { RouterContextProvider } from "react-router"
+import { RouterContextProvider, type ServerBuild } from "react-router"
 import type { ViteDevServer } from "vite"
 
 import { requestInfoContext } from "#request-info"
@@ -25,6 +25,18 @@ export async function createServer(vite?: ViteDevServer) {
 
   await app.register(fastifyReactRouter, {
     devServer: vite,
+    build: async () => {
+      let serverBuildPath = pathToFileURL("build/server/index.js").href
+
+      let serverBuild = (await import(
+        serverBuildPath
+      )) as unknown as ServerBuild
+
+      return {
+        ...serverBuild,
+        allowedActionOrigins: ["https://remix.run"],
+      }
+    },
     getLoadContext(request) {
       let context = new RouterContextProvider()
       context.set(requestInfoContext, {
