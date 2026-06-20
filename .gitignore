@@ -3,3 +3,4 @@ node_modules
 .ds_store
 *.tgz
 coverage
+.pnpm-store

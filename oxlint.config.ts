@@ -34,8 +34,8 @@ export default defineConfig({
       files: ["**/*.{ts,tsx}"],
       plugins: ["typescript", "import"],
       jsPlugins: [
-        "./oxlint-plugins/interface-pascal-case-plugin.ts",
-        "./oxlint-plugins/no-typescript-accessibility-plugin.ts",
+        "./scripts/oxlint-plugins/interface-pascal-case-plugin.ts",
+        "./scripts/oxlint-plugins/no-typescript-accessibility-plugin.ts",
       ],
       rules: {
         "@typescript-eslint/consistent-type-imports": [
@@ -65,8 +65,8 @@ export default defineConfig({
     {
       files: ["**/*.{ts,tsx,js,jsx}"],
       jsPlugins: [
-        "./oxlint-plugins/prefer-let-locals-plugin.ts",
-        "./oxlint-plugins/canonical-header-names-plugin.ts",
+        "./scripts/oxlint-plugins/prefer-let-locals-plugin.ts",
+        "./scripts/oxlint-plugins/canonical-header-names-plugin.ts",
       ],
       rules: {
         "remix-headers/canonical-header-name": "warn",
