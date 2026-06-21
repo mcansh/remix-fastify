@@ -221,11 +221,15 @@ await app.register(fastifyReactRouter, {
 - `clientBuildDirectory` - production client asset directory, default `build/client`
 - `mode` - value passed to React Router's request handler, default `process.env.NODE_ENV`
 - `getLoadContext` - returns a `RouterContextProvider` for each request
-- `build` - explicit React Router server build or build loader
+- `build` - production-only React Router server build or build loader override
 - `staticOptions` - options forwarded to `@fastify/static`
 - `assetCacheControl` - cache-control string for files under `<clientBuildDirectory>/assets`
 - `fileCacheControl` - cache-control string for other files in `clientBuildDirectory`
 - `routeOptions` - Fastify route options for the catch-all route
+
+When `devServer` is provided, `fastifyReactRouter` always uses Vite's
+`virtual:react-router/server-build` module. This keeps development requests
+hot-reloaded even if a production `build` override is configured.
 
 `fastifyReactRouterDev` options:
 

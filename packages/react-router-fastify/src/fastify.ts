@@ -1,4 +1,3 @@
-import type { ServerResponse } from "node:http"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 
@@ -50,7 +49,9 @@ export async function fastifyReactRouter(
   } = options
 
   let serverBuild =
-    build ?? createBuildLoader(devServer, path.resolve(serverBuildPath))
+    devServer == null
+      ? build ?? createBuildLoader(devServer, path.resolve(serverBuildPath))
+      : createBuildLoader(devServer, path.resolve(serverBuildPath))
 
   if (devServer == null) {
     await registerStaticFiles(fastify, {

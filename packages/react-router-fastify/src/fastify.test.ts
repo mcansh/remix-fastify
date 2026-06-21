@@ -5,6 +5,7 @@ import path from "node:path"
 import fastify from "fastify"
 import type * as ReactRouter from "react-router"
 import { createRequestHandler as createReactRouterHandler } from "react-router"
+import type { ViteDevServer } from "vite"
 import type { MockedFunction } from "vitest"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
@@ -83,6 +84,40 @@ describe("fastifyReactRouter", () => {
     } finally {
       await app.close()
       fs.rmSync(root, { recursive: true, force: true })
+    }
+  })
+
+  it("uses the Vite server build in development when a production build is configured", async () => {
+    mockedReactRouterHandler.mockImplementation(
+      () => async () => new Response("route"),
+    )
+
+    let developmentBuild = {} as ReactRouter.ServerBuild
+    let productionBuild = {} as ReactRouter.ServerBuild
+    let vite = {
+      ssrLoadModule: vi.fn(async () => developmentBuild),
+    } as unknown as ViteDevServer
+
+    let app = fastify()
+
+    try {
+      await app.register(fastifyReactRouter, {
+        devServer: vite,
+        build: productionBuild,
+      })
+
+      let build = mockedReactRouterHandler.mock.calls[0]?.[0]
+
+      expect(build).not.toBe(productionBuild)
+      expect(build).toEqual(expect.any(Function))
+      await expect(
+        (build as () => Promise<ReactRouter.ServerBuild>)(),
+      ).resolves.toBe(developmentBuild)
+      expect(vite.ssrLoadModule).toHaveBeenCalledWith(
+        "virtual:react-router/server-build",
+      )
+    } finally {
+      await app.close()
     }
   })
 })
