@@ -1,5 +1,56 @@
 # @mcansh/react-router-fastify
 
+## 5.0.0
+
+### Major Changes
+
+- c51dd78: Replace the old server integration with a Web Fetch request/response adapter for React Router.
+
+  Fastify requests are now converted into Fetch `Request` objects with absolute URLs based on the original incoming URL, normalized headers, streamed request bodies for non-GET/HEAD requests, serialized parsed JSON bodies, and abort signals tied to the Fastify reply lifecycle.
+
+  React Router `Response` objects are now written back through Fastify with status, headers, streamed response bodies, bodyless responses, and multiple `Set-Cookie` headers preserved when the runtime exposes `Headers.getSetCookie()`.
+
+  `createRequestHandler` now accepts either a React Router server build or a build loader function, passes the configured mode through to React Router, and resolves `getLoadContext(request, reply)` for each request before handing control to React Router.
+
+- c51dd78: Refresh the docs, example app, tests, and build tooling around the React Router rewrite.
+
+  The package README now documents the Fastify server factory pattern, `react-router dev`, production build/start commands, `fastifyReactRouter` options, the lower-level handler API, and React Router 8 `RouterContextProvider` usage.
+
+  The examples have been consolidated to a single `examples/basic` app that demonstrates React Router framework mode, a custom Fastify server, a Fastify API route beside the React Router catch-all, `fastifyReactRouterDev`, and shared context tokens through a `#request-info` package import. The old Remix template version of the basic app, the separate Vite Remix example, the playground, and the standalone React Router example were removed or replaced.
+
+  The package test suite was rewritten around the new adapter surface, covering request/header/body conversion, response streaming and cookies, load context propagation, static-file cache headers, Vite SSR module loading, and dev-plugin import externalization.
+
+  The workspace now builds with `tsdown` as an ESM-only package with generated declarations, `publint`, and the ESM `attw` profile. Project tooling moved from ESLint and Prettier to `oxlint` and `oxfmt`, the changeset helper scripts were migrated to TypeScript files, CI/package-preview checks were simplified, and old Remix workspace overrides and deployment targets were removed.
+
+- c51dd78: Rebuild the package as a React Router 8 framework-mode Fastify adapter.
+
+  This is a breaking rewrite of the public API and package shape. The Remix-focused adapter APIs have been removed:
+
+  - Removed `remixFastify` and Remix request-handler support.
+  - Removed the `@mcansh/react-router-fastify/middleware` and `@mcansh/react-router-fastify/react-router` subpath exports.
+  - Removed the generated CommonJS proxy files for those subpaths.
+  - Removed CommonJS package output. The package is now ESM-only and publishes `./dist/index.mjs` plus `./dist/vite.mjs`.
+  - React Router 8, `@react-router/node` 8, Fastify 5, and Node `>=22.22.0` are now required.
+
+  The main export now provides `fastifyReactRouter`, `createRequestHandler`, lower-level request/response adapter helpers (`createHeaders`, `createRequest`, `createUrl`, and `sendResponse`), and the related public types.
+
+  `fastifyReactRouter` registers React Router as a Fastify catch-all route while preserving Fastify routes that were registered first. In development it loads `virtual:react-router/server-build` from Vite; in production it imports `build/server/index.js` by default and serves `build/client` with `@fastify/static`.
+
+  The production static-file handler now supports separate cache controls for immutable build assets and other client files through `assetCacheControl` and `fileCacheControl`. The catch-all route can also receive Fastify `routeOptions`.
+
+- c51dd78: Add the `@mcansh/react-router-fastify/vite` entry point with `fastifyReactRouterDev`.
+
+  The Vite plugin lets `react-router dev` run through the app's own Fastify server instead of a separate manual server process. It loads a configurable server entry, calls the configured factory export, waits for `app.ready()`, and mounts Fastify after Vite's own middleware so Vite internals and HMR continue to run first.
+
+  The plugin also closes and reloads the Fastify app when watched files change or unlink, and when the Vite HTTP server closes. SSR module loading uses Vite's environment runner when available and falls back to `ssrLoadModule` for older Vite server shapes.
+
+  For production builds, `fastifyReactRouterDev` can keep local and `#` imports from the server entry external in the React Router SSR build. This preserves singleton module identity for shared values such as React Router context tokens used by `getLoadContext`, middleware, and route loaders.
+
+### Patch Changes
+
+- fad8fbc: feat: support vite 8
+- c51dd78: Use Vite's virtual React Router server build whenever a dev server is present, so production `build` overrides no longer disable hot-reloaded development builds.
+
 ## 4.1.2
 
 ### Patch Changes
@@ -115,13 +166,13 @@
   ```js vite.config.ts
   export default defineConfig({
     plugins: [remix({ serverFilename: "example.js" })],
-  })
+  });
   ```
 
   ```js server.js
   await app.register(remixFastify, {
     serverFilename: "example.js",
-  })
+  });
   ```
 
 ## 3.3.2
@@ -141,7 +192,7 @@
   await app.register(remixFastify, {
     assetCacheControl: {},
     defaultCacheControl: {},
-  })
+  });
   ```
 
 - a7fcb6d: fix cache control so that build assets are immutable and cached for 1 year instead of everything being cached for 1 hour
@@ -153,43 +204,43 @@
 - 597df2e: re-introduce plugin for easy configuration, we're still publicly exporting all the pieces, so you can still continue to configure your server as you do today.
 
   ```js
-  import { remixFastify } from "@mcansh/remix-fastify"
-  import { installGlobals } from "@remix-run/node"
-  import { fastify } from "fastify"
+  import { remixFastify } from "@mcansh/remix-fastify";
+  import { installGlobals } from "@remix-run/node";
+  import { fastify } from "fastify";
 
-  installGlobals()
+  installGlobals();
 
-  let app = fastify()
+  let app = fastify();
 
-  await app.register(remixFastify)
+  await app.register(remixFastify);
 
-  let port = Number(process.env.PORT) || 3000
+  let port = Number(process.env.PORT) || 3000;
 
-  let address = await app.listen({ port, host: "0.0.0.0" })
-  console.log(`✅ app ready: ${address}`)
+  let address = await app.listen({ port, host: "0.0.0.0" });
+  console.log(`✅ app ready: ${address}`);
   ```
 
   and if you need to configure loadContext, you can do so like this:
 
   ```js
-  import { remixFastify } from "@mcansh/remix-fastify"
-  import { installGlobals } from "@remix-run/node"
-  import { fastify } from "fastify"
+  import { remixFastify } from "@mcansh/remix-fastify";
+  import { installGlobals } from "@remix-run/node";
+  import { fastify } from "fastify";
 
-  installGlobals()
+  installGlobals();
 
-  let app = fastify()
+  let app = fastify();
 
   await app.register(remixFastify, {
     getLoadContext(request, reply) {
-      return {}
+      return {};
     },
-  })
+  });
 
-  let port = Number(process.env.PORT) || 3000
+  let port = Number(process.env.PORT) || 3000;
 
-  let address = await app.listen({ port, host: "0.0.0.0" })
-  console.log(`✅ app ready: ${address}`)
+  let address = await app.listen({ port, host: "0.0.0.0" });
+  console.log(`✅ app ready: ${address}`);
   ```
 
 ### Patch Changes
