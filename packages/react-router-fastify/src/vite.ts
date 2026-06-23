@@ -7,6 +7,11 @@ import type { Plugin, ViteDevServer } from "vite"
 
 import { importSsrModule } from "./vite-runtime.ts"
 
+const adapterPackageNames = [
+  "@mcansh/react-router-fastify",
+  "@mcansh/remix-fastify",
+]
+
 export type FastifyAppFactory = (
   vite: ViteDevServer,
 ) => FastifyInstance | Promise<FastifyInstance>
@@ -52,6 +57,15 @@ export function fastifyReactRouterDev(
   return {
     name: "fastify-react-router-dev",
     enforce: "pre",
+    config(_config, environment) {
+      if (environment.command !== "serve") return
+
+      return {
+        ssr: {
+          noExternal: adapterPackageNames,
+        },
+      }
+    },
     configResolved(config) {
       command = config.command
       root = config.root

@@ -15,6 +15,38 @@ describe("fastifyReactRouterDev", () => {
     expect(plugin.configureServer).toBeTypeOf("function")
   })
 
+  it("keeps the adapter in Vite's SSR module graph during development", async () => {
+    let plugin = fastifyReactRouterDev({ entry: "./server.ts" })
+    let config = getHook<AnyHook>(plugin.config)
+
+    let result = await config?.call(undefined, {}, {
+      command: "serve",
+      mode: "development",
+      isPreview: false,
+      isSsrBuild: false,
+    })
+
+    expect(result).toEqual({
+      ssr: {
+        noExternal: ["@mcansh/react-router-fastify", "@mcansh/remix-fastify"],
+      },
+    })
+  })
+
+  it("does not force adapter noExternal settings during builds", async () => {
+    let plugin = fastifyReactRouterDev({ entry: "./server.ts" })
+    let config = getHook<AnyHook>(plugin.config)
+
+    let result = await config?.call(undefined, {}, {
+      command: "build",
+      mode: "production",
+      isPreview: false,
+      isSsrBuild: true,
+    })
+
+    expect(result).toBeUndefined()
+  })
+
   it("externalizes package imports found in the server entry during SSR builds", async () => {
     let root = fs.mkdtempSync(path.join(os.tmpdir(), "rr-fastify-"))
     fs.writeFileSync(
