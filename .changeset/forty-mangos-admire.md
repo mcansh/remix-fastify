@@ -1,5 +1,5 @@
 ---
-"@mcansh/remix-fastify": patch
+"@mcansh/react-router-fastify": patch
 ---
 
 feat: support vite 8

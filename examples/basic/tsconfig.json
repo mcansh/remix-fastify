@@ -1,14 +1,29 @@
 {
-  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
-  "extends": "@total-typescript/tsconfig/bundler/dom/app",
   "compilerOptions": {
-    "types": ["@remix-run/node"],
+    "strict": true,
+    "lib": ["ES2024", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ES2024",
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
     "jsx": "react-jsx",
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+    "noEmit": true,
+    "rootDirs": [".", "./.react-router/types"],
+    "types": ["node", "vite/client", "react", "react-dom"],
     "paths": {
-      "~/*": ["./app/*"]
-    },
-    "noEmit": true
-  }
+      "#request-info": ["./app/request-info.ts"]
+    }
+  },
+  "include": [
+    ".react-router/types/**/*",
+    "app/**/*",
+    "react-router.config.ts",
+    "server.ts",
+    "vite.config.ts"
+  ]
 }

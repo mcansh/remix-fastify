@@ -15,30 +15,6 @@ services:
         generateValue: true
 
   - type: web
-    name: remix-fastify-basic
-    plan: free
-    runtime: node
-    rootDir: ./examples/basic
-    buildFilter:
-      paths:
-        - ./examples/basic
-        - ./packages/**/*
-    buildCommand: npm i -g corepack@latest && corepack enable && pnpm i && pnpm run build
-    startCommand: pnpm run start
-
-  - type: web
-    name: remix-fastify-vite
-    plan: free
-    runtime: node
-    rootDir: ./examples/vite
-    buildFilter:
-      paths:
-        - ./examples/vite
-        - ./packages/**/*
-    buildCommand: npm i -g corepack@latest && corepack enable && pnpm i && pnpm run build
-    startCommand: pnpm run start
-
-  - type: web
     name: remix-fastify-react-router
     plan: free
     runtime: node

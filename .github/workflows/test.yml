@@ -32,7 +32,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v6
         with:
-          node-version-file: ".nvmrc"
+          node-version-file: "package.json"
           cache: "pnpm"
 
       - name: 🟧 Install dependencies
@@ -40,9 +40,6 @@ jobs:
 
       - name: 🏗 Build
         run: pnpm run build
-
-      - name: 📦 Package
-        run: pnpm run attw
 
   test:
     name: "${{ matrix.os }} | ${{ matrix.node }}"

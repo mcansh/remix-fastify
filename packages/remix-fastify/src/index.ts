@@ -1,6 +1,1 @@
-export type {
-  GetLoadContextFunction,
-  RequestHandler,
-  RemixFastifyOptions,
-} from "./remix";
-export { createRequestHandler, remixFastify } from "./remix";
+export * from "@mcansh/react-router-fastify"

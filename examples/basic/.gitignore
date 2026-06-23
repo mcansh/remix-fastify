@@ -1,6 +1,4 @@
+.react-router
+build
 node_modules
-
-/.cache
-/build
-/public/build
-.env
+.ds_store
