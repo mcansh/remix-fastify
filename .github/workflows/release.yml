@@ -23,7 +23,7 @@ jobs:
   release:
     name: 🦋 Changesets Release
     if: github.repository == 'mcansh/remix-fastify'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     outputs:
       published: ${{ steps.changesets.outputs.published }}
     steps:
@@ -75,7 +75,7 @@ jobs:
     name: 📝 Comment on issues and pull requests
     if: github.repository == 'mcansh/remix-fastify' && needs.release.outputs.published == 'true'
     needs: [release]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v5
