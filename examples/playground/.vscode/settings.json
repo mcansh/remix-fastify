@@ -1,6 +1,0 @@
-{
-  "typescript.preferences.autoImportFileExcludePatterns": [
-    "react-router-dom",
-    "react-router"
-  ]
-}

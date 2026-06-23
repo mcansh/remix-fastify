@@ -1,14 +1,6 @@
 dist
 node_modules
 .ds_store
-.yalc
-yalc.lock
-
-/examples/**/build
-/examples/**/public/build
-
 *.tgz
-# added during build
-/packages/*/LICENSE
-.tsdown
-.idea
+coverage
+.pnpm-store

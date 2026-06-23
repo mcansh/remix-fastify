@@ -1,17 +1,16 @@
-packages:
-  - packages/*
-  - examples/*
+publishBranch: release-next
 
-onlyBuiltDependencies:
-  - "@tailwindcss/oxide"
-  - esbuild
-  - svelte-preprocess
+packages:
+  - "packages/*"
+  - "examples/*"
+
+minimumReleaseAgeExclude:
+  - nanoid@3.3.14
 
 overrides:
+  "@mcansh/react-router-fastify": "workspace:"
   "@mcansh/remix-fastify": "workspace:"
-  "@remix-run/css-bundle": "latest"
-  "@remix-run/dev": "latest"
-  "@remix-run/eslint-config": "latest"
-  "@remix-run/node": "latest"
-  "@remix-run/react": "latest"
-  "@remix-run/server-runtime": "latest"
+
+minimumReleaseAgeStrict: true
+
+shellEmulator: true

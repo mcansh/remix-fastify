@@ -1,19 +1,29 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction } from "@remix-run/node";
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "@remix-run/react";
+  type MiddlewareFunction,
+} from "react-router"
 
-export const links: LinksFunction = () => [
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
-];
+import { requestInfoContext } from "#request-info"
 
-export default function App() {
+import "./styles.css"
+
+export const middleware: MiddlewareFunction[] = [
+  async ({ context }, next) => {
+    let requestInfo = context.get(requestInfoContext)
+    context.set(requestInfoContext, {
+      ...requestInfo,
+      source: `${requestInfo.source} -> root middleware`,
+    })
+
+    return next()
+  },
+]
+
+export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
@@ -22,12 +32,15 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body>
-        <Outlet />
+      <body className="bg-[#f4f2ec] font-sans text-[#18202f] antialiased">
+        {children}
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
       </body>
     </html>
-  );
+  )
+}
+
+export default function App() {
+  return <Outlet />
 }

@@ -5,10 +5,10 @@
     "checkJs": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "nodenext",
-    "module": "ESNext",
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
     "noEmit": true,
     "strict": true,
-    "target": "ES2018"
+    "target": "esnext"
   }
 }

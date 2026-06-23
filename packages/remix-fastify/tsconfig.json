@@ -1,10 +1,23 @@
 {
-  "exclude": ["./dist", "./__tests__", "./node_modules"],
-  "include": ["./src"],
-  "extends": "@total-typescript/tsconfig/bundler/no-dom/library",
   "compilerOptions": {
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist",
-    "rootDir": "."
-  }
+    "strict": true,
+    "lib": ["ES2024", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ES2024",
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "types": ["node"],
+    "paths": {
+      "@mcansh/react-router-fastify": ["../react-router-fastify/src/index.ts"],
+      "@mcansh/react-router-fastify/vite": [
+        "../react-router-fastify/src/vite.ts"
+      ]
+    }
+  },
+  "include": ["src", "*.config.ts"]
 }

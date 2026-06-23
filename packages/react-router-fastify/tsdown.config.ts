@@ -5,13 +5,8 @@ export default defineConfig({
     index: "./src/index.ts",
     vite: "./src/vite.ts",
   },
-  deps: {
-    neverBundle: [
-      "@mcansh/react-router-fastify",
-      "@mcansh/react-router-fastify/vite",
-    ],
-  },
   exports: true,
+  sourcemap: true,
   tsconfig: "./tsconfig.json",
   dts: true,
   attw: { profile: "esm-only" },
