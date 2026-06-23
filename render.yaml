@@ -3,25 +3,10 @@ services:
     name: remix-fastify
     plan: free
     runtime: node
-    rootDir: ./examples/playground
+    rootDir: ./examples/basic
     buildFilter:
       paths:
-        - ./examples/playground
-        - ./packages/**/*
-    buildCommand: npm i -g corepack@latest && corepack enable && pnpm i && pnpm run build
-    startCommand: pnpm run start
-    envVars:
-      - key: SESSION_SECRET
-        generateValue: true
-
-  - type: web
-    name: remix-fastify-react-router
-    plan: free
-    runtime: node
-    rootDir: ./examples/react-router
-    buildFilter:
-      paths:
-        - ./examples/react-router
+        - ./examples/basic
         - ./packages/**/*
     buildCommand: npm i -g corepack@latest && corepack enable && pnpm i && pnpm run build
     startCommand: pnpm run start
