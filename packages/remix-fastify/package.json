@@ -1,6 +1,6 @@
 {
   "name": "@mcansh/remix-fastify",
-  "version": "4.1.2",
+  "version": "5.0.0",
   "description": "Compatibility bridge for @mcansh/react-router-fastify",
   "keywords": [
     "adapter",
