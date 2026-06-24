@@ -8,4 +8,12 @@ export default defineConfig({
   jsdoc: true,
   semi: false,
   printWidth: 80,
+  overrides: [
+    {
+      files: ["./packages/**/CHANGELOG.md"],
+      options: {
+        semi: true,
+      },
+    },
+  ],
 })
