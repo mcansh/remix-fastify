@@ -28,7 +28,7 @@ jobs:
       published: ${{ steps.changesets.outputs.published }}
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: ⎔ Enable corepack
         run: |
@@ -78,7 +78,7 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
