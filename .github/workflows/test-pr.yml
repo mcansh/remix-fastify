@@ -10,6 +10,8 @@ concurrency:
 jobs:
   test:
     if: github.repository == 'mcansh/remix-fastify'
+    permissions:
+      contents: read
     uses: ./.github/workflows/test.yml
     with:
       os: '["ubuntu-slim", "macos-latest", "windows-latest"]'
