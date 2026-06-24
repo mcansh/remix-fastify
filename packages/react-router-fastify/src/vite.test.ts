@@ -19,12 +19,16 @@ describe("fastifyReactRouterDev", () => {
     let plugin = fastifyReactRouterDev({ entry: "./server.ts" })
     let config = getHook<AnyHook>(plugin.config)
 
-    let result = await config?.call(undefined, {}, {
-      command: "serve",
-      mode: "development",
-      isPreview: false,
-      isSsrBuild: false,
-    })
+    let result = await config?.call(
+      undefined,
+      {},
+      {
+        command: "serve",
+        mode: "development",
+        isPreview: false,
+        isSsrBuild: false,
+      },
+    )
 
     expect(result).toEqual({
       ssr: {
@@ -37,12 +41,16 @@ describe("fastifyReactRouterDev", () => {
     let plugin = fastifyReactRouterDev({ entry: "./server.ts" })
     let config = getHook<AnyHook>(plugin.config)
 
-    let result = await config?.call(undefined, {}, {
-      command: "build",
-      mode: "production",
-      isPreview: false,
-      isSsrBuild: true,
-    })
+    let result = await config?.call(
+      undefined,
+      {},
+      {
+        command: "build",
+        mode: "production",
+        isPreview: false,
+        isSsrBuild: true,
+      },
+    )
 
     expect(result).toBeUndefined()
   })

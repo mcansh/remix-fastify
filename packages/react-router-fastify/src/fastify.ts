@@ -50,7 +50,7 @@ export async function fastifyReactRouter(
 
   let serverBuild =
     devServer == null
-      ? build ?? createBuildLoader(devServer, path.resolve(serverBuildPath))
+      ? (build ?? createBuildLoader(devServer, path.resolve(serverBuildPath)))
       : createBuildLoader(devServer, path.resolve(serverBuildPath))
 
   if (devServer == null) {
