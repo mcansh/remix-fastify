@@ -70,5 +70,16 @@
   },
   "engines": {
     "node": ">=22.22.0"
+  },
+  "compatiblePackages": {
+    "schemaVersion": 1,
+    "rolldown": {
+      "type": "incompatible",
+      "reason": "Only supports Vite"
+    },
+    "rollup": {
+      "type": "incompatible",
+      "reason": "Only supports Vite"
+    }
   }
 }
