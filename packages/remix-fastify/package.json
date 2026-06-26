@@ -76,11 +76,11 @@
     "schemaVersion": 1,
     "rolldown": {
       "type": "incompatible",
-      "reason": "Uses Vite-specific APIs"
+      "reason": "Re-exports @mcansh/react-router-fastify/vite, which uses Vite-only APIs (Plugin.configureServer, ViteDevServer)"
     },
     "rollup": {
       "type": "incompatible",
-      "reason": "Uses Vite-specific APIs"
+      "reason": "Re-exports @mcansh/react-router-fastify/vite, which uses Vite-only APIs (Plugin.configureServer, ViteDevServer)"
     }
   }
 }
