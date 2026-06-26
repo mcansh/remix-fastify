@@ -6,7 +6,8 @@
     "adapter",
     "fastify",
     "react-router",
-    "vite"
+    "vite",
+    "vite-plugin"
   ],
   "bugs": {
     "url": "https://github.com/mcansh/remix-fastify/issues"
