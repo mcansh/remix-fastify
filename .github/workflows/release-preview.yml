@@ -36,14 +36,21 @@ jobs:
       - name: 🟧 Install dependencies
         run: pnpm install --recursive --frozen-lockfile --strict-peer-dependencies
 
-      - name: 🔐 Setup npm auth
-        run: |
-          echo "registry=https://registry.npmjs.org" >> ~/.npmrc
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+      - name: 🔀 Prepare npm config
+        parallel:
+          - name: 🔐 Prepare npm auth snippet
+            run: |
+              {
+                echo "registry=https://registry.npmjs.org"
+                echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}"
+              } > /tmp/npmrc-auth
+          - name: 🟧 Prepare publish-branch snippet
+            run: |
+              echo "publish-branch=$(git branch --show-current)" > /tmp/npmrc-publish-branch
 
-      - name: 🟧 Set publish-branch to current branch
+      - name: 🧩 Write npm config
         run: |
-          echo "publish-branch=$(git branch --show-current)" >> ~/.npmrc
+          cat /tmp/npmrc-auth /tmp/npmrc-publish-branch >> ~/.npmrc
 
       - name: 🏗️ Build
         run: pnpm run build
