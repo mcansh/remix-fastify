@@ -6,7 +6,8 @@
     "adapter",
     "fastify",
     "react-router",
-    "vite"
+    "vite",
+    "vite-plugin"
   ],
   "bugs": {
     "url": "https://github.com/mcansh/remix-fastify/issues"
@@ -70,5 +71,16 @@
   },
   "engines": {
     "node": ">=22.22.0"
+  },
+  "compatiblePackages": {
+    "schemaVersion": 1,
+    "rolldown": {
+      "type": "incompatible",
+      "reason": "Re-exports @mcansh/react-router-fastify/vite, which uses Vite-only APIs (Plugin.configureServer, ViteDevServer)"
+    },
+    "rollup": {
+      "type": "incompatible",
+      "reason": "Re-exports @mcansh/react-router-fastify/vite, which uses Vite-only APIs (Plugin.configureServer, ViteDevServer)"
+    }
   }
 }
