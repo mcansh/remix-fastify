@@ -89,11 +89,11 @@
     "schemaVersion": 1,
     "rolldown": {
       "type": "incompatible",
-      "reason": "Only supports Vite"
+      "reason": "Uses Vite-specific APIs"
     },
     "rollup": {
       "type": "incompatible",
-      "reason": "Only supports Vite"
+      "reason": "Uses Vite-specific APIs"
     }
   }
 }
