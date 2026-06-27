@@ -26,7 +26,7 @@ export async function createServer(vite?: ViteDevServer) {
   await app.register(fastifyReactRouter, {
     devServer: vite,
     build: async () => {
-      let serverBuildPath = pathToFileURL("build/server/index.js").href
+      let serverBuildPath = pathToFileURL("./build/server/index.js").href
 
       let serverBuild = (await import(
         serverBuildPath
