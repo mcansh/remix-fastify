@@ -59,7 +59,7 @@ importers:
         version: 5.8.5
       isbot:
         specifier: ^5
-        version: 5.1.43
+        version: 5.1.44
       react:
         specifier: ^19.2.7
         version: 19.2.7
@@ -1606,8 +1606,8 @@ packages:
     resolution: {integrity: sha512-eXK1UInq2bPmjyX6e3VHIzMLobc4J94i4AWn+Hpq3OU5KkrRC96OAcR3PRJ/pGu6m8TRnBHP9dkXQVsT/COVIA==}
     engines: {node: '>=0.10.0'}
 
-  isbot@5.1.43:
-    resolution: {integrity: sha512-drJhFmibra4LO6Wd7D3Oi6UICRK9244vSZkmxzhlZP0TTdwCA2ueK4PEkUkzPYeuqug9+cqqdWPgihjk5+83Cg==}
+  isbot@5.1.44:
+    resolution: {integrity: sha512-PGEHtwMnKbZpeSEXW2Utx+/JWed7dp6DiH0WWg33vGSDA7RUvpUeJSVlLrVkQ1RCpvDOUc/eH9ql7VsdbBZ8pA==}
     engines: {node: '>=18'}
 
   isexe@2.0.0:
@@ -3159,7 +3159,7 @@ snapshots:
       dedent: 1.7.2
       es-module-lexer: 2.1.0
       exit-hook: 5.1.0
-      isbot: 5.1.43
+      isbot: 5.1.44
       jsesc: 3.1.0
       lodash: 4.18.1
       p-map: 7.0.4
@@ -3792,7 +3792,7 @@ snapshots:
 
   is-windows@1.0.2: {}
 
-  isbot@5.1.43: {}
+  isbot@5.1.44: {}
 
   isexe@2.0.0: {}
 
