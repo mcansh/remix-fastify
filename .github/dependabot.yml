@@ -31,3 +31,8 @@ updates:
         patterns:
           - "@react-router/*"
           - react-router
+      "oxc":
+        patterns:
+          - "@oxlint/*"
+          - oxfmt
+          - oxlint
