@@ -36,3 +36,4 @@ updates:
           - "@oxlint/*"
           - oxfmt
           - oxlint
+          - oxlint-tsgolint
