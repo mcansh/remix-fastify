@@ -37,3 +37,7 @@ updates:
           - oxfmt
           - oxlint
           - oxlint-tsgolint
+      "tailwindcss":
+        patterns:
+          - "@tailwindcss/*"
+          - tailwindcss
