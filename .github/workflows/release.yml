@@ -20,9 +20,89 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  release:
-    name: 🦋 Changesets Release
+  select-mode:
+    name: 🦋 Changesets Select Mode
     if: github.repository == 'mcansh/remix-fastify'
+    runs-on: ubuntu-slim
+    outputs:
+      mode: ${{ steps.changesets.outputs.mode }}
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v7
+
+      - name: ⎔ Enable corepack
+        run: |
+          npm i -g corepack@latest
+          corepack enable
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: "package.json"
+          cache: "pnpm"
+
+      - name: 🟧 Install dependencies
+        run: pnpm install --recursive --frozen-lockfile --strict-peer-dependencies
+
+      - name: 🔐 Setup npm auth
+        run: |
+          echo "registry=https://registry.npmjs.org" >> ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+
+      - name: 🟧 Set publish-branch to current branch
+        run: |
+          echo "publish-branch=$(git branch --show-current)" >> ~/.npmrc
+
+      - name: 🧭 Select mode
+        id: changesets
+        uses: changesets/action@v1/select-mode
+
+  version:
+    name: 🦋 Changesets Version
+    if: github.repository == 'mcansh/remix-fastify' && needs.select-mode.outputs.mode == 'version'
+    needs: [select-mode]
+    runs-on: ubuntu-slim
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v7
+
+      - name: ⎔ Enable corepack
+        run: |
+          npm i -g corepack@latest
+          corepack enable
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: "package.json"
+          cache: "pnpm"
+
+      - name: 🟧 Install dependencies
+        run: pnpm install --recursive --frozen-lockfile --strict-peer-dependencies
+
+      - name: 🔐 Setup npm auth
+        run: |
+          echo "registry=https://registry.npmjs.org" >> ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+
+      - name: 🟧 Set publish-branch to current branch
+        run: |
+          echo "publish-branch=$(git branch --show-current)" >> ~/.npmrc
+
+      - name: 🚀 Version
+        uses: changesets/action@v1/version
+        with:
+          script: pnpm run changeset:version
+          commit-message: "chore: Update version for release"
+          pr-title: "chore: Update version for release"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish:
+    name: 🦋 Changesets Publish
+    if: github.repository == 'mcansh/remix-fastify' && needs.select-mode.outputs.mode == 'publish'
+    needs: [select-mode]
     runs-on: ubuntu-slim
     outputs:
       published: ${{ steps.changesets.outputs.published }}
@@ -53,28 +133,20 @@ jobs:
         run: |
           echo "publish-branch=$(git branch --show-current)" >> ~/.npmrc
 
-        # This action has two responsibilities. The first time the workflow runs
-        # (initial push to a `release-*` branch) it will create a new branch and
-        # then open a PR with the related changes for the new version. After the
-        # PR is merged, the workflow will run again and this action will build +
-        # publish to npm & github packages.
-      - name: 🚀 PR / Publish
+      - name: 🚀 Publish
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v1/publish
         with:
-          version: pnpm run changeset:version
-          commit: "chore: Update version for release"
-          title: "chore: Update version for release"
-          publish: pnpm run changeset:release
-          createGithubReleases: true
+          script: pnpm run changeset:release
+          create-github-releases: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   comment:
     name: 📝 Comment on issues and pull requests
-    if: github.repository == 'mcansh/remix-fastify' && needs.release.outputs.published == 'true'
-    needs: [release]
+    if: github.repository == 'mcansh/remix-fastify' && needs.publish.outputs.published == 'true'
+    needs: [publish]
     runs-on: ubuntu-slim
     steps:
       - name: ⬇️ Checkout repo
