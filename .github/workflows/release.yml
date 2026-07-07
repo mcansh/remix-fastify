@@ -30,29 +30,6 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v7
 
-      - name: ⎔ Enable corepack
-        run: |
-          npm i -g corepack@latest
-          corepack enable
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: "package.json"
-          cache: "pnpm"
-
-      - name: 🟧 Install dependencies
-        run: pnpm install --recursive --frozen-lockfile --strict-peer-dependencies
-
-      - name: 🔐 Setup npm auth
-        run: |
-          echo "registry=https://registry.npmjs.org" >> ~/.npmrc
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
-
-      - name: 🟧 Set publish-branch to current branch
-        run: |
-          echo "publish-branch=$(git branch --show-current)" >> ~/.npmrc
-
       - name: 🧭 Select mode
         id: changesets
         uses: changesets/action@v1/select-mode
