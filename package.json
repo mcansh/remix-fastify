@@ -15,9 +15,11 @@
     "typecheck": "pnpm --recursive --filter './packages/*' run typecheck",
     "validate": "pnpm run typecheck && pnpm run test && pnpm run build && pnpm run example:typecheck && pnpm run example:build",
     "changeset": "changeset",
-    "changeset:version": "changeset version && node ./scripts/remove-prerelease-changelogs.ts && node ./scripts/post-changeset.ts",
+    "changeset:version": "changeset version && node ./scripts/sync-jsr-versions.ts && node ./scripts/remove-prerelease-changelogs.ts && node ./scripts/post-changeset.ts",
     "changeset:release": "pnpm run build && pnpm publish -r",
     "format": "oxfmt",
+    "jsr:publish": "node ./scripts/sync-jsr-versions.ts && node ./scripts/publish-jsr.ts",
+    "jsr:publish:dry-run": "node ./scripts/sync-jsr-versions.ts && node ./scripts/publish-jsr.ts --dry-run",
     "lint": "oxlint"
   },
   "dependencies": {

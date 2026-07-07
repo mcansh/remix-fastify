@@ -120,6 +120,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: 🚀 Publish to JSR
+        if: steps.changesets.outputs.published == 'true'
+        run: pnpm run jsr:publish
+
   comment:
     name: 📝 Comment on issues and pull requests
     if: github.repository == 'mcansh/remix-fastify' && needs.publish.outputs.published == 'true'

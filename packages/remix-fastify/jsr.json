@@ -1,0 +1,13 @@
+{
+  "$schema": "https://jsr.io/schema/config-file.v1.json",
+  "name": "@mcansh/remix-fastify",
+  "version": "5.0.0",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts",
+    "./vite": "./src/vite.ts"
+  },
+  "publish": {
+    "include": ["CHANGELOG.md", "README.md", "package.json", "src/**/*.ts"]
+  }
+}
