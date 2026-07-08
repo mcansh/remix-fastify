@@ -70,7 +70,7 @@
     "tsdown": "^0.22.3",
     "typescript": "^6.0.3",
     "vite": "^8.0.16",
-    "vitest": "^4.0.15"
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "@react-router/node": "^8.0.0",
