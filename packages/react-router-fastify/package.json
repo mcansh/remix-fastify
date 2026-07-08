@@ -61,7 +61,7 @@
     "@react-router/dev": "8.1.0",
     "@react-router/node": "8.1.0",
     "@types/node": "^26.0.1",
-    "@vitest/coverage-v8": "4.1.9",
+    "@vitest/coverage-v8": "4.1.10",
     "fastify": "^5.9.0",
     "publint": "^0.3.21",
     "react": "^19.2.7",
