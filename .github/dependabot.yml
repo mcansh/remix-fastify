@@ -41,3 +41,9 @@ updates:
         patterns:
           - "@tailwindcss/*"
           - tailwindcss
+      "vite":
+        patterns:
+          - "@vitejs/*"
+          - "@vitest/*"
+          - "vite"
+          - "vitest"
