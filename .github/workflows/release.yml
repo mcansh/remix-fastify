@@ -49,7 +49,7 @@ jobs:
           corepack enable
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: "package.json"
           cache: "pnpm"
@@ -93,7 +93,7 @@ jobs:
           corepack enable
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: "package.json"
           cache: "pnpm"
