@@ -53,7 +53,7 @@ importers:
         version: link:../../packages/react-router-fastify
       '@react-router/node':
         specifier: 8.2.0
-        version: 8.2.0(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)
+        version: 8.2.0(react-router@8.3.0(react-dom@19.2.7(react@19.2.8))(react@19.2.8))(typescript@6.0.3)
       fastify:
         specifier: ^5.10.0
         version: 5.10.0
@@ -61,18 +61,18 @@ importers:
         specifier: ^5
         version: 5.2.1
       react:
-        specifier: ^19.2.7
-        version: 19.2.7
+        specifier: ^19.2.8
+        version: 19.2.8
       react-dom:
         specifier: ^19.2.7
-        version: 19.2.7(react@19.2.7)
+        version: 19.2.7(react@19.2.8)
       react-router:
         specifier: 8.3.0
-        version: 8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 8.3.0(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@react-router/dev':
         specifier: 8.2.0
-        version: 8.2.0(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)(vite@8.1.5(@types/node@26.0.1)(jiti@2.7.0)(yaml@2.9.0))
+        version: 8.2.0(react-router@8.3.0(react-dom@19.2.7(react@19.2.8))(react@19.2.8))(typescript@6.0.3)(vite@8.1.5(@types/node@26.0.1)(jiti@2.7.0)(yaml@2.9.0))
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.1.5(@types/node@26.0.1)(jiti@2.7.0)(yaml@2.9.0))
@@ -106,10 +106,10 @@ importers:
         version: 0.18.5
       '@react-router/dev':
         specifier: 8.2.0
-        version: 8.2.0(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)(vite@8.1.5(@types/node@26.0.1)(jiti@2.7.0)(yaml@2.9.0))
+        version: 8.2.0(react-router@8.3.0(react-dom@19.2.7(react@19.2.8))(react@19.2.8))(typescript@6.0.3)(vite@8.1.5(@types/node@26.0.1)(jiti@2.7.0)(yaml@2.9.0))
       '@react-router/node':
         specifier: 8.2.0
-        version: 8.2.0(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)
+        version: 8.2.0(react-router@8.3.0(react-dom@19.2.7(react@19.2.8))(react@19.2.8))(typescript@6.0.3)
       '@types/node':
         specifier: ^26.0.1
         version: 26.0.1
@@ -123,14 +123,14 @@ importers:
         specifier: ^0.3.21
         version: 0.3.21
       react:
-        specifier: ^19.2.7
-        version: 19.2.7
+        specifier: ^19.2.8
+        version: 19.2.8
       react-dom:
         specifier: ^19.2.7
-        version: 19.2.7(react@19.2.7)
+        version: 19.2.7(react@19.2.8)
       react-router:
         specifier: 8.3.0
-        version: 8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 8.3.0(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
       tsdown:
         specifier: ^0.22.3
         version: 0.22.3(@arethetypeswrong/core@0.18.5)(publint@0.3.21)(typescript@6.0.3)
@@ -151,13 +151,13 @@ importers:
         version: link:../react-router-fastify
       '@react-router/node':
         specifier: ^8.0.0
-        version: 8.0.1(react-router@8.0.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)
+        version: 8.0.1(react-router@8.0.1(react-dom@19.2.7(react@19.2.8))(react@19.2.8))(typescript@6.0.3)
       fastify:
         specifier: ^5.0.0
         version: 5.8.5
       react-router:
         specifier: ^8.0.0
-        version: 8.0.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 8.0.1(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
       vite:
         specifier: ^7.0.0 || ^8.0.0
         version: 8.0.16(@types/node@26.0.1)(jiti@2.7.0)(yaml@2.9.0)
@@ -2243,8 +2243,8 @@ packages:
       react-dom:
         optional: true
 
-  react@19.2.7:
-    resolution: {integrity: sha512-HNe9WslTbXmFK8o8cmwgAeJFSBvt1bPdHCVKtaaV+WlAN36mpT4hcRpwbf3fY56ar2oIXzsBpOAiIRHAdY0OlQ==}
+  react@19.2.8:
+    resolution: {integrity: sha512-PWaYA1L/q9u2u7xYQi+Y3L3Yfnie7XyLeaJICV1MGD6LprsBxcAqGjYyr0eY3p+QdsA+x/Irkt4Qif8D63+Sbw==}
     engines: {node: '>=0.10.0'}
 
   read-yaml-file@1.1.0:
@@ -3432,7 +3432,7 @@ snapshots:
     dependencies:
       quansync: 1.0.0
 
-  '@react-router/dev@8.2.0(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)(vite@8.1.5(@types/node@26.0.1)(jiti@2.7.0)(yaml@2.9.0))':
+  '@react-router/dev@8.2.0(react-router@8.3.0(react-dom@19.2.7(react@19.2.8))(react@19.2.8))(typescript@6.0.3)(vite@8.1.5(@types/node@26.0.1)(jiti@2.7.0)(yaml@2.9.0))':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/generator': 7.29.7
@@ -3441,7 +3441,7 @@ snapshots:
       '@babel/preset-typescript': 7.29.7(@babel/core@7.29.7)
       '@babel/traverse': 7.29.7
       '@babel/types': 7.29.7
-      '@react-router/node': 8.2.0(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)
+      '@react-router/node': 8.2.0(react-router@8.3.0(react-dom@19.2.7(react@19.2.8))(react@19.2.8))(typescript@6.0.3)
       '@remix-run/node-fetch-server': 0.13.3
       babel-dead-code-elimination: 1.0.12
       chokidar: 5.0.0
@@ -3457,7 +3457,7 @@ snapshots:
       pkg-types: 2.3.1
       prettier: 3.9.5
       react-refresh: 0.18.0
-      react-router: 8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      react-router: 8.3.0(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
       semver: 7.8.5
       tinyglobby: 0.2.17
       valibot: 1.4.2(typescript@6.0.3)
@@ -3468,17 +3468,17 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  '@react-router/node@8.0.1(react-router@8.0.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)':
+  '@react-router/node@8.0.1(react-router@8.0.1(react-dom@19.2.7(react@19.2.8))(react@19.2.8))(typescript@6.0.3)':
     dependencies:
       '@remix-run/node-fetch-server': 0.13.3
-      react-router: 8.0.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      react-router: 8.0.1(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
     optionalDependencies:
       typescript: 6.0.3
 
-  '@react-router/node@8.2.0(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)':
+  '@react-router/node@8.2.0(react-router@8.3.0(react-dom@19.2.7(react@19.2.8))(react@19.2.8))(typescript@6.0.3)':
     dependencies:
       '@remix-run/node-fetch-server': 0.13.3
-      react-router: 8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      react-router: 8.3.0(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
     optionalDependencies:
       typescript: 6.0.3
 
@@ -4564,28 +4564,28 @@ snapshots:
 
   quick-format-unescaped@4.0.4: {}
 
-  react-dom@19.2.7(react@19.2.7):
+  react-dom@19.2.7(react@19.2.8):
     dependencies:
-      react: 19.2.7
+      react: 19.2.8
       scheduler: 0.27.0
 
   react-refresh@0.18.0: {}
 
-  react-router@8.0.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  react-router@8.0.1(react-dom@19.2.7(react@19.2.8))(react@19.2.8):
     dependencies:
       cookie-es: 3.1.1
-      react: 19.2.7
+      react: 19.2.8
     optionalDependencies:
-      react-dom: 19.2.7(react@19.2.7)
+      react-dom: 19.2.7(react@19.2.8)
 
-  react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  react-router@8.3.0(react-dom@19.2.7(react@19.2.8))(react@19.2.8):
     dependencies:
       cookie-es: 3.1.1
-      react: 19.2.7
+      react: 19.2.8
     optionalDependencies:
-      react-dom: 19.2.7(react@19.2.7)
+      react-dom: 19.2.7(react@19.2.8)
 
-  react@19.2.7: {}
+  react@19.2.8: {}
 
   read-yaml-file@1.1.0:
     dependencies:
