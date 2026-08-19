@@ -32,7 +32,7 @@ jobs:
 
       - name: 🧭 Select mode
         id: changesets
-        uses: changesets/action@v1/select-mode
+        uses: changesets/action/select-mode@c47fa68bd43bb8ae0bae7e558622593deebf5955 # v2.0.0-next.3
 
   version:
     name: 🦋 Changesets Version
@@ -67,7 +67,7 @@ jobs:
           echo "publish-branch=$(git branch --show-current)" >> ~/.npmrc
 
       - name: 🚀 Version
-        uses: changesets/action@v1/version
+        uses: changesets/action/version@c47fa68bd43bb8ae0bae7e558622593deebf5955 # v2.0.0-next.3
         with:
           script: pnpm run changeset:version
           commit-message: "chore: Update version for release"
@@ -112,7 +112,7 @@ jobs:
 
       - name: 🚀 Publish
         id: changesets
-        uses: changesets/action@v1/publish
+        uses: changesets/action/publish@c47fa68bd43bb8ae0bae7e558622593deebf5955 # v2.0.0-next.3
         with:
           script: pnpm run changeset:release
           create-github-releases: true
