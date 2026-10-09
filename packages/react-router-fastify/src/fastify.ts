@@ -119,9 +119,9 @@ async function registerStaticFiles(
     dotfiles: "ignore",
     etag: true,
     lastModified: true,
-    setHeaders(res, filePath) {
+    setHeaders(reply, filePath) {
       let isAsset = filePath.startsWith(assetsDirectory)
-      res.setHeader(
+      reply.header(
         "cache-control",
         isAsset ? options.assetCacheControl : options.fileCacheControl,
       )
