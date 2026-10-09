@@ -3,4 +3,4 @@ version = 1
 name = "remix-fastify"
 
 [setup]
-script = ""
+script = "pnpm install"
