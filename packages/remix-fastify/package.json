@@ -54,9 +54,9 @@
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.5",
-    "publint": "^0.3.22",
-    "tsdown": "^0.22.3",
-    "typescript": "^6.0.3"
+    "publint": "^0.3.25",
+    "tsdown": "^0.23.0",
+    "typescript": "^7.0.2"
   },
   "peerDependencies": {
     "@react-router/node": "^8.0.0",
