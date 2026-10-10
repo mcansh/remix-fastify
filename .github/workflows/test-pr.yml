@@ -15,4 +15,4 @@ jobs:
     uses: ./.github/workflows/test.yml
     with:
       os: '["ubuntu-slim", "macos-latest", "windows-latest"]'
-      node: '["latest"]'
+      node: '["22.22.0", "24", "latest"]'
