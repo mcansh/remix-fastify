@@ -333,37 +333,6 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3(@types/node@26.6.5)(@vitest/coverage-v8@5.0.3)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
 
-  packages/remix-fastify:
-    dependencies:
-      '@mcansh/react-router-fastify':
-        specifier: 'workspace:'
-        version: link:../react-router-fastify
-      '@react-router/node':
-        specifier: ^8.0.0
-        version: 8.4.0(react-router@8.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(typescript@7.0.2)
-      fastify:
-        specifier: ^5.0.0
-        version: 5.12.5
-      react-router:
-        specifier: ^8.0.0
-        version: 8.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      vite:
-        specifier: ^7.0.0 || ^8.0.0
-        version: 8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1)
-    devDependencies:
-      '@arethetypeswrong/core':
-        specifier: ^0.18.5
-        version: 0.18.5
-      publint:
-        specifier: ^0.3.25
-        version: 0.3.25
-      tsdown:
-        specifier: ^0.23.0
-        version: 0.23.0(@arethetypeswrong/core@0.18.5)(publint@0.3.25)(typescript@7.0.2)
-      typescript:
-        specifier: ^7.0.2
-        version: 7.0.2
-
 packages:
 
   '@andrewbranch/untar.js@1.0.3':

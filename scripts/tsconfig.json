@@ -5,10 +5,13 @@
     "checkJs": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
     "noEmit": true,
     "strict": true,
-    "target": "esnext"
+    "target": "esnext",
+    "types": ["node"]
   }
 }
