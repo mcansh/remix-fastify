@@ -1,5 +1,22 @@
 # @mcansh/react-router-fastify
 
+## 6.0.0
+
+### Major Changes
+
+- d1bec29: Upgrade `@fastify/static` to v10 to fix GHSA-83w8-p2f5-377r, a route guard
+  bypass through `..` path segments.
+
+  `@fastify/static` v10 passes a `FastifyReply` to `staticOptions.setHeaders`
+  instead of a raw `ServerResponse`. If you pass your own `setHeaders`, call
+  `reply.header(name, value)` instead of `res.setHeader(name, value)`.
+
+### Patch Changes
+
+- 3ec9b18: Add Vite plugin registry metadata by declaring plugin compatibility details and
+  including `vite-plugin` in package keywords.
+- e7c534f: Update `@fastify/static` to `^10.1.6`.
+
 ## 5.0.0
 
 ### Major Changes
