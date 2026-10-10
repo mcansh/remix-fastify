@@ -5,10 +5,12 @@ on:
     branches:
       - main
     paths:
-      - ./packages/*
-      - ./.github/*
-      - ./package.json
-      - ./pnpm-lock.yaml
+      - packages/**
+      - .github/**
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - examples/**
   pull_request:
     branches:
       - changeset-release/*
@@ -25,4 +27,4 @@ jobs:
     uses: ./.github/workflows/test.yml
     with:
       os: '["ubuntu-slim", "macos-latest", "windows-latest"]'
-      node: '["18", "20", "latest"]'
+      node: '["22.22.0", "24", "latest"]'
