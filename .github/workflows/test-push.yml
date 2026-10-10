@@ -5,10 +5,12 @@ on:
     branches:
       - main
     paths:
-      - ./packages/*
-      - ./.github/*
-      - ./package.json
-      - ./pnpm-lock.yaml
+      - packages/**
+      - .github/**
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - examples/**
   pull_request:
     branches:
       - changeset-release/*

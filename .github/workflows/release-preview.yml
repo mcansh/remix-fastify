@@ -28,25 +28,11 @@ jobs:
           node-version-file: "package.json"
           cache: "pnpm"
 
-      - name: ⎔ Enable corepack
-        run: |
-          npm i -g corepack@latest
-          corepack enable
-
       - name: 🟧 Install dependencies
         run: pnpm install --recursive --frozen-lockfile --strict-peer-dependencies
-
-      - name: 🔐 Setup npm auth
-        run: |
-          echo "registry=https://registry.npmjs.org" >> ~/.npmrc
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
-
-      - name: 🟧 Set publish-branch to current branch
-        run: |
-          echo "publish-branch=$(git branch --show-current)" >> ~/.npmrc
 
       - name: 🏗️ Build
         run: pnpm run build
 
       - name: 🚀 Publish PR
-        run: pnpm dlx pkg-pr-new publish --compact './packages/*' --template './examples/*'
+        run: pnpm exec pkg-pr-new publish --compact './packages/*' --template './examples/*'
