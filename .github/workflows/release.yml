@@ -60,7 +60,7 @@ jobs:
         # publish to npm & github packages.
       - name: 🚀 PR / Publish
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
           version: pnpm run changeset:version
           commit: "chore: Update version for release"
