@@ -32,10 +32,17 @@ jobs:
       - name: 🟧 Install dependencies
         run: pnpm install --recursive --frozen-lockfile --strict-peer-dependencies
 
-      - name: 🧹 Format
-        run: pnpm run format
-
       - name: 🧹 Lint
+        id: lint
         run: pnpm run lint
 
+      - name: 🧹 Format
+        if: ${{ !cancelled() && (success() || steps.lint.outcome == 'failure') }}
+        run: pnpm run format -- . '!.github/**'
+
+      - name: Restore .github
+        if: ${{ !cancelled() && (success() || steps.lint.outcome == 'failure') }}
+        run: git restore --source=HEAD --worktree --staged -- .github
+
       - uses: autofix-ci/action@c5b2d67aa2274e7b5a18224e8171550871fc7e4a # v1.3.4
+        if: ${{ !cancelled() && (success() || steps.lint.outcome == 'failure') }}
