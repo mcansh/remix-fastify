@@ -1,0 +1,20 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "RAILPACK",
+    "buildCommand": "pnpm -w build && pnpm -w example:build",
+    "watchPatterns": [
+      "/examples/basic/**",
+      "/packages/react-router-fastify/**",
+      "/package.json",
+      "/pnpm-lock.yaml",
+      "/pnpm-workspace.yaml",
+      "/railway.json",
+      "/railway.toml"
+    ]
+  },
+  "deploy": {
+    "startCommand": "cd examples/basic && pnpm run start",
+    "healthcheckPath": "/"
+  }
+}
