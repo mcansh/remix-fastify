@@ -52,9 +52,9 @@ if (isMain) {
 Add the Vite plugin so `react-router dev` uses that Fastify server:
 
 ```ts
+import { fastifyReactRouterDev } from "@mcansh/react-router-fastify/vite"
 // vite.config.ts
 import { reactRouter } from "@react-router/dev/vite"
-import { fastifyReactRouterDev } from "@mcansh/react-router-fastify/vite"
 import { defineConfig } from "vite"
 
 export default defineConfig({
@@ -122,10 +122,11 @@ export let requestInfoContext = createContext<RequestInfo>()
 Seed it from `getLoadContext`:
 
 ```ts
-// server.ts
-import { requestInfoContext } from "#request-info"
 import { fastifyReactRouter } from "@mcansh/react-router-fastify"
 import { RouterContextProvider } from "react-router"
+
+// server.ts
+import { requestInfoContext } from "#request-info"
 
 app.register(fastifyReactRouter, {
   devServer: vite,
@@ -143,9 +144,10 @@ app.register(fastifyReactRouter, {
 Read or update the same context from React Router middleware and route modules:
 
 ```ts
+import type { MiddlewareFunction } from "react-router"
+
 // app/root.tsx
 import { requestInfoContext } from "#request-info"
-import type { MiddlewareFunction } from "react-router"
 
 export const middleware: MiddlewareFunction[] = [
   async ({ context }, next) => {
@@ -157,9 +159,10 @@ export const middleware: MiddlewareFunction[] = [
 ```
 
 ```ts
+import type { LoaderFunctionArgs } from "react-router"
+
 // app/routes/home.tsx
 import { requestInfoContext } from "#request-info"
-import type { LoaderFunctionArgs } from "react-router"
 
 export async function loader({ context }: LoaderFunctionArgs) {
   return {
@@ -172,9 +175,9 @@ Tell the Vite plugin to keep that package import external in React Router's SSR
 build:
 
 ```ts
+import { fastifyReactRouterDev } from "@mcansh/react-router-fastify/vite"
 // vite.config.ts
 import { reactRouter } from "@react-router/dev/vite"
-import { fastifyReactRouterDev } from "@mcansh/react-router-fastify/vite"
 import { defineConfig } from "vite"
 
 export default defineConfig({
