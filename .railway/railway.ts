@@ -17,6 +17,11 @@ export default defineRailway(() => {
     },
     start: "cd examples/basic && pnpm run start",
     healthcheck: "/",
+    // Keep existing dashboard settings so apply does not turn them off.
+    deploy: {
+      sleepApplication: true,
+    },
+    cdn: { enabled: true },
   })
 
   return project("remix-fastify", {
