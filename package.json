@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "pnpm --recursive --filter './packages/*' --filter './examples/*' run build",
+    "build:packages": "pnpm --recursive --filter './packages/*' run build",
     "clean": "git clean -fdX",
     "example:build": "pnpm --dir examples/basic run build",
     "example:dev": "pnpm --dir examples/basic run dev",
@@ -16,7 +17,7 @@
     "validate": "pnpm run typecheck && pnpm run test && pnpm run build && pnpm run example:typecheck",
     "changeset": "changeset",
     "changeset:version": "changeset version && node ./scripts/remove-prerelease-changelogs.ts && node ./scripts/post-changeset.ts",
-    "changeset:release": "pnpm run build && node ./scripts/publish.ts",
+    "changeset:release": "pnpm run build:packages && node ./scripts/publish.ts",
     "format": "oxfmt",
     "lint": "oxlint"
   },
