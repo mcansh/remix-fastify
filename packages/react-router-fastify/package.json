@@ -61,7 +61,7 @@
     "@react-router/dev": "8.4.0",
     "@react-router/node": "8.4.0",
     "@types/node": "^26.6.5",
-    "@vitest/coverage-v8": "5.0.3",
+    "@vitest/coverage-v8": "5.0.5",
     "fastify": "^5.12.7",
     "publint": "^0.3.25",
     "react": "^19.3.1",
@@ -69,8 +69,8 @@
     "react-router": "8.4.0",
     "tsdown": "^0.23.4",
     "typescript": "^7.0.2",
-    "vite": "^8.3.4",
-    "vitest": "^5.0.3"
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
   },
   "peerDependencies": {
     "@react-router/node": "^8.0.0",
