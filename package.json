@@ -33,6 +33,9 @@
     "pkg-pr-new": "^0.0.91",
     "typescript": "^7.0.2"
   },
+  "devDependencies": {
+    "railway": "^3.16.0"
+  },
   "engines": {
     "node": ">=22"
   },
