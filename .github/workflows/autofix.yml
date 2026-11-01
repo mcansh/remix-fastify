@@ -12,7 +12,8 @@ permissions:
 
 jobs:
   autofix:
-    runs-on: ubuntu-slim
+    # ubuntu-slim OOMs oxlint JS plugins (oxc#20331); lint still fails on remaining diagnostics
+    runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v7
