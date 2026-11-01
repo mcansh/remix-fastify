@@ -1,9 +1,10 @@
 import assert from "node:assert/strict"
-import { execFileSync } from "node:child_process"
+import { execFileSync, spawnSync } from "node:child_process"
 import {
   existsSync,
   mkdirSync,
   mkdtempSync,
+  readFileSync,
   rmSync,
   writeFileSync,
 } from "node:fs"
@@ -12,130 +13,121 @@ import { tmpdir } from "node:os"
 import path from "node:path"
 import test from "node:test"
 
-import { runPublish } from "./publish.ts"
+const cli = createRequire(import.meta.url).resolve("@changesets/cli/bin.js")
+const packageName = "@mcansh/react-router-fastify"
+const version = "6.0.0"
 
-test("accepts the installed Changesets CLI's actual tag report", () => {
+test("changeset:release builds packages and then runs changeset publish", () => {
+  let pkg = JSON.parse(
+    readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+  )
+  assert.equal(
+    pkg.scripts["changeset:release"],
+    "pnpm run build:packages && changeset publish",
+  )
+})
+
+test("installed CLI git-tag writes the action report and leaves the file", () => {
   let directory = mkdtempSync(path.join(tmpdir(), "changesets-report-test-"))
   try {
-    mkdirSync(path.join(directory, ".changeset"))
-    mkdirSync(path.join(directory, "packages/adapter"), { recursive: true })
-    writeFileSync(
-      path.join(directory, "package.json"),
-      JSON.stringify({
-        name: "release-test",
-        private: true,
-      }),
-    )
-    writeFileSync(
-      path.join(directory, "pnpm-workspace.yaml"),
-      "packages:\n  - packages/*\n",
-    )
-    writeFileSync(path.join(directory, ".changeset/config.json"), "{}")
-    writeFileSync(
-      path.join(directory, "packages/adapter/package.json"),
-      JSON.stringify({
-        name: "@mcansh/react-router-fastify",
-        version: "6.0.0",
-      }),
-    )
-    execFileSync("git", ["init", "--quiet"], { cwd: directory })
-    execFileSync("git", ["config", "commit.gpgsign", "false"], {
-      cwd: directory,
-    })
-    execFileSync("git", ["config", "tag.gpgsign", "false"], { cwd: directory })
-    execFileSync(
-      "git",
-      [
-        "-c",
-        "user.name=Release Test",
-        "-c",
-        "user.email=release@example.com",
-        "commit",
-        "--quiet",
-        "--allow-empty",
-        "-m",
-        "fixture",
-      ],
-      { cwd: directory },
-    )
-    let messages: string[] = []
-    let status = runPublish(
-      (reportPath) => {
-        execFileSync(
-          process.execPath,
-          [
-            createRequire(import.meta.url).resolve("@changesets/cli/bin.js"),
-            "git-tag",
-          ],
-          {
-            cwd: directory,
-            env: { ...process.env, CHANGESETS_OUTPUT: reportPath },
-          },
-        )
-        return 0
+    writeReleaseFixture(directory)
+    let reportPath = path.join(directory, "events.ndjson")
+    let result = runGitTag(directory, reportPath)
+    assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`)
+    assert.equal(existsSync(reportPath), true)
+    assert.deepEqual(gitTagEvents(reportPath), [
+      {
+        type: "git-tag",
+        tag: "@mcansh/react-router-fastify@6.0.0",
+        packageName: "@mcansh/react-router-fastify",
       },
-      (message) => messages.push(message),
-    )
-    assert.equal(status, 0)
-    assert.deepEqual(messages, ["New tag: @mcansh/react-router-fastify@6.0.0"])
+    ])
   } finally {
     rmSync(directory, { recursive: true, force: true })
   }
 })
 
-test("reports v3 git tags in the format consumed by changesets/action v1", () => {
-  let messages: string[] = []
-  let report = ""
-  let status = runPublish(
-    (reportPath) => {
-      report = reportPath
-      writeFileSync(
-        reportPath,
-        `${JSON.stringify({
-          type: "git-tag",
-          tag: "@mcansh/react-router-fastify@6.0.0",
-          packageName: "@mcansh/react-router-fastify",
-        })}\n`,
-      )
-      return 0
-    },
-    (message) => messages.push(message),
-  )
-
-  assert.equal(status, 0)
-  // This is the detection regex from the action used by release.yml.
-  let match = messages
-    .join("\n")
-    .match(/New tag:\s+(@[^/]+\/[^@]+|[^/]+)@([^\s]+)/)
-  assert.equal(match?.[1], "@mcansh/react-router-fastify")
-  assert.equal(match?.[2], "6.0.0")
-  assert.equal(existsSync(report), false)
+test("an empty git-tag report has no events and does not print New tag", () => {
+  let directory = mkdtempSync(path.join(tmpdir(), "changesets-report-test-"))
+  try {
+    writeReleaseFixture(directory)
+    execFileSync("git", ["tag", `${packageName}@${version}`], {
+      cwd: directory,
+    })
+    let reportPath = path.join(directory, "events.ndjson")
+    let result = runGitTag(directory, reportPath)
+    let output = `${result.stdout ?? ""}${result.stderr ?? ""}`
+    assert.equal(result.status, 0, output)
+    assert.equal(readFileSync(reportPath, "utf8"), "")
+    assert.deepEqual(gitTagEvents(reportPath), [])
+    assert.doesNotMatch(output, /New tag:/)
+  } finally {
+    rmSync(directory, { recursive: true, force: true })
+  }
 })
 
-test("does not announce a release when all versions are already published", () => {
-  let messages: string[] = []
-  let status = runPublish(
-    (reportPath) => {
-      writeFileSync(reportPath, "")
-      return 0
-    },
-    (message) => messages.push(message),
+function writeReleaseFixture(directory: string) {
+  mkdirSync(path.join(directory, ".changeset"))
+  mkdirSync(path.join(directory, "packages/adapter"), { recursive: true })
+  writeFileSync(
+    path.join(directory, "package.json"),
+    JSON.stringify({
+      name: "release-test",
+      private: true,
+    }),
   )
-  assert.equal(status, 0)
-  assert.deepEqual(messages, [])
-})
+  writeFileSync(
+    path.join(directory, "pnpm-workspace.yaml"),
+    "packages:\n  - packages/*\n",
+  )
+  writeFileSync(path.join(directory, ".changeset/config.json"), "{}")
+  writeFileSync(
+    path.join(directory, "packages/adapter/package.json"),
+    JSON.stringify({
+      name: packageName,
+      version,
+    }),
+  )
+  execFileSync("git", ["init", "--quiet"], { cwd: directory })
+  execFileSync("git", ["config", "user.name", "Release Test"], {
+    cwd: directory,
+  })
+  execFileSync("git", ["config", "user.email", "release@example.com"], {
+    cwd: directory,
+  })
+  execFileSync("git", ["config", "commit.gpgsign", "false"], {
+    cwd: directory,
+  })
+  execFileSync("git", ["config", "tag.gpgsign", "false"], { cwd: directory })
+  execFileSync("git", ["commit", "--quiet", "--allow-empty", "-m", "fixture"], {
+    cwd: directory,
+  })
+}
 
-test("preserves publish failures and does not announce success", () => {
-  let messages: string[] = []
-  let report = ""
-  let status = runPublish(
-    (reportPath) => {
-      report = reportPath
-      return 7
-    },
-    (message) => messages.push(message),
-  )
-  assert.equal(status, 7)
-  assert.deepEqual(messages, [])
-  assert.equal(existsSync(report), false)
-})
+function runGitTag(directory: string, reportPath: string) {
+  return spawnSync(process.execPath, [cli, "git-tag"], {
+    cwd: directory,
+    env: { ...process.env, CHANGESETS_OUTPUT: reportPath },
+    encoding: "utf8",
+  })
+}
+
+function gitTagEvents(reportPath: string) {
+  let events: Array<{ type: string; tag: string; packageName: string }> = []
+  for (let line of readFileSync(reportPath, "utf8").split("\n")) {
+    if (!line.trim()) continue
+    let event = JSON.parse(line)
+    if (
+      event.type === "git-tag" &&
+      typeof event.tag === "string" &&
+      typeof event.packageName === "string"
+    ) {
+      events.push({
+        type: event.type,
+        tag: event.tag,
+        packageName: event.packageName,
+      })
+    }
+  }
+  return events
+}
