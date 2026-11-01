@@ -5,7 +5,7 @@
   "repository": "mcansh/remix-fastify",
   "type": "module",
   "scripts": {
-    "build": "pnpm --recursive --filter './packages/*' run build",
+    "build": "pnpm --recursive --filter './packages/*' --filter './examples/*' run build",
     "clean": "git clean -fdX",
     "example:build": "pnpm --dir examples/basic run build",
     "example:dev": "pnpm --dir examples/basic run dev",
@@ -13,7 +13,7 @@
     "example:typecheck": "pnpm --dir examples/basic run typecheck",
     "test": "node --test scripts/publish.test.ts && pnpm --filter @mcansh/react-router-fastify run test",
     "typecheck": "pnpm --recursive --filter './packages/*' run typecheck",
-    "validate": "pnpm run typecheck && pnpm run test && pnpm run build && pnpm run example:typecheck && pnpm run example:build",
+    "validate": "pnpm run typecheck && pnpm run test && pnpm run build && pnpm run example:typecheck",
     "changeset": "changeset",
     "changeset:version": "changeset version && node ./scripts/remove-prerelease-changelogs.ts && node ./scripts/post-changeset.ts",
     "changeset:release": "pnpm run build && node ./scripts/publish.ts",

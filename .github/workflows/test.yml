@@ -46,7 +46,6 @@ jobs:
           pnpm run typecheck
           pnpm run build
           pnpm run example:typecheck
-          pnpm run example:build
 
   test:
     name: "${{ matrix.os }} | ${{ matrix.node }}"
