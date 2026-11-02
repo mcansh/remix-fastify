@@ -52,5 +52,5 @@ error inside the catch-all. Fastify receives no throw for that error.
 
 `pnpm dev` does not pass `--import`. The dev server does not send events.
 
-To send a report from your machine, run `pnpm --dir examples/basic build`.
+To enable reporting from your machine, run `pnpm --dir examples/basic build`.
 Set `SENTRY_DSN` in your shell. Run `pnpm --dir examples/basic start`.
