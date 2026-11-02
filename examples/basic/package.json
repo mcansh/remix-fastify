@@ -8,12 +8,13 @@
   "scripts": {
     "dev": "react-router dev",
     "build": "react-router build",
-    "start": "NODE_ENV=production node ./server.ts",
+    "start": "NODE_ENV=production node --import ./instrument.ts ./server.ts",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
     "@mcansh/react-router-fastify": "workspace:",
     "@react-router/node": "8.4.0",
+    "@sentry/node": "^11.10.0",
     "fastify": "^5.12.7",
     "isbot": "^5.2.2",
     "react": "^19.3.1",

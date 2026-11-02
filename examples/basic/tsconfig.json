@@ -22,6 +22,7 @@
   "include": [
     ".react-router/types/**/*",
     "app/**/*",
+    "instrument.ts",
     "react-router.config.ts",
     "server.ts",
     "vite.config.ts"
