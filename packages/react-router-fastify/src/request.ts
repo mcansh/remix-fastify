@@ -1,7 +1,29 @@
+import type { IncomingHttpHeaders as Http1IncomingHttpHeaders } from "node:http"
+import type { IncomingHttpHeaders as Http2IncomingHttpHeaders } from "node:http2"
 import { Readable } from "node:stream"
 
 import { createReadableStreamFromReadable } from "@react-router/node"
-import type { FastifyReply, FastifyRequest } from "fastify"
+import type {
+  FastifyReply,
+  FastifyRequest,
+  RawServerBase,
+  RawServerDefault,
+  RouteGenericInterface,
+} from "fastify"
+
+/**
+ * A Fastify request served by any Node server Fastify supports: HTTP/1, HTTPS,
+ * or HTTP/2 (`fastify({ http2: true })`).
+ */
+export type AdapterRequest<RawServer extends RawServerBase = RawServerDefault> =
+  FastifyRequest<RouteGenericInterface, RawServer>
+
+/**
+ * A Fastify reply served by any Node server Fastify supports: HTTP/1, HTTPS, or
+ * HTTP/2 (`fastify({ http2: true })`).
+ */
+export type AdapterReply<RawServer extends RawServerBase = RawServerDefault> =
+  FastifyReply<RouteGenericInterface, RawServer>
 
 /**
  * Copies Fastify's normalized request headers into Web Fetch `Headers`. HTTP/2
@@ -11,7 +33,9 @@ import type { FastifyReply, FastifyRequest } from "fastify"
  * @param source Fastify request headers.
  * @returns Fetch-compatible headers.
  */
-export function createHeaders(source: FastifyRequest["headers"]): Headers {
+export function createHeaders(
+  source: Http1IncomingHttpHeaders | Http2IncomingHttpHeaders,
+): Headers {
   let headers = new Headers()
 
   for (let [name, value] of Object.entries(source)) {
@@ -36,7 +60,9 @@ export function createHeaders(source: FastifyRequest["headers"]): Headers {
  * @param request Fastify request.
  * @returns Absolute URL for the original incoming request.
  */
-export function createUrl(request: FastifyRequest): string {
+export function createUrl<RawServer extends RawServerBase = RawServerDefault>(
+  request: AdapterRequest<RawServer>,
+): string {
   return `${request.protocol}://${request.host}${request.originalUrl}`
 }
 
@@ -47,10 +73,9 @@ export function createUrl(request: FastifyRequest): string {
  * @param reply Fastify reply, used to abort work when the connection closes.
  * @returns Fetch-compatible request for React Router.
  */
-export function createRequest(
-  request: FastifyRequest,
-  reply: FastifyReply,
-): Request {
+export function createRequest<
+  RawServer extends RawServerBase = RawServerDefault,
+>(request: AdapterRequest<RawServer>, reply: AdapterReply<RawServer>): Request {
   let controller: AbortController | null = new AbortController()
 
   let init: RequestInit & { duplex?: "half" } = {
@@ -74,7 +99,9 @@ export function createRequest(
   return new Request(createUrl(request), init)
 }
 
-function getBody(request: FastifyRequest): BodyInit | null {
+function getBody<RawServer extends RawServerBase>(
+  request: AdapterRequest<RawServer>,
+): BodyInit | null {
   let body = request.body
 
   if (body == null) return createReadableStreamFromReadable(request.raw)

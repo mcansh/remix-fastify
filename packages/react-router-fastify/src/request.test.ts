@@ -1,7 +1,6 @@
 import http2 from "node:http2"
 
 import fastify from "fastify"
-import type { FastifyReply, FastifyRequest } from "fastify"
 import { describe, expect, it } from "vitest"
 
 import { createHeaders, createRequest, createUrl } from "./request.ts"
@@ -36,7 +35,7 @@ describe("request adapter", () => {
       ":scheme": "http",
       ":authority": "example.com",
       "x-value": "yes",
-    } as unknown as Parameters<typeof createHeaders>[0])
+    })
 
     expect([...headers.keys()]).toEqual(["x-value"])
   })
@@ -47,11 +46,7 @@ describe("request adapter", () => {
     let seenUrl = ""
 
     app.get("*", async (request, reply) => {
-      // createRequest is typed for HTTP/1 requests; the runtime shape is the same.
-      let webRequest = createRequest(
-        request as unknown as FastifyRequest,
-        reply as unknown as FastifyReply,
-      )
+      let webRequest = createRequest(request, reply)
       seenMethod = webRequest.method
       seenUrl = webRequest.url
       reply.send("ok")
