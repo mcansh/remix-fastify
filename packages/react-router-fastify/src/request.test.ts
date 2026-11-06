@@ -1,4 +1,7 @@
+import http2 from "node:http2"
+
 import fastify from "fastify"
+import type { FastifyReply, FastifyRequest } from "fastify"
 import { describe, expect, it } from "vitest"
 
 import { createHeaders, createRequest, createUrl } from "./request.ts"
@@ -24,6 +27,59 @@ describe("request adapter", () => {
     expect(headers.has("X-Null")).toBe(false)
     expect(headers.has("X-Undefined")).toBe(false)
     expect(headers.get("X-Value")).toBe("yes")
+  })
+
+  it("skips HTTP/2 pseudo headers", () => {
+    let headers = createHeaders({
+      ":method": "GET",
+      ":path": "/",
+      ":scheme": "http",
+      ":authority": "example.com",
+      "x-value": "yes",
+    } as unknown as Parameters<typeof createHeaders>[0])
+
+    expect([...headers.keys()]).toEqual(["x-value"])
+  })
+
+  it("creates Web requests from HTTP/2 requests", async () => {
+    let app = fastify({ http2: true })
+    let seenMethod = ""
+    let seenUrl = ""
+
+    app.get("*", async (request, reply) => {
+      // createRequest is typed for HTTP/1 requests; the runtime shape is the same.
+      let webRequest = createRequest(
+        request as unknown as FastifyRequest,
+        reply as unknown as FastifyReply,
+      )
+      seenMethod = webRequest.method
+      seenUrl = webRequest.url
+      reply.send("ok")
+    })
+
+    let address = await app.listen({ host: "127.0.0.1", port: 0 })
+    let client = http2.connect(address)
+
+    try {
+      let status = await new Promise<number | undefined>((resolve, reject) => {
+        let stream = client.request({ ":path": "/docs?x=1" })
+        let responseStatus: number | undefined
+        stream.on("response", (headers) => {
+          responseStatus = headers[":status"]
+        })
+        stream.on("error", reject)
+        stream.on("end", () => resolve(responseStatus))
+        stream.resume()
+        stream.end()
+      })
+
+      expect(status).toBe(200)
+      expect(seenMethod).toBe("GET")
+      expect(seenUrl).toBe(`${address}/docs?x=1`)
+    } finally {
+      client.close()
+      await app.close()
+    }
   })
 
   it("keeps original URLs intact", async () => {
