@@ -4,7 +4,9 @@ import { createReadableStreamFromReadable } from "@react-router/node"
 import type { FastifyReply, FastifyRequest } from "fastify"
 
 /**
- * Copies Fastify's normalized request headers into Web Fetch `Headers`.
+ * Copies Fastify's normalized request headers into Web Fetch `Headers`. HTTP/2
+ * pseudo headers (`:method`, `:path`, ...) are skipped because they are not
+ * valid Fetch header names.
  *
  * @param source Fastify request headers.
  * @returns Fetch-compatible headers.
@@ -14,6 +16,7 @@ export function createHeaders(source: FastifyRequest["headers"]): Headers {
 
   for (let [name, value] of Object.entries(source)) {
     if (value == null) continue
+    if (name.startsWith(":")) continue
 
     if (Array.isArray(value)) {
       for (let item of value) {
