@@ -258,6 +258,9 @@ app.all(
 )
 ```
 
+The handler also works with `fastify({ http2: true })`. When it is passed
+straight to a route, the request and reply types are inferred from the app.
+
 ## License
 
 See [LICENSE](https://github.com/mcansh/remix-fastify/blob/main/LICENSE)
