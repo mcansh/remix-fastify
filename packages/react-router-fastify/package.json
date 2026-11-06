@@ -1,6 +1,6 @@
 {
   "name": "@mcansh/react-router-fastify",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "Fastify adapter and Vite development plugin for React Router v8 framework mode",
   "keywords": [
     "adapter",
