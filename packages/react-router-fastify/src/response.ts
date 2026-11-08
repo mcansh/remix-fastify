@@ -1,6 +1,8 @@
 import { Readable } from "node:stream"
 
-import type { FastifyReply } from "fastify"
+import type { RawServerBase, RawServerDefault } from "fastify"
+
+import type { AdapterReply } from "./request.ts"
 
 /**
  * Writes a Web Fetch `Response` through a Fastify reply.
@@ -9,10 +11,9 @@ import type { FastifyReply } from "fastify"
  * @param response React Router response.
  * @returns A promise that settles after the response is sent.
  */
-export async function sendResponse(
-  reply: FastifyReply,
-  response: Response,
-): Promise<void> {
+export async function sendResponse<
+  RawServer extends RawServerBase = RawServerDefault,
+>(reply: AdapterReply<RawServer>, response: Response): Promise<void> {
   reply.status(response.status)
   writeHeaders(reply, response.headers)
 
@@ -23,7 +24,10 @@ export async function sendResponse(
   return reply.send(readableFromWeb(response.body))
 }
 
-function writeHeaders(reply: FastifyReply, headers: Headers): void {
+function writeHeaders<RawServer extends RawServerBase>(
+  reply: AdapterReply<RawServer>,
+  headers: Headers,
+): void {
   let cookies = readSetCookies(headers)
 
   for (let [name, value] of headers) {
