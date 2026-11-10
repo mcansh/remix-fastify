@@ -24,6 +24,15 @@ export async function sendResponse<
   return reply.send(readableFromWeb(response.body))
 }
 
+/**
+ * Copies the response headers onto the reply. A header from the response
+ * replaces one already set on the reply, except `Set-Cookie` (Fastify appends
+ * cookies) and `Link`, whose values are appended so preload hints set in
+ * Fastify before the handler runs are kept.
+ *
+ * @param reply Fastify reply.
+ * @param headers React Router response headers.
+ */
 function writeHeaders<RawServer extends RawServerBase>(
   reply: AdapterReply<RawServer>,
   headers: Headers,
@@ -31,13 +40,27 @@ function writeHeaders<RawServer extends RawServerBase>(
   let cookies = readSetCookies(headers)
 
   for (let [name, value] of headers) {
-    if (name.toLowerCase() === "set-cookie" && cookies.length > 0) continue
+    let lowerName = name.toLowerCase()
+    if (lowerName === "set-cookie" && cookies.length > 0) continue
+    if (lowerName === "link") {
+      reply.header(name, mergeLink(reply.getHeader(name), value))
+      continue
+    }
     reply.header(name, value)
   }
 
   if (cookies.length > 0) {
     reply.header("set-cookie", cookies)
   }
+}
+
+function mergeLink(
+  existing: ReturnType<AdapterReply["getHeader"]>,
+  value: string,
+): string | string[] {
+  if (Array.isArray(existing)) return [...existing, value]
+  if (existing == null || existing === "") return value
+  return `${existing}, ${value}`
 }
 
 function readSetCookies(headers: Headers): string[] {
