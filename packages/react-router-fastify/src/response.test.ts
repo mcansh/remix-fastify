@@ -46,6 +46,65 @@ describe("response adapter", () => {
     ])
   })
 
+  it("appends Link headers to ones already set on the reply", async () => {
+    let app = fastify()
+
+    app.get("*", async (_request, reply) => {
+      reply.header("Link", "</font.woff2>; rel=preload; as=font; crossorigin")
+      await sendResponse(
+        reply,
+        new Response("ok", {
+          headers: { Link: "</app.css>; rel=preload; as=style" },
+        }),
+      )
+    })
+
+    let response = await app.inject("/")
+
+    expect(response.headers.link).toBe(
+      "</font.woff2>; rel=preload; as=font; crossorigin, </app.css>; rel=preload; as=style",
+    )
+  })
+
+  it("keeps Link headers set on the reply as an array", async () => {
+    let app = fastify()
+
+    app.get("*", async (_request, reply) => {
+      reply.header("Link", ["</a.js>; rel=modulepreload"])
+      await sendResponse(
+        reply,
+        new Response("ok", {
+          headers: { Link: "</b.js>; rel=modulepreload" },
+        }),
+      )
+    })
+
+    let response = await app.inject("/")
+
+    expect(response.headers.link).toEqual([
+      "</a.js>; rel=modulepreload",
+      "</b.js>; rel=modulepreload",
+    ])
+  })
+
+  it("lets response headers other than Link replace ones set on the reply", async () => {
+    let app = fastify()
+
+    app.get("*", async (_request, reply) => {
+      reply.header("X-Robots-Tag", "noindex")
+      reply.header("Link", "</font.woff2>; rel=preload; as=font")
+      await sendResponse(
+        reply,
+        new Response("ok", { headers: { "X-Robots-Tag": "all" } }),
+      )
+    })
+
+    let response = await app.inject("/")
+
+    expect(response.headers["x-robots-tag"]).toBe("all")
+    expect(response.headers.link).toBe("</font.woff2>; rel=preload; as=font")
+  })
+
   it("sends responses without bodies", async () => {
     let app = fastify()
 
