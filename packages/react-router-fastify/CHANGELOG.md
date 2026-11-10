@@ -1,5 +1,11 @@
 # @mcansh/react-router-fastify
 
+## 6.0.2
+
+### Patch Changes
+
+- 983261c: Append `Link` headers from React Router responses to `Link` headers already set on the Fastify reply instead of replacing them. Other headers still replace existing values.
+
 ## 6.0.1
 
 ### Patch Changes
