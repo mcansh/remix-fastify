@@ -1,5 +1,12 @@
 # @mcansh/react-router-fastify
 
+## 6.0.1
+
+### Patch Changes
+
+- c2ad48d: Accept HTTP/2 Fastify requests and replies in `createRequest`, `createUrl`, `createRequestHandler`, and `sendResponse`, so apps using `fastify({ http2: true })` no longer need type casts
+- d4a5162: Skip HTTP/2 pseudo headers such as `:method` when building the Fetch request, so apps using `fastify({ http2: true })` no longer fail with an invalid header name error
+
 ## 6.0.0
 
 ### Major Changes
