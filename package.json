@@ -25,11 +25,11 @@
     "@changesets/cli": "^3.0.3",
     "@manypkg/get-packages": "^3.1.0",
     "@npmcli/package-json": "^8.0.0",
-    "@oxlint/plugins": "^1.92.0",
+    "@oxlint/plugins": "^1.93.0",
     "@types/node": "^26.6.6",
     "@types/npmcli__package-json": "^4.0.4",
-    "oxfmt": "^0.77.0",
-    "oxlint": "^1.92.0",
+    "oxfmt": "^0.78.0",
+    "oxlint": "^1.93.0",
     "oxlint-tsgolint": "^7.0.2006",
     "pkg-pr-new": "^0.0.93",
     "typescript": "^7.0.2"
@@ -37,8 +37,15 @@
   "devDependencies": {
     "railway": "^3.16.0"
   },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^12.18.0",
+      "onFail": "warn"
+    }
+  },
   "engines": {
     "node": ">=22"
   },
-  "packageManager": "pnpm@11.28.5+sha512.484563d30b4c2ad27cb48aa94ff2b302dbcebc8ff6bf28816c2589886e146ce7f76f354f3bc1a438e6f5e9768c302aa0a6f7add8232903cd4cf81426cbc14d9e"
+  "packageManager": "pnpm@12.18.0+sha512.9d7882d5dc82147ecfc4e062aa34834e0ad0296710a1837a1115ae012127d36b7109e321ac1598a1dd0a65597681b1e99917e12ed0d749eae91187943363beb3"
 }
