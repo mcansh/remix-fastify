@@ -229,8 +229,8 @@ importers:
         specifier: ^7.0.2005
         version: 7.0.2005
       pkg-pr-new:
-        specifier: ^0.0.91
-        version: 0.0.91
+        specifier: ^0.0.93
+        version: 0.0.93
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -1959,8 +1959,8 @@ packages:
     resolution: {integrity: sha512-bk1ZMTwG/Vymx+zPoa28MhNzucFvXJWp3csrSuxuHPSMeUettaCoQ5Jvg07mtC4JGNpcfTwz41oVCnNgBK9+vA==}
     hasBin: true
 
-  pkg-pr-new@0.0.91:
-    resolution: {integrity: sha512-FQPmjspKRKYV4MlHQnun9snJqlYm6Yhmo12x1O3pgE2Akim/y/BZjMOppK//BFdh222WOj6WGqlmeZfrtUtfgQ==}
+  pkg-pr-new@0.0.93:
+    resolution: {integrity: sha512-JH3HEO+m8sNFpalNAeGrNKjdwxNcXT3yuEuGMU/65dvLojPo+Ofnmc8la2v2ceisjXTOKQw/738Pj4KNFY7F+w==}
     hasBin: true
 
   pkg-types@2.3.3:
@@ -3723,7 +3723,7 @@ snapshots:
       sonic-boom: 4.2.1
       thread-stream: 4.2.0
 
-  pkg-pr-new@0.0.91: {}
+  pkg-pr-new@0.0.93: {}
 
   pkg-types@2.3.3:
     dependencies:
