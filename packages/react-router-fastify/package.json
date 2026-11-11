@@ -54,7 +54,7 @@
     "validate": "pnpm run typecheck && pnpm run test && pnpm run build"
   },
   "dependencies": {
-    "@fastify/static": "^10.1.8"
+    "@fastify/static": "^10.1.10"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.5",
@@ -62,7 +62,7 @@
     "@react-router/node": "8.5.1",
     "@types/node": "^26.6.6",
     "@vitest/coverage-v8": "5.0.5",
-    "fastify": "^5.12.7",
+    "fastify": "^5.12.8",
     "publint": "^0.3.25",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",

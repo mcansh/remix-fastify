@@ -14,7 +14,7 @@
   "dependencies": {
     "@mcansh/react-router-fastify": "workspace:",
     "@react-router/node": "8.5.1",
-    "fastify": "^5.12.7",
+    "fastify": "^5.12.8",
     "isbot": "^5.2.2",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
