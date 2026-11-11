@@ -14,3 +14,7 @@ overrides:
 minimumReleaseAgeStrict: true
 
 shellEmulator: true
+
+update:
+  githubActions: true
+  changeset: true
