@@ -35,7 +35,7 @@
     "typescript": "^7.0.2"
   },
   "devDependencies": {
-    "railway": "^3.16.0"
+    "railway": "^3.17.0"
   },
   "devEngines": {
     "packageManager": {
