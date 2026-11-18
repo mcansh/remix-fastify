@@ -54,7 +54,7 @@
     "validate": "pnpm run typecheck && pnpm run test && pnpm run build"
   },
   "dependencies": {
-    "@fastify/static": "^10.1.10"
+    "@fastify/static": "^10.1.11"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.5",
