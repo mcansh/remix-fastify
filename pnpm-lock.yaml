@@ -200,13 +200,12 @@ importers:
       pkg-pr-new:
         specifier: ^0.0.93
         version: 0.0.93
-      typescript:
-        specifier: ^7.0.2
-        version: 7.0.2
-    devDependencies:
       railway:
         specifier: ^3.17.0
         version: 3.17.0
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
 
   examples/basic:
     dependencies:

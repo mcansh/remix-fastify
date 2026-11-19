@@ -32,10 +32,8 @@
     "oxlint": "^1.93.0",
     "oxlint-tsgolint": "^7.0.2006",
     "pkg-pr-new": "^0.0.93",
+    "railway": "^3.17.0",
     "typescript": "^7.0.2"
-  },
-  "devDependencies": {
-    "railway": "^3.17.0"
   },
   "devEngines": {
     "packageManager": {
