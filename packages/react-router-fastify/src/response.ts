@@ -72,10 +72,22 @@ function readSetCookies(headers: Headers): string[] {
   return cookie ? [cookie] : []
 }
 
+/**
+ * Wraps a Web `ReadableStream` in a Node `Readable` for Fastify. When Fastify
+ * destroys the `Readable`, for example because the client disconnected, the Web
+ * stream is cancelled so its source can stop producing data and clean up.
+ *
+ * @param body Web response body.
+ * @returns Node readable stream.
+ */
 function readableFromWeb(body: ReadableStream<Uint8Array>): Readable {
   let reader = body.getReader()
 
   return new Readable({
+    destroy(error, callback) {
+      reader.cancel(error ?? undefined).catch(() => {})
+      callback(error)
+    },
     read() {
       reader.read().then(
         ({ done, value }) => {

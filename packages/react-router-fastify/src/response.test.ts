@@ -1,3 +1,4 @@
+import http from "node:http"
 import { Readable } from "node:stream"
 
 import { createReadableStreamFromReadable } from "@react-router/node"
@@ -123,5 +124,60 @@ describe("response adapter", () => {
     expect(response.statusCode).toBe(204)
     expect(response.headers["x-empty"]).toBe("yes")
     expect(response.body).toBe("")
+  })
+
+  it("cancels the response body when the client disconnects", async () => {
+    let app = fastify()
+    let cancelled = Promise.withResolvers<void>()
+    let timer: ReturnType<typeof setInterval> | undefined
+
+    app.get("*", async (_request, reply) => {
+      let encoder = new TextEncoder()
+      let body = new ReadableStream<Uint8Array>({
+        start(controller) {
+          timer = setInterval(() => {
+            controller.enqueue(encoder.encode("data: tick\n\n"))
+          }, 5)
+        },
+        cancel() {
+          clearInterval(timer)
+          cancelled.resolve()
+        },
+      })
+
+      await sendResponse(
+        reply,
+        new Response(body, {
+          headers: { "Content-Type": "text/event-stream" },
+        }),
+      )
+    })
+
+    let address = await app.listen({ host: "127.0.0.1", port: 0 })
+
+    try {
+      await new Promise<void>((resolve, reject) => {
+        let request = http.get(address, (response) => {
+          response.once("data", () => {
+            request.destroy()
+            resolve()
+          })
+        })
+        request.on("error", (error) => {
+          if (request.destroyed) return
+          reject(error)
+        })
+      })
+
+      await expect(
+        Promise.race([
+          cancelled.promise.then(() => "cancelled"),
+          new Promise((resolve) => setTimeout(resolve, 1000, "timed out")),
+        ]),
+      ).resolves.toBe("cancelled")
+    } finally {
+      clearInterval(timer)
+      await app.close()
+    }
   })
 })
