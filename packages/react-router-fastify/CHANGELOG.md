@@ -1,5 +1,13 @@
 # @mcansh/react-router-fastify
 
+## 6.0.3
+
+### Patch Changes
+
+- 38fac58: Bump `@fastify/static` to `^10.1.11`.
+- 5b8ed0c: Bump `@fastify/static` to `^10.1.10`
+- e771600: Cancel the response body stream when the client disconnects, so streamed responses such as server-sent events stop producing data and run their cleanup
+
 ## 6.0.2
 
 ### Patch Changes
