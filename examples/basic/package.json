@@ -9,7 +9,8 @@
     "dev": "react-router dev",
     "build": "react-router build",
     "start": "NODE_ENV=production node ./server.ts",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "test": "react-router build && node --test --test-concurrency=1 --test-timeout=120000 test/production.test.ts test/development.test.ts"
   },
   "dependencies": {
     "@mcansh/react-router-fastify": "workspace:",
