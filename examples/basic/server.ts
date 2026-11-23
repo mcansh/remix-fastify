@@ -34,7 +34,8 @@ export async function createServer(vite?: ViteDevServer) {
 
       return {
         ...serverBuild,
-        allowedActionOrigins: ["https://remix.run"],
+        // hosts, not origins: React Router compares them with `URL.host`
+        allowedActionOrigins: ["remix.run"],
       }
     },
     getLoadContext(request) {

@@ -24,6 +24,7 @@
     "app/**/*",
     "react-router.config.ts",
     "server.ts",
-    "vite.config.ts"
+    "vite.config.ts",
+    "test/**/*"
   ]
 }

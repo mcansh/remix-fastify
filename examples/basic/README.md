@@ -23,3 +23,6 @@ Useful routes:
 - `/` - React Router route with loader data from `getLoadContext` and middleware
 - `/about` - second React Router route
 - `/api/health` - plain Fastify API route registered before the catch-all
+
+`pnpm --dir examples/basic test` builds the app and runs integration tests
+against the production server and the Vite dev server.
