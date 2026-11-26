@@ -1,10 +1,11 @@
 import fs from "node:fs"
 import fsp from "node:fs/promises"
 import path from "node:path"
+import { fileURLToPath } from "node:url"
 
 import PackageJson from "@npmcli/package-json"
 
-const rootDir = import.meta.resolve(import.meta.dirname, "..")
+const rootDir = fileURLToPath(new URL("..", import.meta.url))
 
 // 1. remove CHANGELOG.md from './examples/*'
 const changelogsIterator = fsp.glob("./examples/*/CHANGELOG.md", {
