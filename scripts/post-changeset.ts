@@ -33,7 +33,7 @@ for await (let file of examplePackageJsonsIterator) {
 }
 
 for (let file of examplePackageJsons) {
-  let pkg = await PackageJson.load(path.dirname(file))
+  let pkg = await PackageJson.load(path.resolve(rootDir, path.dirname(file)))
   delete pkg.content.version
   await pkg.save()
   console.log(`✅ Removed version from ${file}`)
