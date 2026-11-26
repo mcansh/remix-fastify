@@ -7,10 +7,7 @@ import type { Plugin, ViteDevServer } from "vite"
 
 import { importSsrModule } from "./vite-runtime.ts"
 
-const adapterPackageNames = [
-  "@mcansh/react-router-fastify",
-  "@mcansh/remix-fastify",
-]
+const adapterPackageNames = ["@mcansh/react-router-fastify"]
 
 export type FastifyAppFactory = (
   vite: ViteDevServer,

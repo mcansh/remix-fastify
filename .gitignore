@@ -1,6 +1,6 @@
 dist
 node_modules
-.ds_store
+.DS_Store
 *.tgz
 coverage
 .pnpm-store
