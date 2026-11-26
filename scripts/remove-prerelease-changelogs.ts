@@ -1,11 +1,11 @@
 import fs from "node:fs"
 import path from "node:path"
+import { fileURLToPath } from "node:url"
 
 import { getPackagesSync } from "@manypkg/get-packages"
 
-const rootDir = import.meta.resolve(import.meta.dirname, "..")
+const rootDir = fileURLToPath(new URL("..", import.meta.url))
 
-const DRY_RUN = false
 // pre-release headings look like: "1.15.0-pre.2"
 const PRE_RELEASE_HEADING_REGEXP = /^\d+\.\d+\.\d+-pre\.\d+$/i
 // stable headings look like: "1.15.0"
@@ -53,14 +53,11 @@ async function removePreReleaseChangelogs() {
             },
           )
 
-          // remove all lines between the pre-release heading and the next stable
-          // heading
           changelogFileContents = removeLines(changelogFileContents, {
             start: preReleaseHeadingIndex,
             end: nextStableHeadingIndex === -1 ? "max" : nextStableHeadingIndex,
           })
 
-          // find the next pre-release heading
           preReleaseHeadingIndex = findHeadingLineIndex(changelogFileContents, {
             level: 2,
             startAtIndex: 0,
@@ -68,15 +65,11 @@ async function removePreReleaseChangelogs() {
           })
         }
 
-        if (DRY_RUN) {
-          console.log("FILE CONTENTS:\n\n" + changelogFileContents)
-        } else {
-          await fs.promises.writeFile(
-            changelogPath,
-            changelogFileContents,
-            "utf-8",
-          )
-        }
+        await fs.promises.writeFile(
+          changelogPath,
+          changelogFileContents,
+          "utf-8",
+        )
       })(),
     )
   }
@@ -84,19 +77,10 @@ async function removePreReleaseChangelogs() {
 }
 
 function isPrereleaseMode() {
-  try {
-    let prereleaseFilePath = path.join(rootDir, ".changeset", "pre.json")
-    return fs.existsSync(prereleaseFilePath)
-  } catch (err) {
-    return false
-  }
+  let prereleaseFilePath = path.join(rootDir, ".changeset", "pre.json")
+  return fs.existsSync(prereleaseFilePath)
 }
 
-/**
- * @param {string} markdownContents
- * @param {{ level: number; startAtIndex: number; matcher: RegExp }} options
- * @returns {number}
- */
 function findHeadingLineIndex(
   markdownContents: string,
   {
@@ -114,11 +98,6 @@ function findHeadingLineIndex(
   return index
 }
 
-/**
- * @param {string} markdownContents
- * @param {{ start: number; end: number | "max" }} options
- * @returns {string}
- */
 function removeLines(
   markdownContents: string,
   { start, end }: { start: number; end: number | "max" },

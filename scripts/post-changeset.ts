@@ -1,10 +1,11 @@
 import fs from "node:fs"
 import fsp from "node:fs/promises"
 import path from "node:path"
+import { fileURLToPath } from "node:url"
 
 import PackageJson from "@npmcli/package-json"
 
-const rootDir = import.meta.resolve(import.meta.dirname, "..")
+const rootDir = fileURLToPath(new URL("..", import.meta.url))
 
 // 1. remove CHANGELOG.md from './examples/*'
 const changelogsIterator = fsp.glob("./examples/*/CHANGELOG.md", {
@@ -32,7 +33,7 @@ for await (let file of examplePackageJsonsIterator) {
 }
 
 for (let file of examplePackageJsons) {
-  let pkg = await PackageJson.load(path.dirname(file))
+  let pkg = await PackageJson.load(path.resolve(rootDir, path.dirname(file)))
   delete pkg.content.version
   await pkg.save()
   console.log(`✅ Removed version from ${file}`)
