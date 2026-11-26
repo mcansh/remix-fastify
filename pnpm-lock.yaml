@@ -164,7 +164,6 @@ settings:
 
 overrides:
   '@mcansh/react-router-fastify': 'workspace:'
-  '@mcansh/remix-fastify': 'workspace:'
 
 importers:
 

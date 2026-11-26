@@ -32,7 +32,7 @@ describe("fastifyReactRouterDev", () => {
 
     expect(result).toEqual({
       ssr: {
-        noExternal: ["@mcansh/react-router-fastify", "@mcansh/remix-fastify"],
+        noExternal: ["@mcansh/react-router-fastify"],
       },
     })
   })
