@@ -1,3 +1,4 @@
+import { getSourceMapsSupport, setSourceMapsSupport } from "node:module"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 
@@ -22,6 +23,15 @@ export interface FastifyReactRouterOptions {
   assetCacheControl?: string
   fileCacheControl?: string
   routeOptions?: RouteShorthandOptions
+  /**
+   * Enable Node's built-in source map support before the production server
+   * build is loaded, so stack traces point at your original source files.
+   * Ignored when `devServer` is provided, since Vite handles source maps in
+   * development.
+   *
+   * @default false
+   */
+  sourceMapSupport?: boolean
 }
 
 /**
@@ -46,7 +56,16 @@ export async function fastifyReactRouter(
     assetCacheControl = "public, max-age=31536000, immutable",
     fileCacheControl = "public, max-age=3600",
     routeOptions,
+    sourceMapSupport = false,
   } = options
+
+  if (
+    sourceMapSupport &&
+    devServer == null &&
+    !getSourceMapsSupport().enabled
+  ) {
+    setSourceMapsSupport(true)
+  }
 
   let serverBuild =
     devServer == null

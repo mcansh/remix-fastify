@@ -1,4 +1,5 @@
 import fs from "node:fs"
+import { getSourceMapsSupport, setSourceMapsSupport } from "node:module"
 import os from "node:os"
 import path from "node:path"
 
@@ -24,8 +25,14 @@ const mockedReactRouterHandler = createReactRouterHandler as MockedFunction<
 >
 
 describe("fastifyReactRouter", () => {
+  let initialSourceMapsSupport = getSourceMapsSupport()
+
   afterEach(() => {
     mockedReactRouterHandler.mockReset()
+    setSourceMapsSupport(initialSourceMapsSupport.enabled, {
+      nodeModules: initialSourceMapsSupport.nodeModules,
+      generatedCode: initialSourceMapsSupport.generatedCode,
+    })
   })
 
   it("registers a catch-all route and leaves custom routes usable", async () => {
@@ -118,6 +125,75 @@ describe("fastifyReactRouter", () => {
       )
     } finally {
       await app.close()
+    }
+  })
+
+  it("enables Node source map support for production builds when sourceMapSupport is set", async () => {
+    setSourceMapsSupport(false)
+    mockedReactRouterHandler.mockImplementation(
+      () => async () => new Response("route"),
+    )
+
+    let app = fastify()
+
+    try {
+      await app.register(fastifyReactRouter, {
+        build: {} as ReactRouter.ServerBuild,
+        sourceMapSupport: true,
+      })
+
+      expect(getSourceMapsSupport().enabled).toBe(true)
+    } finally {
+      await app.close()
+    }
+  })
+
+  it("keeps existing source map settings such as --enable-source-maps", async () => {
+    setSourceMapsSupport(true, { nodeModules: true, generatedCode: true })
+    mockedReactRouterHandler.mockImplementation(
+      () => async () => new Response("route"),
+    )
+
+    let app = fastify()
+
+    try {
+      await app.register(fastifyReactRouter, {
+        build: {} as ReactRouter.ServerBuild,
+        sourceMapSupport: true,
+      })
+
+      expect(getSourceMapsSupport()).toEqual({
+        enabled: true,
+        nodeModules: true,
+        generatedCode: true,
+      })
+    } finally {
+      await app.close()
+    }
+  })
+
+  it("leaves source map support alone by default and in development", async () => {
+    setSourceMapsSupport(false)
+    mockedReactRouterHandler.mockImplementation(
+      () => async () => new Response("route"),
+    )
+
+    let production = fastify()
+    let development = fastify()
+
+    try {
+      await production.register(fastifyReactRouter, {
+        build: {} as ReactRouter.ServerBuild,
+      })
+      await development.register(fastifyReactRouter, {
+        devServer: {} as ViteDevServer,
+        sourceMapSupport: true,
+      })
+
+      expect(getSourceMapsSupport().enabled).toBe(false)
+    } finally {
+      await production.close()
+      await development.close()
     }
   })
 })

@@ -214,6 +214,29 @@ await app.register(fastifyReactRouter, {
 })
 ```
 
+To get stack traces that point at your original source files, build the server
+with source maps and pass `sourceMapSupport: true`. This turns on Node's
+built-in source map support before the server build is loaded:
+
+```ts
+// vite.config.ts
+export default defineConfig(({ isSsrBuild }) => ({
+  // only emit source maps for the server build
+  build: { sourcemap: isSsrBuild },
+  // ...
+}))
+```
+
+```ts
+await app.register(fastifyReactRouter, {
+  sourceMapSupport: true,
+})
+```
+
+This only applies to modules loaded after the plugin is registered, so it has
+no effect on a server build you import yourself and pass as `build`. If you
+already run Node with `--enable-source-maps`, you don't need this option.
+
 ## API
 
 `fastifyReactRouter` options:
@@ -229,6 +252,7 @@ await app.register(fastifyReactRouter, {
 - `assetCacheControl` - cache-control string for files under `<clientBuildDirectory>/assets`
 - `fileCacheControl` - cache-control string for other files in `clientBuildDirectory`
 - `routeOptions` - Fastify route options for the catch-all route
+- `sourceMapSupport` - enable Node's built-in source map support before the production server build is loaded, default `false`
 
 When `devServer` is provided, `fastifyReactRouter` always uses Vite's
 `virtual:react-router/server-build` module. This keeps development requests
