@@ -218,13 +218,8 @@ To get stack traces that point at your original source files, build the server
 with source maps and pass `sourceMapSupport: true`. This turns on Node's
 built-in source map support before the server build is loaded:
 
-```ts
-// vite.config.ts
-export default defineConfig(({ isSsrBuild }) => ({
-  // only emit source maps for the server build
-  build: { sourcemap: isSsrBuild },
-  // ...
-}))
+```sh
+react-router build --sourcemapServer
 ```
 
 ```ts
